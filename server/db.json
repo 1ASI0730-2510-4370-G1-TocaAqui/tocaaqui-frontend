@@ -1,0 +1,163 @@
+{
+    "riders": [
+      {
+        "id": 1,
+        "firstName": "Juan",
+        "lastName": "Pérez",
+        "documentType": "DNI",
+        "documentNumber": "45678912",
+        "email": "juan.perez@email.com",
+        "phone": "+51987654321",
+        "location": "lima",
+        "genre": "M",
+        "paymentMethod": "cash",
+        "status": "pending",
+        "documents": [
+          {
+            "id": 1,
+            "type": "dni",
+            "url": "https://example.com/docs/dni.pdf",
+            "uploadedAt": "2024-03-15T10:30:00Z"
+          }
+        ],
+        "createdAt": "2024-03-15T10:00:00Z",
+        "updatedAt": "2024-03-15T10:30:00Z"
+      },
+      {
+        "id": 2,
+        "firstName": "María",
+        "lastName": "García",
+        "documentType": "DNI",
+        "documentNumber": "78912345",
+        "email": "maria.garcia@email.com",
+        "phone": "+51987123456",
+        "location": "callao",
+        "genre": "F",
+        "paymentMethod": "transfer",
+        "status": "approved",
+        "documents": [
+          {
+            "id": 2,
+            "type": "dni",
+            "url": "https://example.com/docs/dni2.pdf",
+            "uploadedAt": "2024-03-14T15:30:00Z"
+          },
+          {
+            "id": 3,
+            "type": "license",
+            "url": "https://example.com/docs/license2.pdf",
+            "uploadedAt": "2024-03-14T15:35:00Z"
+          }
+        ],
+        "createdAt": "2024-03-14T15:00:00Z",
+        "updatedAt": "2024-03-14T16:00:00Z"
+      }
+    ],
+    "applications": [
+      {
+        "id": 1,
+        "riderId": 1,
+        "status": "pending",
+        "comments": [
+          {
+            "id": 1,
+            "text": "Documentos recibidos, en revisión",
+            "createdAt": "2024-03-15T10:31:00Z",
+            "author": "admin"
+          }
+        ],
+        "stages": [
+          {
+            "name": "document_verification",
+            "status": "in_progress",
+            "completedAt": null
+          },
+          {
+            "name": "background_check",
+            "status": "pending",
+            "completedAt": null
+          },
+          {
+            "name": "training",
+            "status": "pending",
+            "completedAt": null
+          }
+        ],
+        "createdAt": "2024-03-15T10:00:00Z",
+        "updatedAt": "2024-03-15T10:31:00Z"
+      },
+      {
+        "id": 2,
+        "riderId": 2,
+        "status": "approved",
+        "comments": [
+          {
+            "id": 2,
+            "text": "Documentos verificados correctamente",
+            "createdAt": "2024-03-14T15:40:00Z",
+            "author": "admin"
+          },
+          {
+            "id": 3,
+            "text": "Verificación de antecedentes completada",
+            "createdAt": "2024-03-14T16:00:00Z",
+            "author": "admin"
+          }
+        ],
+        "stages": [
+          {
+            "name": "document_verification",
+            "status": "completed",
+            "completedAt": "2024-03-14T15:40:00Z"
+          },
+          {
+            "name": "background_check",
+            "status": "completed",
+            "completedAt": "2024-03-14T16:00:00Z"
+          },
+          {
+            "name": "training",
+            "status": "completed",
+            "completedAt": "2024-03-14T16:30:00Z"
+          }
+        ],
+        "createdAt": "2024-03-14T15:00:00Z",
+        "updatedAt": "2024-03-14T16:30:00Z"
+      }
+    ],
+    "locations": [
+      {
+        "id": "lima",
+        "name": "Lima",
+        "isActive": true
+      },
+      {
+        "id": "callao",
+        "name": "Callao",
+        "isActive": true
+      }
+    ],
+    "document_types": [
+      {
+        "id": "dni",
+        "name": "DNI",
+        "required": true,
+        "maxSize": 5000000,
+        "allowedFormats": ["pdf", "jpg", "png"]
+      },
+      {
+        "id": "license",
+        "name": "Licencia de conducir",
+        "required": true,
+        "maxSize": 5000000,
+        "allowedFormats": ["pdf", "jpg", "png"]
+      },
+      {
+        "id": "criminal_record",
+        "name": "Antecedentes penales",
+        "required": true,
+        "maxSize": 5000000,
+        "allowedFormats": ["pdf"]
+      }
+    ]
+  }
