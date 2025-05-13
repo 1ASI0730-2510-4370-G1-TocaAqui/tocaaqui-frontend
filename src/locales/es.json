@@ -1,0 +1,62 @@
+{
+    "common": {
+        "add": "Agregar",
+        "edit": "Editar",
+        "delete": "Eliminar",
+        "save": "Guardar",
+        "cancel": "Cancelar",
+        "confirm": "Confirmar",
+        "actions": "Acciones",
+        "loading": "Cargando",
+        "search": "Buscar",
+        "notifications": "Notificaciones",
+        "darkMode": "Modo oscuro",
+        "lightMode": "Modo claro",
+        "language": "Idioma",
+        "success": "Éxito",
+        "error": "Error",
+        "mainMenu": "Menú principal",
+        "close": "Cerrar",
+        "toggleMenu": "Alternar menú",
+        "userProfile": "Perfil de usuario"
+    },
+    "menu": {
+        "dashboard": "Dashboard",
+        "profile": "Mi Perfil",
+        "applications": "Postulaciones",
+        "search": "Buscar espacio",
+        "agenda": "Agenda",
+        "evaluations": "Evaluaciones",
+        "payments": "Pagos Recibidos"
+    },
+    "rider": {
+        "application": {
+            "title": "Postulación para Rider",
+            "location": "Elige tu ubicación",
+            "genre": "Elige tu género",
+            "paymentMethod": "Elige tu forma de pago",
+            "document": "Sube tu documento",
+            "documentHelp": "Máximo 10MB - PDF o Word",
+            "submit": "Enviar postulación",
+            "success": "Tu postulación ha sido enviada correctamente",
+            "error": "Error al enviar la postulación",
+            "documentSuccess": "Documento subido correctamente",
+            "documentError": "Error al subir el documento",
+            "options": {
+                "locations": {
+                    "lima": "Lima",
+                    "callao": "Callao"
+                },
+                "genres": {
+                    "M": "Masculino",
+                    "F": "Femenino",
+                    "O": "Otro"
+                },
+                "payments": {
+                    "cash": "Efectivo",
+                    "transfer": "Transferencia"
+                }
+            }
+        }
+    }
+} 

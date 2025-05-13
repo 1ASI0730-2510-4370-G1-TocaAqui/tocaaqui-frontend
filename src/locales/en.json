@@ -1,0 +1,62 @@
+{
+    "common": {
+        "add": "Add",
+        "edit": "Edit",
+        "delete": "Delete",
+        "save": "Save",
+        "cancel": "Cancel",
+        "confirm": "Confirm",
+        "actions": "Actions",
+        "loading": "Loading",
+        "search": "Search",
+        "notifications": "Notifications",
+        "darkMode": "Dark Mode",
+        "lightMode": "Light Mode",
+        "language": "Language",
+        "success": "Success",
+        "error": "Error",
+        "mainMenu": "Main Menu",
+        "close": "Close",
+        "toggleMenu": "Toggle menu",
+        "userProfile": "User profile"
+    },
+    "menu": {
+        "dashboard": "Dashboard",
+        "profile": "My Profile",
+        "applications": "Applications",
+        "search": "Search Space",
+        "agenda": "Schedule",
+        "evaluations": "Evaluations",
+        "payments": "Received Payments"
+    },
+    "rider": {
+        "application": {
+            "title": "Rider Application",
+            "location": "Choose your location",
+            "genre": "Choose your gender",
+            "paymentMethod": "Choose your payment method",
+            "document": "Upload your document",
+            "documentHelp": "Maximum 10MB - PDF or Word",
+            "submit": "Submit application",
+            "success": "Your application has been submitted successfully",
+            "error": "Error submitting application",
+            "documentSuccess": "Document uploaded successfully",
+            "documentError": "Error uploading document",
+            "options": {
+                "locations": {
+                    "lima": "Lima",
+                    "callao": "Callao"
+                },
+                "genres": {
+                    "M": "Male",
+                    "F": "Female",
+                    "O": "Other"
+                },
+                "payments": {
+                    "cash": "Cash",
+                    "transfer": "Bank Transfer"
+                }
+            }
+        }
+    }
+} 
