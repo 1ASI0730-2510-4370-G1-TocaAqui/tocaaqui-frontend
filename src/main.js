@@ -8,42 +8,42 @@ import Material from '@primeuix/themes/material';
 import Aura from '@primevue/themes/aura';
 
 // PrimeVue componentes
-import {
-    Button,
-    Card,
-    Checkbox,
-    Column,
-    ConfirmDialog,
-    ConfirmationService,
-    DataTable,
-    Dialog,
-    DialogService,
-    Drawer,
-    FileUpload,
-    FloatLabel,
-    IconField,
-    InputIcon,
-    InputNumber,
-    InputText,
-    Menu,
-    Rating,
-    Row,
-    Select,
-    SelectButton,
-    Tag,
-    Textarea,
-    Toast,
-    Toolbar,
-    Password,
-    Message,
-    ProgressSpinner,
-    Avatar,
-} from "primevue";
+import Button from 'primevue/button';
+import Card from 'primevue/card';
+import Checkbox from 'primevue/checkbox';
+import Column from 'primevue/column';
+import ConfirmDialog from 'primevue/confirmdialog';
+import DataTable from 'primevue/datatable';
+import Dialog from 'primevue/dialog';
+import Drawer from 'primevue/drawer';
+import Dropdown from 'primevue/dropdown';
+import FileUpload from 'primevue/fileupload';
+import FloatLabel from 'primevue/floatlabel';
+import IconField from 'primevue/iconfield';
+import InputIcon from 'primevue/inputicon';
+import InputNumber from 'primevue/inputnumber';
+import InputText from 'primevue/inputtext';
+import Menu from 'primevue/menu';
+import Rating from 'primevue/rating';
+import Row from 'primevue/row';
+import Select from 'primevue/select';
+import SelectButton from 'primevue/selectbutton';
+import Tag from 'primevue/tag';
+import Textarea from 'primevue/textarea';
+import Toast from 'primevue/toast';
+import Toolbar from 'primevue/toolbar';
+import Password from 'primevue/password';
+import Message from 'primevue/message';
+import ProgressSpinner from 'primevue/progressspinner';
+import Avatar from 'primevue/avatar';
 
-// PrimeVue directivas y servicios
+// PrimeVue servicios
 import ToastService from 'primevue/toastservice';
+import ConfirmationService from 'primevue/confirmationservice';
+import DialogService from 'primevue/dialogservice';
 import Tooltip from 'primevue/tooltip';
 
+// Estilos de PrimeVue
 import 'primeicons/primeicons.css';
 import 'primeflex/primeflex.css';
 
@@ -51,27 +51,7 @@ import 'primeflex/primeflex.css';
 import i18n from "./i18n.js";
 
 // Vue Router
-import * as VueRouter from 'vue-router';
-import RiderApplication from './rider/components/RiderApplication.vue';
-
-// Configuración de rutas
-const routes = [
-    {
-        path: '/',
-        redirect: '/applications'
-    },
-    {
-        path: '/applications',
-        name: 'RiderApplication',
-        component: RiderApplication
-    }
-    // Aquí puedes agregar más rutas si las necesitas
-];
-
-const router = VueRouter.createRouter({
-    history: VueRouter.createWebHistory(),
-    routes
-});
+import router from './router';
 
 // Crear app
 const app = createApp(App);
@@ -104,6 +84,7 @@ app
     .component('pv-data-table', DataTable)
     .component('pv-dialog', Dialog)
     .component('pv-drawer', Drawer)
+    .component('pv-dropdown', Dropdown)
     .component('pv-file-upload', FileUpload)
     .component('pv-float-label', FloatLabel)
     .component('pv-icon-field', IconField)

@@ -3,11 +3,12 @@
 
 <script>
 import { useI18n } from 'vue-i18n'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { computed } from 'vue'
 import Sidebar from './shared/components/Sidebar.vue'
 import ThemeToggle from './shared/components/ThemeToggle.vue'
 import LanguageToggle from './shared/components/LanguageToggle.vue'
+import LoginService from './login/services/login.service'
 
 export default {
   name: 'App',
@@ -19,23 +20,51 @@ export default {
   setup() {
     const { t } = useI18n()
     const route = useRoute()
+    const router = useRouter()
 
     const currentTitle = computed(() => {
       const path = route.path.split('/')[1] || 'dashboard'
       return t(`menu.${path}`)
     })
 
-    return { t, currentTitle }
+    const isLoginPage = computed(() => {
+      return route.path === '/login'
+    })
+
+    const userName = computed(() => {
+      const userStr = localStorage.getItem('user')
+      if (userStr) {
+        const user = JSON.parse(userStr)
+        return user.name
+      }
+      return ''
+    })
+
+    const handleLogout = () => {
+      LoginService.logout()
+      router.push('/login')
+    }
+
+    return { 
+      t, 
+      currentTitle, 
+      isLoginPage,
+      userName,
+      handleLogout
+    }
   },
   data() {
     return {
-      userName: 'John Doe',
-      isSidebarVisible: false
+      isSidebarVisible: false,
+      isUserMenuVisible: false
     }
   },
   methods: {
     toggleSidebar() {
       this.isSidebarVisible = !this.isSidebarVisible
+    },
+    toggleUserMenu() {
+      this.isUserMenuVisible = !this.isUserMenuVisible
     }
   }
 }
@@ -43,63 +72,86 @@ export default {
 
 <template>
   <div class="app-container">
-    <!-- Overlay para móvil -->
-    <div 
-      v-show="isSidebarVisible" 
-      class="sidebar-overlay"
-      @click="toggleSidebar"
-    ></div>
+    <template v-if="!isLoginPage">
+      <!-- Overlay para móvil -->
+      <div 
+        v-show="isSidebarVisible" 
+        class="sidebar-overlay"
+        @click="toggleSidebar"
+      ></div>
 
-    <!-- Sidebar -->
-    <Sidebar 
-      :user-name="userName" 
-      @close="toggleSidebar"
-      :class="['sidebar', { 'sidebar-active': isSidebarVisible }]"
-    />
-    
-    <!-- Main Content -->
-    <main :class="['main-content', { 'sidebar-pushed': isSidebarVisible }]">
-      <!-- Header -->
-      <header class="header">
-        <div class="flex justify-content-between align-items-center">
-          <div class="flex align-items-center gap-3">
-            <button 
-              class="menu-toggle"
-              @click="toggleSidebar"
-              :aria-label="t('common.toggleMenu')"
-            >
-              <i class="pi pi-bars"></i>
-            </button>
-            <h1 class="text-xl font-bold">{{ currentTitle }}</h1>
-          </div>
-          <div class="flex align-items-center gap-3">
-            <LanguageToggle />
-            <ThemeToggle />
-            <pv-button
-              icon="pi pi-bell"
-              severity="secondary"
-              text
-              rounded
-              :aria-label="t('common.notifications')"
-            />
-            <div class="user-info flex align-items-center gap-2">
-              <span class="font-medium">{{ userName }}</span>
-              <pv-avatar
-                icon="pi pi-user"
-                shape="circle"
-                size="normal"
-                :aria-label="t('common.userProfile')"
+      <!-- Sidebar -->
+      <Sidebar 
+        :user-name="userName" 
+        @close="toggleSidebar"
+        :class="['sidebar', { 'sidebar-active': isSidebarVisible }]"
+      />
+      
+      <!-- Main Content -->
+      <main :class="['main-content', { 'sidebar-pushed': isSidebarVisible }]">
+        <!-- Header -->
+        <header class="header">
+          <div class="flex justify-content-between align-items-center">
+            <div class="flex align-items-center gap-3">
+              <button 
+                class="menu-toggle"
+                @click="toggleSidebar"
+                :aria-label="t('common.toggleMenu')"
+              >
+                <i class="pi pi-bars"></i>
+              </button>
+              <h1 class="text-xl">{{ currentTitle }}</h1>
+            </div>
+            <div class="flex align-items-center gap-3">
+              <LanguageToggle />
+              <ThemeToggle />
+              <pv-button
+                icon="pi pi-bell"
+                severity="secondary"
+                text
+                rounded
+                :aria-label="t('common.notifications')"
               />
+              <div class="user-menu relative">
+                <div 
+                  class="user-info flex align-items-center gap-2 cursor-pointer" 
+                  @click="toggleUserMenu"
+                >
+                  <span class="font-medium">{{ userName }}</span>
+                  <pv-avatar
+                    icon="pi pi-user"
+                    shape="circle"
+                    size="normal"
+                    :aria-label="t('common.userProfile')"
+                  />
+                </div>
+                <!-- Menú desplegable -->
+                <div v-if="isUserMenuVisible" class="user-dropdown">
+                  <ul class="list-none p-0 m-0">
+                    <li>
+                      <a @click="handleLogout" class="dropdown-item">
+                        <i class="pi pi-sign-out mr-2"></i>
+                        Cerrar Sesión
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </header>
+        </header>
 
-      <!-- Router View -->
-      <div class="content-wrapper p-4">
-        <router-view></router-view>
-      </div>
-    </main>
+        <!-- Router View -->
+        <div class="content-wrapper p-4">
+          <router-view></router-view>
+        </div>
+      </main>
+    </template>
+
+    <!-- Login page -->
+    <template v-else>
+      <router-view></router-view>
+    </template>
 
     <!-- Toast -->
     <pv-toast />
@@ -193,6 +245,37 @@ export default {
   z-index: 1001;
   opacity: 0;
   transition: opacity 0.3s ease;
+}
+
+.user-menu {
+  position: relative;
+}
+
+.user-dropdown {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background-color: var(--surface-0);
+  border: 1px solid var(--surface-200);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  min-width: 200px;
+  z-index: 1000;
+  margin-top: 0.5rem;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  color: var(--text-color);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.dropdown-item:hover {
+  background-color: var(--surface-100);
 }
 
 /* Responsive */
