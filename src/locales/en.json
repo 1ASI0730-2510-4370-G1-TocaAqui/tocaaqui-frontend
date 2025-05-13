@@ -58,5 +58,96 @@
                 }
             }
         }
+    },
+    "dashboard": {
+        "welcome": "Welcome {name}",
+        "stats": {
+            "nextEvents": {
+                "title": "Next Events",
+                "empty": "No upcoming events"
+            },
+            "pendingPayments": {
+                "title": "Pending Payments",
+                "empty": "No pending payments"
+            },
+            "rating": {
+                "title": "Rating",
+                "empty": "No ratings"
+            },
+            "bookings": {
+                "title": "Bookings",
+                "empty": "No bookings"
+            }
+        },
+        "sections": {
+            "upcomingEvents": {
+                "title": "Upcoming Events",
+                "empty": "No upcoming events"
+            },
+            "recentActivity": {
+                "title": "Recent Activity",
+                "empty": "No recent activity"
+            }
+        }
+    },
+    "eventApplications": {
+        "title": "Event Applications",
+        "searchPlaceholder": "Search by name or location",
+        "allStatuses": "All statuses",
+        "pending": "Pending",
+        "accepted": "Accepted",
+        "rejected": "Rejected",
+        "noApplications": "No applications available",
+        "status": {
+            "pending": "Pending",
+            "accepted": "Accepted",
+            "rejected": "Rejected"
+        },
+        "venue": "Venue",
+        "payment": "Payment",
+        "apply": "Apply",
+        "viewApplication": "View application"
+    },
+    "applicationDetail": {
+        "back": "Back to applications",
+        "errorLoading": "Error loading application details",
+        "eventDetails": "Event Details",
+        "requirements": "Requirements",
+        "description": "Description",
+        "venue": "Venue",
+        "payment": "Payment",
+        "duration": "Duration",
+        "hours": "hours",
+        "genre": "Musical genre",
+        "equipment": "Equipment",
+        "accept": "Accept application",
+        "reject": "Reject application",
+        "status": {
+            "pending": "Pending",
+            "accepted": "Accepted",
+            "rejected": "Rejected"
+        },
+        "technicalDetails": "Technical Details",
+        "publishDate": "Publish Date",
+        "eventDate": "Event Date",
+        "eventTime": "Event Time",
+        "location": "Location",
+        "soundcheckDate": "Soundcheck Date",
+        "soundcheckTime": "Soundcheck Time",
+        "venueCapacity": "Venue Capacity",
+        "availableTickets": "Available Tickets",
+        "contract": {
+            "title": "Event Contract",
+            "reject": "Reject",
+            "signAndAccept": "Sign and Accept"
+        },
+        "rider": {
+            "title": "Upload Technical Rider",
+            "chooseLabel": "Select Rider",
+            "uploadLabel": "Upload",
+            "cancelLabel": "Cancel",
+            "dragDropText": "Drag and drop the PDF file here or click to select it",
+            "sizeNote": "* File must be in PDF format and must not exceed 5MB"
+        }
     }
 } 

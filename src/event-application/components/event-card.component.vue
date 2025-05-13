@@ -8,7 +8,7 @@
     />
     <div class="absolute top-0 right-0 m-2">
       <pv-tag 
-        :value="getStatusLabel(event.status)"
+        :value="$t(`eventApplications.status.${event.status}`)"
         :severity="getStatusSeverity(event.status)"
         class="font-semibold"
       />
@@ -30,7 +30,7 @@
 
     <pv-button 
       @click="$emit('view-detail', event.id)"
-      label="Ver postulación"
+      :label="$t('eventApplications.viewApplication')"
       icon="pi pi-eye"
       class="w-full p-button-outlined"
     />
@@ -38,7 +38,10 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n';
 import type { EventApplication } from '../model/event-application.model';
+
+const { t, locale } = useI18n();
 
 const props = defineProps<{
   event: EventApplication
@@ -49,20 +52,11 @@ const emit = defineEmits<{
 }>();
 
 const formatDate = (date: string) => {
-  return new Date(date).toLocaleDateString('es-ES', {
+  return new Date(date).toLocaleDateString(locale.value, {
     weekday: 'long',
     day: 'numeric',
     month: 'long'
   });
-};
-
-const getStatusLabel = (status: string) => {
-  const labels = {
-    pending: 'Pendiente',
-    accepted: 'Aceptado',
-    rejected: 'Rechazado'
-  };
-  return labels[status as keyof typeof labels] || status;
 };
 
 const getStatusSeverity = (status: string) => {

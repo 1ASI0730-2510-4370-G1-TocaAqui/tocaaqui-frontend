@@ -1,13 +1,13 @@
 <template>
   <div class="postulaciones-container">
     <div class="flex justify-content-between align-items-center mb-4">
-      <h1 class="text-2xl font-bold">Solicitudes de Eventos</h1>
+      <h1 class="text-2xl font-bold">{{ $t('eventApplications.title') }}</h1>
       <pv-dropdown
         v-model="statusFilter"
         :options="statusOptions"
         optionLabel="label"
         optionValue="value"
-        placeholder="Todos los eventos"
+        :placeholder="$t('eventApplications.allStatuses')"
         class="w-12rem"
       />
     </div>
@@ -17,7 +17,7 @@
     </div>
 
     <div v-else-if="applications.length === 0" class="text-center">
-      <pv-message severity="info" :closable="false">No hay eventos disponibles</pv-message>
+      <pv-message severity="info" :closable="false">{{ $t('eventApplications.noApplications') }}</pv-message>
     </div>
 
     <div v-else class="grid">
@@ -48,10 +48,10 @@ const loading = ref(true);
 const statusFilter = ref('');
 
 const statusOptions = [
-  { label: t('event.status.all'), value: '' },
-  { label: t('event.status.pending'), value: 'pending' },
-  { label: t('event.status.accepted'), value: 'accepted' },
-  { label: t('event.status.rejected'), value: 'rejected' }
+  { label: t('eventApplications.allStatuses'), value: '' },
+  { label: t('eventApplications.status.pending'), value: 'pending' },
+  { label: t('eventApplications.status.accepted'), value: 'accepted' },
+  { label: t('eventApplications.status.rejected'), value: 'rejected' }
 ];
 
 const filteredEvents = computed(() => {

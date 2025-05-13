@@ -112,7 +112,8 @@
         },
         "venue": "Lugar",
         "payment": "Pago",
-        "apply": "Postular"
+        "apply": "Postular",
+        "viewApplication": "Ver postulación"
     },
     "applicationDetail": {
         "back": "Volver a solicitudes",
@@ -132,6 +133,28 @@
             "pending": "Pendiente",
             "accepted": "Aceptado",
             "rejected": "Rechazado"
+        },
+        "technicalDetails": "Detalles Técnicos",
+        "publishDate": "Fecha de Publicación",
+        "eventDate": "Fecha del Evento",
+        "eventTime": "Hora del Evento",
+        "location": "Localización",
+        "soundcheckDate": "Fecha Prueba de Sonido",
+        "soundcheckTime": "Hora Prueba de Sonido",
+        "venueCapacity": "Capacidad del Local",
+        "availableTickets": "Entradas Disponibles",
+        "contract": {
+            "title": "Contrato del Evento",
+            "reject": "Rechazar",
+            "signAndAccept": "Firmar y Aceptar"
+        },
+        "rider": {
+            "title": "Subir Rider Técnico",
+            "chooseLabel": "Seleccionar Rider",
+            "uploadLabel": "Subir",
+            "cancelLabel": "Cancelar",
+            "dragDropText": "Arrastra y suelta el archivo PDF aquí o haz clic para seleccionarlo",
+            "sizeNote": "* El archivo debe estar en formato PDF y no debe exceder los 5MB"
         }
     }
 } 

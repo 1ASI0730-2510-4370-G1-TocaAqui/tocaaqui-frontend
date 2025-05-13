@@ -45,22 +45,22 @@
                 <div class="flex flex-column gap-3">
                   <div class="flex align-items-center">
                     <i class="pi pi-calendar-plus mr-2"></i>
-                    <span class="font-medium">Fecha de Publicación:</span>
+                    <span class="font-medium">{{ $t('applicationDetail.publishDate') }}:</span>
                     <span class="ml-2">{{ formatDate(application.publishDate) }}</span>
                   </div>
                   <div class="flex align-items-center">
                     <i class="pi pi-calendar mr-2"></i>
-                    <span class="font-medium">Fecha del Evento:</span>
+                    <span class="font-medium">{{ $t('applicationDetail.eventDate') }}:</span>
                     <span class="ml-2">{{ formatDate(application.eventDate) }}</span>
                   </div>
                   <div class="flex align-items-center">
                     <i class="pi pi-clock mr-2"></i>
-                    <span class="font-medium">Hora del Evento:</span>
+                    <span class="font-medium">{{ $t('applicationDetail.eventTime') }}:</span>
                     <span class="ml-2">{{ formatTime(application.eventTime) }}</span>
                   </div>
                   <div class="flex align-items-center">
                     <i class="pi pi-map-marker mr-2"></i>
-                    <span class="font-medium">Localización:</span>
+                    <span class="font-medium">{{ $t('applicationDetail.location') }}:</span>
                     <span class="ml-2">{{ application.location }}</span>
                   </div>
                 </div>
@@ -72,22 +72,22 @@
                 <div class="flex flex-column gap-3">
                   <div class="flex align-items-center">
                     <i class="pi pi-volume-up mr-2"></i>
-                    <span class="font-medium">Fecha Prueba de Sonido:</span>
+                    <span class="font-medium">{{ $t('applicationDetail.soundcheckDate') }}:</span>
                     <span class="ml-2">{{ formatDate(application.soundcheckDate) }}</span>
                   </div>
                   <div class="flex align-items-center">
                     <i class="pi pi-clock mr-2"></i>
-                    <span class="font-medium">Hora Prueba de Sonido:</span>
+                    <span class="font-medium">{{ $t('applicationDetail.soundcheckTime') }}:</span>
                     <span class="ml-2">{{ formatTime(application.soundcheckTime) }}</span>
                   </div>
                   <div class="flex align-items-center">
                     <i class="pi pi-users mr-2"></i>
-                    <span class="font-medium">Capacidad del Local:</span>
+                    <span class="font-medium">{{ $t('applicationDetail.venueCapacity') }}:</span>
                     <span class="ml-2">{{ application.capacity }} personas</span>
                   </div>
                   <div class="flex align-items-center">
                     <i class="pi pi-ticket mr-2"></i>
-                    <span class="font-medium">Entradas Disponibles:</span>
+                    <span class="font-medium">{{ $t('applicationDetail.availableTickets') }}:</span>
                     <span class="ml-2">{{ application.availableTickets }}</span>
                   </div>
                 </div>
@@ -175,18 +175,18 @@
           :maxFileSize="5000000"
           @upload="onRiderUpload"
           :auto="true"
-          chooseLabel="Seleccionar Rider"
-          uploadLabel="Subir"
-          cancelLabel="Cancelar"
+          :chooseLabel="$t('applicationDetail.rider.chooseLabel')"
+          :uploadLabel="$t('applicationDetail.rider.uploadLabel')"
+          :cancelLabel="$t('applicationDetail.rider.cancelLabel')"
           :customUpload="true"
         >
           <template #empty>
-            <p>Arrastra y suelta el archivo PDF aquí o haz clic para seleccionarlo.</p>
+            <p>{{ $t('applicationDetail.rider.dragDropText') }}</p>
           </template>
         </pv-file-upload>
         
         <small class="block mt-2 text-600">
-          * El archivo debe estar en formato PDF y no debe exceder los 5MB
+          {{ $t('applicationDetail.rider.sizeNote') }}
         </small>
       </div>
 
@@ -213,7 +213,7 @@ export default {
   setup() {
     const route = useRoute();
     const router = useRouter();
-    const { t } = useI18n();
+    const { t, locale } = useI18n();
 
     const application = ref(null);
     const loading = ref(true);
@@ -278,7 +278,7 @@ El Artista recibirá como pago por su presentación la cantidad de [Monto] euros
     };
 
     const formatDate = (date) => {
-      return new Date(date).toLocaleDateString('es-ES', {
+      return new Date(date).toLocaleDateString(locale.value, {
         weekday: 'long',
         year: 'numeric',
         month: 'long',
@@ -287,7 +287,7 @@ El Artista recibirá como pago por su presentación la cantidad de [Monto] euros
     };
 
     const formatTime = (time) => {
-      return new Date(`2000-01-01T${time}`).toLocaleTimeString('es-ES', {
+      return new Date(`2000-01-01T${time}`).toLocaleTimeString(locale.value, {
         hour: '2-digit',
         minute: '2-digit'
       });
