@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "server": "json-server --watch server/db.json --port 3000"
   },
   "dependencies": {
     "@primevue/themes": "^4.3.4",
@@ -15,10 +16,12 @@
     "primeicons": "^7.0.0",
     "primevue": "^4.3.3",
     "vue": "^3.5.13",
-    "vue-i18n": "^11.1.3"
+    "vue-i18n": "^11.1.3",
+    "vue-router": "^4.5.1"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.3",
+    "json-server": "^0.17.0",
     "vite": "^6.3.5"
   }
 }
