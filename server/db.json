@@ -6,9 +6,22 @@
       "password": "1234",
       "role": "musico",
       "id": 1
+    },
+    {
+      "name": "Oscar Antayhua",
+      "email": "123@gmail.com",
+      "password": "1234",
+      "role": "musico",
+      "id": 2
+    },
+    {
+      "id": 1,
+      "email": "musico@test.com",
+      "password": "123456",
+      "name": "Mario Torres",
+      "role": "musico"
     }
-  ]
-
+  ],
   "riders": [
     {
       "id": 1,
@@ -67,7 +80,7 @@
     {
       "id": 1,
       "riderId": 1,
-      "status": "pending",
+      "status": "accepted",
       "comments": [
         {
           "id": 1,
@@ -153,21 +166,57 @@
       "name": "DNI",
       "required": true,
       "maxSize": 5000000,
-      "allowedFormats": ["pdf", "jpg", "png"]
+      "allowedFormats": [
+        "pdf",
+        "jpg",
+        "png"
+      ]
     },
     {
       "id": "license",
       "name": "Licencia de conducir",
       "required": true,
       "maxSize": 5000000,
-      "allowedFormats": ["pdf", "jpg", "png"]
+      "allowedFormats": [
+        "pdf",
+        "jpg",
+        "png"
+      ]
     },
     {
       "id": "criminal_record",
       "name": "Antecedentes penales",
       "required": true,
       "maxSize": 5000000,
-      "allowedFormats": ["pdf"]
+      "allowedFormats": [
+        "pdf"
+      ]
+    }
+  ],
+  "events": [
+    {
+      "id": 1,
+      "name": "Rock Night Fest",
+      "date": "2024-11-24",
+      "location": "Downtown Arena, NY",
+      "imageUrl": "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80",
+      "status": "pending"
+    },
+    {
+      "id": 2,
+      "name": "Jazz Under Stars",
+      "date": "2024-12-02",
+      "location": "Central Park, NY",
+      "imageUrl": "https://images.unsplash.com/photo-1415201364774-f6f0bb35f28f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80",
+      "status": "pending"
+    },
+    {
+      "id": 3,
+      "name": "Electro Beats Fest",
+      "date": "2024-12-10",
+      "location": "Pier 17, NY",
+      "imageUrl": "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80",
+      "status": "pending"
     }
   ]
 }
