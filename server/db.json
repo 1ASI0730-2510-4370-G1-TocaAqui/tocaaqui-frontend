@@ -1,0 +1,11 @@
+{
+  "users": [
+    {
+      "name": "Celeste",
+      "email": "dicabrerabuitron@gmail.com",
+      "password": "1234",
+      "role": "musico",
+      "id": 1
+    }
+  ]
+}
