@@ -58,5 +58,80 @@
                 }
             }
         }
+    },
+    "login": {
+        "title": "Iniciar Sesión",
+        "email": "Correo electrónico",
+        "password": "Contraseña",
+        "submit": "Ingresar",
+        "error": "Credenciales inválidas"
+    },
+    "dashboard": {
+        "welcome": "Bienvenido {name}",
+        "stats": {
+            "nextEvents": {
+                "title": "Próximos Eventos",
+                "empty": "No hay eventos próximos"
+            },
+            "pendingPayments": {
+                "title": "Pagos Pendientes",
+                "empty": "No hay pagos pendientes"
+            },
+            "rating": {
+                "title": "Calificación",
+                "empty": "Sin calificaciones"
+            },
+            "bookings": {
+                "title": "Reservas",
+                "empty": "No hay reservas"
+            }
+        },
+        "sections": {
+            "upcomingEvents": {
+                "title": "Próximos Eventos",
+                "empty": "No tienes eventos próximos"
+            },
+            "recentActivity": {
+                "title": "Actividad Reciente",
+                "empty": "No hay actividad reciente"
+            }
+        }
+    },
+    "eventApplications": {
+        "title": "Solicitudes de Eventos",
+        "searchPlaceholder": "Buscar por nombre o lugar",
+        "allStatuses": "Todos los estados",
+        "pending": "Pendiente",
+        "accepted": "Aceptado",
+        "rejected": "Rechazado",
+        "noApplications": "No hay solicitudes disponibles",
+        "status": {
+            "pending": "Pendiente",
+            "accepted": "Aceptado",
+            "rejected": "Rechazado"
+        },
+        "venue": "Lugar",
+        "payment": "Pago",
+        "apply": "Postular"
+    },
+    "applicationDetail": {
+        "back": "Volver a solicitudes",
+        "errorLoading": "Error al cargar los detalles de la solicitud",
+        "eventDetails": "Detalles del Evento",
+        "requirements": "Requisitos",
+        "description": "Descripción",
+        "venue": "Lugar",
+        "payment": "Pago",
+        "duration": "Duración",
+        "hours": "horas",
+        "genre": "Género musical",
+        "equipment": "Equipamiento",
+        "accept": "Aceptar solicitud",
+        "reject": "Rechazar solicitud",
+        "status": {
+            "pending": "Pendiente",
+            "accepted": "Aceptado",
+            "rejected": "Rechazado"
+        }
     }
 } 

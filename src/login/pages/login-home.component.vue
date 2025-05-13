@@ -4,6 +4,7 @@ import { useToast } from 'primevue/usetoast';
 import { LoginEntity, RegisterEntity } from "../model/login.entity.js";
 import LoginService from "../services/login.service.js";
 import { Button as PvButton } from "primevue";
+import { useRouter } from 'vue-router';
 
 export default {
   name: "login-home",
@@ -14,12 +15,14 @@ export default {
     const password = ref('');
     const selectedRole = ref(null);
     const toast = useToast();
+    const router = useRouter();
 
     const handleLogin = async () => {
       const loginEntity = new LoginEntity(name.value, email.value, password.value, selectedRole.value);
       try {
         const user = await LoginService.login(loginEntity);
         toast.add({ severity: 'success', summary: 'Éxito', detail: `Bienvenid@, ${user.name}`, life: 3000 });
+        router.push('/dashboard');
       } catch (error) {
         toast.add({ severity: 'error', summary: 'Error', detail: error, life: 3000 });
       }
@@ -35,6 +38,7 @@ export default {
       try {
         const response = await LoginService.register(registerEntity);
         toast.add({ severity: 'success', summary: 'Éxito', detail: 'Registro exitoso', life: 3000 });
+        await handleLogin();
       } catch (error) {
         toast.add({ severity: 'error', summary: 'Error', detail: error, life: 3000 });
       }

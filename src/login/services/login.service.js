@@ -13,6 +13,9 @@ class LoginService {
                 throw new Error('Credenciales incorrectas');
             }
 
+            // Guardar el usuario en localStorage
+            localStorage.setItem('user', JSON.stringify(user));
+
             return user; // Devuelve el usuario encontrado
         } catch (error) {
             throw error.response?.data || error.message;
@@ -21,7 +24,6 @@ class LoginService {
 
     async register(registerEntity) {
         try {
-
             const existingUser = await httpInstance.get('/users', {
                 params: { email: registerEntity.email }
             });
@@ -41,6 +43,10 @@ class LoginService {
         } catch (error) {
             throw error.response?.data || error.message;
         }
+    }
+
+    logout() {
+        localStorage.removeItem('user');
     }
 }
 
