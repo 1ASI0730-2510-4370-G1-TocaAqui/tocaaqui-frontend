@@ -18,7 +18,8 @@
         "mainMenu": "Main Menu",
         "close": "Close",
         "toggleMenu": "Toggle menu",
-        "userProfile": "User profile"
+        "userProfile": "User profile",
+        "logout": "Logout"
     },
     "menu": {
         "dashboard": "Dashboard",
@@ -109,6 +110,7 @@
         "viewApplication": "View application"
     },
     "applicationDetail": {
+        "title": "Application Detail",
         "back": "Back to applications",
         "errorLoading": "Error loading application details",
         "eventDetails": "Event Details",

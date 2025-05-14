@@ -117,6 +117,7 @@
         "viewApplication": "Ver postulación"
     },
     "applicationDetail": {
+        "title": "Detalle de la Postulación",
         "back": "Volver a solicitudes",
         "errorLoading": "Error al cargar los detalles de la solicitud",
         "eventDetails": "Detalles del Evento",
