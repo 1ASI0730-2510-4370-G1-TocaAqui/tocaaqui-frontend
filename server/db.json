@@ -242,5 +242,25 @@
       "adminName": "Mike Wilson",
       "adminContact": "+1 234-567-8902"
     }
+  ],
+  "event_applicants": [
+    {
+      "id": 1,
+      "userId": 1,
+      "eventId": 1,
+      "status": "pending",
+      "applicationDate": "2024-03-20T10:00:00Z",
+      "contractSigned": false,
+      "riderUploaded": false
+    },
+    {
+      "id": 2,
+      "userId": 1,
+      "eventId": 2,
+      "status": "accepted",
+      "applicationDate": "2024-03-19T15:00:00Z",
+      "contractSigned": true,
+      "riderUploaded": true
+    }
   ]
 }
