@@ -205,5 +205,45 @@
         "pending": "Pendiente"
       }
     }
+  },
+  "ticket": {
+    "management": "Gestión de Entradas",
+    "create": "Crear Entrada",
+    "edit": "Editar Entrada",
+    "delete": "Eliminar Entrada",
+    "confirmDelete": "¿Está seguro que desea eliminar esta entrada?",
+    "noTickets": "No hay entradas creadas",
+    "event": "Evento",
+    "selectEvent": "Seleccione un evento",
+    "type": "Tipo de Entrada",
+    "typePlaceholder": "Ej: General, VIP, Backstage",
+    "price": "Precio",
+    "validUntil": "Válido hasta",
+    "status": "Estado",
+    "statusActive": "Activo",
+    "statusUsed": "Usado",
+    "statusCancelled": "Cancelado",
+    "code": "Código",
+    "qrCode": "Código QR",
+    "generated": "Generado automáticamente",
+    "notGenerated": "No generado",
+    "creation": "Creación de entradas",
+    "statistics": "Estadísticas de Promoción",
+    "viewStats": "Ver estadísticas",
+    "share": "Compartir",
+    "shareOn": "Compartir en redes",
+    "stats": {
+      "clicks": "Clics en el enlace",
+      "uniqueVisits": "Visitas únicas",
+      "confirmations": "Confirmaciones de asistencia",
+      "issued": "Entradas emitidas",
+      "scanned": "Entradas escaneadas"
+    },
+    "platforms": {
+      "facebook": "Facebook",
+      "instagram": "Instagram",
+      "twitter": "Twitter/X",
+      "whatsapp": "WhatsApp"
+    }
   }
 }

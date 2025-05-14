@@ -207,7 +207,6 @@
       ]
     }
   ],
-  
   "event_applicants": [
     {
       "id": 1,
@@ -228,76 +227,110 @@
       "riderUploaded": true
     }
   ],
-
+  "tickets": [
+    {
+      "id": 1,
+      "eventId": 1,
+      "eventName": "Rock Night Fest",
+      "type": "Tipado",
+      "price": 1.1,
+      "code": "RNF-GEN-928374",
+      "validUntil": "2024-11-24",
+      "createdAt": "2024-03-15T10:00:00Z",
+      "updatedAt": "2025-05-14T20:46:45.135Z",
+      "qrGenerated": true,
+      "status": "used",
+      "promoterId": 4,
+      "shareStats": {
+        "clicks": 0,
+        "uniqueVisits": 0,
+        "attendanceConfirmations": 0,
+        "ticketsIssued": 0,
+        "ticketsScanned": 0
+      },
+      "platforms": []
+    }
+  ],
+  "ticket_stats": [
+    {
+      "id": 1,
+      "ticketId": 1,
+      "clicks": 567,
+      "uniqueVisits": 432,
+      "attendanceConfirmations": 213,
+      "ticketsIssued": 200,
+      "ticketsScanned": 104
+    }
+  ],
   "events": [
-  {
-    "id": 1,
-    "promoterId": 4,
-    "name": "Rock Night Fest",
-    "date": "2024-11-24",
-    "time": "20:00",
-    "location": "Downtown Arena, NY",
-    "imageUrl": "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80",
-    "status": "published",
-    "publishDate": "2024-10-24",
-    "soundcheckDate": "2024-11-24",
-    "soundcheckTime": "14:00",
-    "capacity": 5000,
-    "availableTickets": 3000,
-    "adminName": "John Smith",
-    "adminContact": "+1 234-567-8900",
-    "requirements": "Banda de rock con experiencia",
-    "description": "Festival de rock con bandas locales e internacionales",
-    "payment": "$1000",
-    "duration": 2,
-    "genre": "Rock",
-    "equipment": "Batería, amplificadores, micrófonos"
-  },
-  {
-    "id": 2,
-    "promoterId": 4,
-    "name": "Jazz Under Stars",
-    "date": "2024-12-02",
-    "time": "19:30",
-    "location": "Central Park, NY",
-    "imageUrl": "https://images.unsplash.com/photo-1415201364774-f6f0bb35f28f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80",
-    "status": "published",
-    "publishDate": "2024-11-02",
-    "soundcheckDate": "2024-12-02",
-    "soundcheckTime": "15:00",
-    "capacity": 3000,
-    "availableTickets": 2000,
-    "adminName": "Sarah Johnson",
-    "adminContact": "+1 234-567-8901",
-    "requirements": "Músicos de jazz con experiencia",
-    "description": "Noche de jazz bajo las estrellas en Central Park",
-    "payment": "$800",
-    "duration": 3,
-    "genre": "Jazz",
-    "equipment": "Piano, contrabajo, batería"
-  },
-  {
-    "id": 3,
-    "promoterId": 4,
-    "name": "Electro Beats Fest",
-    "date": "2024-12-10",
-    "time": "22:00",
-    "location": "Pier 17, NY",
-    "imageUrl": "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80",
-    "status": "published",
-    "publishDate": "2024-11-10",
-    "soundcheckDate": "2024-12-10",
-    "soundcheckTime": "16:00",
-    "capacity": 4000,
-    "availableTickets": 2500,
-    "adminName": "Mike Wilson",
-    "adminContact": "+1 234-567-8902",
-    "requirements": "DJs con experiencia en música electrónica",
-    "description": "Festival de música electrónica en el muelle",
-    "payment": "$1200",
-    "duration": 4,
-    "genre": "Electrónica",
-    "equipment": "Equipo de DJ, luces, efectos"
-  }
-]
+    {
+      "id": 1,
+      "promoterId": 4,
+      "name": "Rock Night Fest",
+      "date": "2024-11-24",
+      "time": "20:00",
+      "location": "Downtown Arena, NY",
+      "imageUrl": "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80",
+      "status": "published",
+      "publishDate": "2024-10-24",
+      "soundcheckDate": "2024-11-24",
+      "soundcheckTime": "14:00",
+      "capacity": 5000,
+      "availableTickets": 3000,
+      "adminName": "John Smith",
+      "adminContact": "+1 234-567-8900",
+      "requirements": "Banda de rock con experiencia",
+      "description": "Festival de rock con bandas locales e internacionales",
+      "payment": "$1000",
+      "duration": 2,
+      "genre": "Rock",
+      "equipment": "Batería, amplificadores, micrófonos"
+    },
+    {
+      "id": 2,
+      "promoterId": 4,
+      "name": "Jazz Under Stars",
+      "date": "2024-12-02",
+      "time": "19:30",
+      "location": "Central Park, NY",
+      "imageUrl": "https://images.unsplash.com/photo-1415201364774-f6f0bb35f28f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80",
+      "status": "published",
+      "publishDate": "2024-11-02",
+      "soundcheckDate": "2024-12-02",
+      "soundcheckTime": "15:00",
+      "capacity": 3000,
+      "availableTickets": 2000,
+      "adminName": "Sarah Johnson",
+      "adminContact": "+1 234-567-8901",
+      "requirements": "Músicos de jazz con experiencia",
+      "description": "Noche de jazz bajo las estrellas en Central Park",
+      "payment": "$800",
+      "duration": 3,
+      "genre": "Jazz",
+      "equipment": "Piano, contrabajo, batería"
+    },
+    {
+      "id": 3,
+      "promoterId": 4,
+      "name": "Electro Beats Fest",
+      "date": "2024-12-10",
+      "time": "22:00",
+      "location": "Pier 17, NY",
+      "imageUrl": "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80",
+      "status": "published",
+      "publishDate": "2024-11-10",
+      "soundcheckDate": "2024-12-10",
+      "soundcheckTime": "16:00",
+      "capacity": 4000,
+      "availableTickets": 2500,
+      "adminName": "Mike Wilson",
+      "adminContact": "+1 234-567-8902",
+      "requirements": "DJs con experiencia en música electrónica",
+      "description": "Festival de música electrónica en el muelle",
+      "payment": "$1200",
+      "duration": 4,
+      "genre": "Electrónica",
+      "equipment": "Equipo de DJ, luces, efectos"
+    }
+  ]
 }

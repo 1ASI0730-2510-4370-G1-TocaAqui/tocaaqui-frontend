@@ -40,6 +40,12 @@ const routes = [
       ),
     meta: { requiresAuth: true },
   },
+   {
+        path: '/entrada/producer',
+        name: 'TicketProducer',
+        component: () => import('../ticket/pages/ticket-producer.component.vue'),
+        meta: { requiresAuth: true }
+    },
 ];
 
 const router = createRouter({

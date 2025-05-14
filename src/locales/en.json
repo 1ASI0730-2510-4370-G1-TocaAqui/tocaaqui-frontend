@@ -198,5 +198,47 @@
         "pending": "Pending"
       }
     }
+  },
+  
+  "ticket": {
+    "management": "Ticket Management",
+    "create": "Create Ticket",
+    "edit": "Edit Ticket",
+    "delete": "Delete Ticket",
+    "confirmDelete": "Are you sure you want to delete this ticket?",
+    "noTickets": "No tickets created",
+    "event": "Event",
+    "selectEvent": "Select an event",
+    "type": "Ticket Type",
+    "typePlaceholder": "Ex: General, VIP, Backstage",
+    "price": "Price",
+    "validUntil": "Valid Until",
+    "status": "Status",
+    "statusActive": "Active",
+    "statusUsed": "Used",
+    "statusCancelled": "Cancelled",
+    "code": "Code",
+    "qrCode": "QR Code",
+    "generated": "Automatically generated",
+    "notGenerated": "Not generated",
+    "creation": "Ticket Creation",
+    "statistics": "Promotion Statistics",
+    "viewStats": "View statistics",
+    "share": "Share",
+    "shareOn": "Share on social media",
+    "stats": {
+      "clicks": "Link clicks",
+      "uniqueVisits": "Unique visits",
+      "confirmations": "Attendance confirmations",
+      "issued": "Tickets issued",
+      "scanned": "Tickets scanned"
+    },
+    "platforms": {
+      "facebook": "Facebook",
+      "instagram": "Instagram",
+      "twitter": "Twitter/X",
+      "whatsapp": "WhatsApp"
+    }
   }
+
 }
