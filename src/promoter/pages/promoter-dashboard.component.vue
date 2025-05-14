@@ -130,12 +130,7 @@ const getMonthDay = (dateString) => {
 
 <template>
   <div class="promoter-dashboard">
-    <div class="header">
-      <div class="header-content">
-        <h1>{{ t('dashboard.welcome', { name: 'Promotor' }) }}</h1>
-      </div>
-    </div>
-
+    
     <div class="dashboard-content">
       <!-- Filtros -->
       <pv-card class="filter-card mb-4">
@@ -164,7 +159,8 @@ const getMonthDay = (dateString) => {
                 <pv-input-text 
                   id="location" 
                   v-model="filters.location" 
-                  placeholder="Buscar por ubicación"
+                  :placeholder="t('eventApplications.locationPlaceholder')"
+                 
                   class="w-full" 
                 />
               </div>
@@ -174,6 +170,7 @@ const getMonthDay = (dateString) => {
                 <label for="status">{{ t('common.status') }}</label>
                 <pv-dropdown 
                   id="status" 
+                   :placeholder="t('eventApplications.statePlaceholder')"
                   v-model="filters.status" 
                   :options="statusOptions" 
                   optionLabel="label" 
@@ -241,20 +238,7 @@ const getMonthDay = (dateString) => {
   background-color: var(--surface-ground);
 }
 
-.header {
-  background-color: var(--surface-card);
-  padding: 1.5rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  margin-bottom: 2rem;
-}
 
-.header-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
 
 .dashboard-content {
   max-width: 1200px;

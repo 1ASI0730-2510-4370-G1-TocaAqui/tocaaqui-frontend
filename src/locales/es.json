@@ -19,7 +19,8 @@
     "close": "Cerrar",
     "toggleMenu": "Alternar menú",
     "userProfile": "Perfil de usuario",
-    "logout": "Cerrar Sesión"
+    "logout": "Cerrar Sesión",
+    "status": "Estado"
   },
   "menu": {
     "dashboard": "Dashboard",
@@ -101,6 +102,8 @@
   "eventApplications": {
     "title": "Solicitudes de Eventos",
     "searchPlaceholder": "Buscar por nombre o lugar",
+    "locationPlaceholder": "Buscar por lugar",
+    "statePlaceholder": " Buscar por estado",
     "allStatuses": "Todos los estados",
     "pending": "Pendiente",
     "accepted": "Aceptado",
