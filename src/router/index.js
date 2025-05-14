@@ -27,6 +27,12 @@ const routes = [
         name: 'EventApplicationDetail',
         component: () => import('../event-application/pages/event-application-detail.component.vue'),
         meta: { requiresAuth: true }
+    },
+    {
+        path:  '/payments',
+        name: 'Payments',
+        component: () => import('../payments/component/artistpayments.vue'),
+        meta: { requiresAuth: true }
     }
 ];
 
