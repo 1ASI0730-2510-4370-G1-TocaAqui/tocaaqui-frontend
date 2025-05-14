@@ -2,8 +2,8 @@
 // @author [Tu nombre]
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref, onMounted, onUnmounted, computed } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import Sidebar from './shared/components/Sidebar.vue';
 import ThemeToggle from './shared/components/ThemeToggle.vue';
@@ -11,12 +11,34 @@ import LanguageToggle from './shared/components/LanguageToggle.vue';
 import { LoginService } from './login/services/login.service';
 
 const router = useRouter();
+const route = useRoute();
 const { t } = useI18n();
 const isAuthenticated = ref(false);
 const userName = ref('');
 const isUserMenuVisible = ref(false);
 const isSidebarVisible = ref(false);
 const loginService = new LoginService();
+
+// Título dinámico basado en la ruta actual
+const currentTitle = computed(() => {
+  const routeTitles = {
+    '/': t('menu.dashboard'),
+    '/dashboard': t('menu.dashboard'),
+    '/applications': t('menu.applications'),
+    '/profile': t('menu.profile'),
+    '/search': t('menu.search'),
+    '/agenda': t('menu.agenda'),
+    '/evaluations': t('menu.evaluations'),
+    '/payments': t('menu.payments')
+  };
+  
+  // Si es una ruta de detalle de aplicación
+  if (route.path.startsWith('/applications/')) {
+    return t('applicationDetail.title');
+  }
+  
+  return routeTitles[route.path] || t('menu.dashboard');
+});
 
 const toggleSidebar = () => {
   isSidebarVisible.value = !isSidebarVisible.value;
@@ -104,7 +126,7 @@ onUnmounted(() => {
               >
                 <i class="pi pi-bars"></i>
               </button>
-              <h1 class="text-xl">{{ t('menu.dashboard') }}</h1>
+              <h1 class="text-xl">{{ currentTitle }}</h1>
             </div>
             
             <div class="flex align-items-center gap-3">
