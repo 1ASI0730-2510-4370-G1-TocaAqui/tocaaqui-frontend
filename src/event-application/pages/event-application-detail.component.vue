@@ -20,113 +20,116 @@
     </div>
 
     <div v-else class="application-content">
-      <pv-card>
+      <pv-card class="card-container">
         <template #header>
-          <div class="flex align-items-start justify-content-between mb-3">
-            <div>
-              <h1 class="text-2xl font-bold mb-2">{{ application.eventName }}</h1>
+          <div class="event-header flex align-items-start justify-content-between">
+            <div class="header-content">
+              <h1 class="text-3xl font-bold mb-3">{{ application.name }}</h1>
               <div class="flex align-items-center">
-                <i class="pi pi-calendar mr-2"></i>
-                <span class="text-600">{{ formatDate(application.eventDate) }}</span>
+                <i class="pi pi-calendar mr-2 text-lg"></i>
+                <span class="text-xl">{{ formattedData.date }}</span>
               </div>
             </div>
             <pv-tag
               :value="$t(`applicationDetail.status.${application.status}`)"
               :severity="getStatusSeverity(application.status)"
               size="large"
+              class="ml-4"
             />
           </div>
         </template>
 
         <template #content>
-          <div class="grid">
-            <div class="col-12 md:col-6">
-              <pv-panel header="Detalles del Evento" class="h-full">
-                <div class="flex flex-column gap-3">
-                  <div class="flex align-items-center">
-                    <i class="pi pi-calendar-plus mr-2"></i>
-                    <span class="font-medium">{{ $t('applicationDetail.publishDate') }}:</span>
-                    <span class="ml-2">{{ formatDate(application.publishDate) }}</span>
+          <div class="content-container">
+            <div class="grid">
+              <div class="col-12 md:col-6">
+                <pv-panel header="Detalles del Evento" class="h-full">
+                  <div class="flex flex-column gap-3">
+                    <div class="flex align-items-center">
+                      <i class="pi pi-calendar-plus mr-2"></i>
+                      <span class="font-medium">{{ $t('applicationDetail.publishDate') }}:</span>
+                      <span class="ml-2">{{ formattedData.publishDate }}</span>
+                    </div>
+                    <div class="flex align-items-center">
+                      <i class="pi pi-calendar mr-2"></i>
+                      <span class="font-medium">{{ $t('applicationDetail.eventDate') }}:</span>
+                      <span class="ml-2">{{ formattedData.date }}</span>
+                    </div>
+                    <div class="flex align-items-center">
+                      <i class="pi pi-clock mr-2"></i>
+                      <span class="font-medium">{{ $t('applicationDetail.eventTime') }}:</span>
+                      <span class="ml-2">{{ formattedData.time }}</span>
+                    </div>
+                    <div class="flex align-items-center">
+                      <i class="pi pi-map-marker mr-2"></i>
+                      <span class="font-medium">{{ $t('applicationDetail.location') }}:</span>
+                      <span class="ml-2">{{ application.location }}</span>
+                    </div>
                   </div>
-                  <div class="flex align-items-center">
-                    <i class="pi pi-calendar mr-2"></i>
-                    <span class="font-medium">{{ $t('applicationDetail.eventDate') }}:</span>
-                    <span class="ml-2">{{ formatDate(application.eventDate) }}</span>
+                </pv-panel>
+              </div>
+
+              <div class="col-12 md:col-6">
+                <pv-panel header="Detalles Técnicos" class="h-full">
+                  <div class="flex flex-column gap-3">
+                    <div class="flex align-items-center">
+                      <i class="pi pi-volume-up mr-2"></i>
+                      <span class="font-medium">{{ $t('applicationDetail.soundcheckDate') }}:</span>
+                      <span class="ml-2">{{ formattedData.soundcheckDate }}</span>
+                    </div>
+                    <div class="flex align-items-center">
+                      <i class="pi pi-clock mr-2"></i>
+                      <span class="font-medium">{{ $t('applicationDetail.soundcheckTime') }}:</span>
+                      <span class="ml-2">{{ formattedData.soundcheckTime }}</span>
+                    </div>
+                    <div class="flex align-items-center">
+                      <i class="pi pi-users mr-2"></i>
+                      <span class="font-medium">{{ $t('applicationDetail.venueCapacity') }}:</span>
+                      <span class="ml-2">{{ application.capacity }} personas</span>
+                    </div>
+                    <div class="flex align-items-center">
+                      <i class="pi pi-ticket mr-2"></i>
+                      <span class="font-medium">{{ $t('applicationDetail.availableTickets') }}:</span>
+                      <span class="ml-2">{{ application.availableTickets }}</span>
+                    </div>
                   </div>
-                  <div class="flex align-items-center">
-                    <i class="pi pi-clock mr-2"></i>
-                    <span class="font-medium">{{ $t('applicationDetail.eventTime') }}:</span>
-                    <span class="ml-2">{{ formatTime(application.eventTime) }}</span>
+                </pv-panel>
+              </div>
+
+              <div class="col-12">
+                <pv-panel header="Información de Contacto">
+                  <div class="flex flex-column gap-3">
+                    <div class="flex align-items-center">
+                      <i class="pi pi-user mr-2"></i>
+                      <span class="font-medium">Administrador:</span>
+                      <span class="ml-2">{{ application.adminName }}</span>
+                    </div>
+                    <div class="flex align-items-center">
+                      <i class="pi pi-phone mr-2"></i>
+                      <span class="font-medium">Contacto:</span>
+                      <span class="ml-2">{{ application.adminContact }}</span>
+                    </div>
                   </div>
-                  <div class="flex align-items-center">
-                    <i class="pi pi-map-marker mr-2"></i>
-                    <span class="font-medium">{{ $t('applicationDetail.location') }}:</span>
-                    <span class="ml-2">{{ application.location }}</span>
-                  </div>
-                </div>
-              </pv-panel>
+                </pv-panel>
+              </div>
             </div>
 
-            <div class="col-12 md:col-6">
-              <pv-panel header="Detalles Técnicos" class="h-full">
-                <div class="flex flex-column gap-3">
-                  <div class="flex align-items-center">
-                    <i class="pi pi-volume-up mr-2"></i>
-                    <span class="font-medium">{{ $t('applicationDetail.soundcheckDate') }}:</span>
-                    <span class="ml-2">{{ formatDate(application.soundcheckDate) }}</span>
-                  </div>
-                  <div class="flex align-items-center">
-                    <i class="pi pi-clock mr-2"></i>
-                    <span class="font-medium">{{ $t('applicationDetail.soundcheckTime') }}:</span>
-                    <span class="ml-2">{{ formatTime(application.soundcheckTime) }}</span>
-                  </div>
-                  <div class="flex align-items-center">
-                    <i class="pi pi-users mr-2"></i>
-                    <span class="font-medium">{{ $t('applicationDetail.venueCapacity') }}:</span>
-                    <span class="ml-2">{{ application.capacity }} personas</span>
-                  </div>
-                  <div class="flex align-items-center">
-                    <i class="pi pi-ticket mr-2"></i>
-                    <span class="font-medium">{{ $t('applicationDetail.availableTickets') }}:</span>
-                    <span class="ml-2">{{ application.availableTickets }}</span>
-                  </div>
-                </div>
-              </pv-panel>
+            <div class="flex gap-3 justify-content-center mt-4">
+              <pv-button
+                v-if="!hasSignedContract"
+                @click="showContractDialog = true"
+                icon="pi pi-file-pdf"
+                label="Ver Contrato"
+                severity="info"
+              />
+              <pv-button
+                v-if="hasSignedContract && !hasUploadedRider"
+                @click="showRiderDialog = true"
+                icon="pi pi-upload"
+                label="Subir Rider Técnico"
+                severity="success"
+              />
             </div>
-
-            <div class="col-12">
-              <pv-panel header="Información de Contacto">
-                <div class="flex flex-column gap-3">
-                  <div class="flex align-items-center">
-                    <i class="pi pi-user mr-2"></i>
-                    <span class="font-medium">Administrador:</span>
-                    <span class="ml-2">{{ application.adminName }}</span>
-                  </div>
-                  <div class="flex align-items-center">
-                    <i class="pi pi-phone mr-2"></i>
-                    <span class="font-medium">Contacto:</span>
-                    <span class="ml-2">{{ application.adminContact }}</span>
-                  </div>
-                </div>
-              </pv-panel>
-            </div>
-          </div>
-
-          <div class="flex gap-3 justify-content-center mt-4">
-            <pv-button
-              v-if="!hasSignedContract"
-              @click="showContractDialog = true"
-              icon="pi pi-file-pdf"
-              label="Ver Contrato"
-              severity="info"
-            />
-            <pv-button
-              v-if="hasSignedContract && !hasUploadedRider"
-              @click="showRiderDialog = true"
-              icon="pi pi-upload"
-              label="Subir Rider Técnico"
-              severity="success"
-            />
           </div>
         </template>
       </pv-card>
@@ -203,17 +206,38 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
-import axios from 'axios';
+import { EventApplicationService } from '../services/event-application.service';
+import Panel from 'primevue/panel';
+import Card from 'primevue/card';
+import Button from 'primevue/button';
+import Dialog from 'primevue/dialog';
+import FileUpload from 'primevue/fileupload';
+import Tag from 'primevue/tag';
+import Message from 'primevue/message';
+import ProgressSpinner from 'primevue/progressspinner';
+import Toolbar from 'primevue/toolbar';
 
 export default {
   name: 'EventApplicationDetail',
+  components: {
+    'pv-panel': Panel,
+    'pv-card': Card,
+    'pv-button': Button,
+    'pv-dialog': Dialog,
+    'pv-file-upload': FileUpload,
+    'pv-tag': Tag,
+    'pv-message': Message,
+    'pv-progress-spinner': ProgressSpinner,
+    'pv-toolbar': Toolbar
+  },
   setup() {
     const route = useRoute();
     const router = useRouter();
     const { t, locale } = useI18n();
+    const eventApplicationService = new EventApplicationService();
 
     const application = ref(null);
     const loading = ref(true);
@@ -224,24 +248,55 @@ export default {
     const artistSignature = ref('');
     const hasSignedContract = ref(false);
     const hasUploadedRider = ref(false);
-    const contractText = ref(`CONTRATO DE PRESENTACIÓN ARTÍSTICA
 
-Este contrato se celebra entre [Nombre del Venue] y el artista, en adelante denominado "el Artista".
+    const formatDate = (date) => {
+      if (!date) return '';
+      return new Date(date).toLocaleDateString(locale.value, {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+    };
+
+    const formatTime = (time) => {
+      if (!time) return '';
+      return new Date(`2000-01-01T${time}`).toLocaleTimeString(locale.value, {
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    };
+
+    const formattedData = computed(() => {
+      if (!application.value) return {};
+      return {
+        date: formatDate(application.value.date),
+        time: formatTime(application.value.time),
+        publishDate: formatDate(application.value.publishDate),
+        soundcheckDate: formatDate(application.value.soundcheckDate),
+        soundcheckTime: formatTime(application.value.soundcheckTime)
+      };
+    });
+
+    const generateContract = (event) => {
+      return `CONTRATO DE PRESENTACIÓN ARTÍSTICA
+
+Este contrato se celebra entre ${event.location} y el artista, en adelante denominado "el Artista".
 
 1. OBJETO DEL CONTRATO
-El Artista se compromete a realizar una presentación musical en vivo en [Nombre del Venue] en la fecha y hora especificadas.
+El Artista se compromete a realizar una presentación musical en vivo en ${event.location} en la fecha y hora especificadas.
 
 2. FECHA Y HORA
-- Fecha del evento: [Fecha]
-- Hora de inicio: [Hora]
-- Duración de la presentación: [Duración]
+- Fecha del evento: ${formattedData.value.date}
+- Hora de inicio: ${formattedData.value.time}
+- Duración de la presentación: 2 horas
 
 3. PRUEBA DE SONIDO
-- Fecha: [Fecha]
-- Hora: [Hora]
+- Fecha: ${formattedData.value.soundcheckDate}
+- Hora: ${formattedData.value.soundcheckTime}
 
 4. REMUNERACIÓN
-El Artista recibirá como pago por su presentación la cantidad de [Monto] euros.
+El Artista recibirá como pago por su presentación la cantidad acordada según el tipo de evento.
 
 5. OBLIGACIONES DEL VENUE
 - Proporcionar equipo de sonido profesional
@@ -256,41 +311,26 @@ El Artista recibirá como pago por su presentación la cantidad de [Monto] euros
 - Mantener conducta profesional
 
 7. CANCELACIÓN
-[Términos de cancelación]
+La cancelación del evento por cualquiera de las partes deberá ser notificada con al menos 48 horas de anticipación.
 
 8. OTROS TÉRMINOS
-[Términos adicionales]
-`);
+Cualquier modificación a este contrato deberá ser acordada por escrito entre ambas partes.`;
+    };
+
+    const contractText = ref('');
 
     const fetchApplicationDetail = async () => {
       try {
         loading.value = true;
-        const response = await axios.get(
-          `${import.meta.env.VITE_API_BASE_URL}/applications/${route.params.id}`
-        );
-        application.value = response.data;
+        const response = await eventApplicationService.getById(route.params.id);
+        application.value = response;
+        contractText.value = generateContract(response);
       } catch (err) {
         error.value = t('applicationDetail.errorLoading');
         console.error('Error fetching application details:', err);
       } finally {
         loading.value = false;
       }
-    };
-
-    const formatDate = (date) => {
-      return new Date(date).toLocaleDateString(locale.value, {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      });
-    };
-
-    const formatTime = (time) => {
-      return new Date(`2000-01-01T${time}`).toLocaleTimeString(locale.value, {
-        hour: '2-digit',
-        minute: '2-digit'
-      });
     };
 
     const formatCurrency = (amount) => {
@@ -311,35 +351,28 @@ El Artista recibirá como pago por su presentación la cantidad de [Monto] euros
 
     const signContract = async () => {
       try {
-        await axios.post(`${import.meta.env.VITE_API_BASE_URL}/applications/${route.params.id}/sign`, {
-          signature: artistSignature.value
-        });
+        updating.value = true;
+        const result = await eventApplicationService.signContract(route.params.id, artistSignature.value);
+        application.value = result.event;
         hasSignedContract.value = true;
         showContractDialog.value = false;
       } catch (error) {
         console.error('Error al firmar el contrato:', error);
+      } finally {
+        updating.value = false;
       }
     };
 
     const onRiderUpload = async (event) => {
       try {
-        const formData = new FormData();
-        formData.append('rider', event.files[0]);
-        
-        await axios.post(
-          `${import.meta.env.VITE_API_BASE_URL}/applications/${route.params.id}/rider`,
-          formData,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            }
-          }
-        );
-        
+        updating.value = true;
+        await eventApplicationService.uploadRider(route.params.id, event.files[0]);
         hasUploadedRider.value = true;
         showRiderDialog.value = false;
       } catch (error) {
         console.error('Error al subir el rider técnico:', error);
+      } finally {
+        updating.value = false;
       }
     };
 
@@ -353,9 +386,7 @@ El Artista recibirá como pago por su presentación la cantidad de [Monto] euros
       error,
       updating,
       router,
-      formatDate,
-      formatTime,
-      formatCurrency,
+      formattedData,
       getStatusSeverity,
       showContractDialog,
       showRiderDialog,
@@ -377,17 +408,63 @@ El Artista recibirá como pago por su presentación la cantidad de [Monto] euros
   margin: 0 auto;
 }
 
+.card-container {
+  overflow: hidden;
+}
+
+.event-header {
+  padding: 1.5rem 1.5rem 1rem 1.5rem;
+  border-bottom: 1px solid var(--surface-200);
+}
+
+.content-container {
+  padding: 1.5rem;
+}
+
+.header-content {
+  padding: 0;
+}
+
+.header-content h1 {
+  color: var(--surface-900);
+  margin-bottom: 0.75rem;
+}
+
+.header-content .pi {
+  color: var(--primary-color);
+}
+
+.header-content span {
+  color: var(--surface-600);
+}
+
+:deep(.p-card) {
+  border-radius: var(--border-radius);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+:deep(.p-card-content) {
+  padding: 0;
+}
+
 :deep(.p-panel) {
   height: 100%;
 }
 
 :deep(.p-panel-content) {
   height: calc(100% - 4rem);
+  padding: 1.25rem;
 }
 
 :deep(.p-toolbar) {
   padding: 1rem;
   border-radius: var(--border-radius);
+  background: transparent;
+}
+
+:deep(.p-tag) {
+  font-size: 0.875rem;
+  padding: 0.4rem 0.8rem;
 }
 
 .contract-text {

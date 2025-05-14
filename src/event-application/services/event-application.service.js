@@ -1,7 +1,7 @@
 // @summary Service for handling event application-related API calls
 // @author [Tu nombre]
 
-import http from "../../shared/services/http-common.js";
+import httpInstance from "../../shared/services/http.instance.js";
 import { EventApplication, Contract, RiderTechnical } from '../model/event-application.model';
 
 export class EventApplicationService {
@@ -12,25 +12,30 @@ export class EventApplicationService {
 
     async getAll() {
         try {
-            const response = await http.get(this.resourceEndpoint);
-            return response.data.map(event => new EventApplication(event));
+            const response = await httpInstance.get(this.resourceEndpoint);
+            return response.data.map(app => new EventApplication(app));
         } catch (error) {
-            throw this.handleError(error);
+            console.error('Error fetching applications:', error);
+            throw error;
         }
     }
 
     async getById(id) {
         try {
-            const response = await http.get(`${this.applicationsEndpoint}/${id}`);
+            const response = await httpInstance.get(`${this.resourceEndpoint}/${id}`);
+            if (!response.data) {
+                throw new Error('No se encontró el evento');
+            }
             return new EventApplication(response.data);
         } catch (error) {
+            console.error('Error fetching application:', error);
             throw this.handleError(error);
         }
     }
 
     async create(eventResource) {
         try {
-            const response = await http.post(this.resourceEndpoint, eventResource);
+            const response = await httpInstance.post(this.resourceEndpoint, eventResource);
             return new EventApplication(response.data);
         } catch (error) {
             throw this.handleError(error);
@@ -39,7 +44,7 @@ export class EventApplicationService {
 
     async update(id, eventResource) {
         try {
-            const response = await http.put(`${this.resourceEndpoint}/${id}`, eventResource);
+            const response = await httpInstance.put(`${this.resourceEndpoint}/${id}`, eventResource);
             return new EventApplication(response.data);
         } catch (error) {
             throw this.handleError(error);
@@ -48,7 +53,7 @@ export class EventApplicationService {
 
     async delete(id) {
         try {
-            return await http.delete(`${this.resourceEndpoint}/${id}`);
+            return await httpInstance.delete(`${this.resourceEndpoint}/${id}`);
         } catch (error) {
             throw this.handleError(error);
         }
@@ -58,9 +63,9 @@ export class EventApplicationService {
         try {
             const formData = new FormData();
             formData.append('rider', riderFile);
-
-            const response = await http.post(
-                `${this.applicationsEndpoint}/${applicationId}/rider`,
+            
+            const response = await httpInstance.post(
+                `/applications/${applicationId}/rider`,
                 formData,
                 {
                     headers: {
@@ -68,20 +73,32 @@ export class EventApplicationService {
                     }
                 }
             );
-            return new RiderTechnical(response.data);
+            return response.data;
         } catch (error) {
-            throw this.handleError(error);
+            console.error('Error uploading rider:', error);
+            throw error;
         }
     }
 
     async signContract(applicationId, signature) {
         try {
-            const response = await http.post(`${this.contractsEndpoint}/${applicationId}/sign`, {
-                signature
+            // Primero firmamos el contrato
+            const signResponse = await httpInstance.post(`${this.applicationsEndpoint}/${applicationId}/sign`, { signature });
+            
+            // Luego actualizamos el estado del evento a accepted
+            const eventResponse = await this.getById(applicationId);
+            const updatedEvent = await this.update(applicationId, {
+                ...eventResponse,
+                status: 'accepted'
             });
-            return new Contract(response.data);
+
+            return {
+                contract: signResponse.data,
+                event: updatedEvent
+            };
         } catch (error) {
-            throw this.handleError(error);
+            console.error('Error signing contract:', error);
+            throw error;
         }
     }
 
@@ -89,7 +106,7 @@ export class EventApplicationService {
         try {
             const [applicationResponse, contractResponse] = await Promise.all([
                 this.getById(applicationId),
-                http.get(`${this.contractsEndpoint}/${applicationId}`)
+                httpInstance.get(`${this.contractsEndpoint}/${applicationId}`)
             ]);
 
             return {

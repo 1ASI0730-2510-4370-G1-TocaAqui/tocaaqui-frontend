@@ -1,14 +1,12 @@
 // @summary Event application entity model
 // @author [Tu nombre]
 
-import { useI18n } from 'vue-i18n';
-
 export class EventApplication {
     constructor({
         id = null,
-        eventName = '',
-        eventDate = '',
-        eventTime = '',
+        name = '',
+        date = '',
+        time = '',
         publishDate = '',
         location = '',
         status = 'pending',
@@ -22,9 +20,9 @@ export class EventApplication {
         documents = []
     } = {}) {
         this.id = id
-        this.eventName = eventName
-        this.eventDate = eventDate
-        this.eventTime = eventTime
+        this.name = name
+        this.date = date
+        this.time = time
         this.publishDate = publishDate
         this.location = location
         this.status = status
@@ -36,24 +34,6 @@ export class EventApplication {
         this.adminContact = adminContact
         this.imageUrl = imageUrl
         this.documents = documents
-    }
-
-    get formattedDate() {
-        const { locale } = useI18n();
-        return new Date(this.eventDate).toLocaleDateString(locale.value, {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        })
-    }
-
-    get formattedTime() {
-        const { locale } = useI18n();
-        return new Date(`2000-01-01T${this.eventTime}`).toLocaleTimeString(locale.value, {
-            hour: '2-digit',
-            minute: '2-digit'
-        })
     }
 }
 

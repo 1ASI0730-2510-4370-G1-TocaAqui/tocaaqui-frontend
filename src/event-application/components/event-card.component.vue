@@ -2,7 +2,7 @@
   <div class="relative">
     <img 
       :src="event.imageUrl || '/default-event.jpg'" 
-      :alt="event.eventName"
+      :alt="event.name"
       class="w-full h-15rem border-round-top-xl"
       style="object-fit: cover;"
     />
@@ -16,11 +16,11 @@
   </div>
   
   <div class="p-4">
-    <h2 class="text-xl font-bold mb-2 text-900">{{ event.eventName }}</h2>
+    <h2 class="text-xl font-bold mb-2 text-900">{{ event.name }}</h2>
     
     <div class="flex align-items-center mb-2">
       <i class="pi pi-calendar mr-2 text-500"></i>
-      <span class="text-600">{{ formatDate(event.eventDate) }}</span>
+      <span class="text-600">{{ formattedDate }}</span>
     </div>
     
     <div class="flex align-items-center mb-3">
@@ -39,6 +39,7 @@
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
+import { computed } from 'vue';
 import type { EventApplication } from '../model/event-application.model';
 
 const { t, locale } = useI18n();
@@ -51,13 +52,15 @@ const emit = defineEmits<{
   (e: 'view-detail', id: string): void
 }>();
 
-const formatDate = (date: string) => {
-  return new Date(date).toLocaleDateString(locale.value, {
+const formattedDate = computed(() => {
+  if (!props.event.date) return '';
+  return new Date(props.event.date).toLocaleDateString(locale.value, {
     weekday: 'long',
-    day: 'numeric',
-    month: 'long'
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
   });
-};
+});
 
 const getStatusSeverity = (status: string) => {
   const severities = {

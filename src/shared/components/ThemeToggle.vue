@@ -1,30 +1,24 @@
-<script>
-export default {
-  name: 'theme-toggle',
-  data() {
-    return {
-      isDarkMode: false
-    }
-  },
-  mounted() {
-    // Recuperar la preferencia guardada o usar la preferencia del sistema
-    const savedTheme = localStorage.getItem('theme')
-    this.isDarkMode = savedTheme === 'dark' || 
-      (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)
-    
-    // Aplicar tema inicial
-    if (this.isDarkMode) {
-      document.documentElement.classList.add('app-dark')
-    }
-  },
-  methods: {
-    toggleTheme() {
-      this.isDarkMode = !this.isDarkMode
-      document.documentElement.classList.toggle('app-dark')
-      localStorage.setItem('theme', this.isDarkMode ? 'dark' : 'light')
-    }
+<script setup>
+import { ref, onMounted } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
+const isDarkMode = ref(false);
+
+const toggleTheme = () => {
+  isDarkMode.value = !isDarkMode.value;
+  document.documentElement.classList.toggle('my-app-dark');
+  localStorage.setItem('theme', isDarkMode.value ? 'dark' : 'light');
+};
+
+onMounted(() => {
+  // Recuperar la preferencia del tema del localStorage
+  const savedTheme = localStorage.getItem('theme');
+  isDarkMode.value = savedTheme === 'dark';
+  if (isDarkMode.value) {
+    document.documentElement.classList.add('my-app-dark');
   }
-}
+});
 </script>
 
 <template>
@@ -34,14 +28,15 @@ export default {
     text
     rounded
     @click="toggleTheme"
-    :aria-label="isDarkMode ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'"
-    class="theme-toggle"
+    :aria-label="t(isDarkMode ? 'common.lightMode' : 'common.darkMode')"
   />
 </template>
 
-<style scoped>
-.theme-toggle {
-  font-family: 'Archivo', sans-serif;
+<style>
+:root {
+  &.dark {
+    color-scheme: dark;
+  }
 }
 
 :deep(.p-button) {

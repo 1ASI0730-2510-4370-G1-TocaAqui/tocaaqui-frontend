@@ -1,64 +1,50 @@
-<script>
+<script setup>
 import { ref } from 'vue';
 import { useToast } from 'primevue/usetoast';
 import { LoginEntity, RegisterEntity } from "../model/login.entity.js";
-import LoginService from "../services/login.service.js";
-import { Button as PvButton } from "primevue";
+import { LoginService } from "../services/login.service.js";
 import { useRouter } from 'vue-router';
 
-export default {
-  name: "login-home",
-  components: { PvButton },
-  setup() {
-    const name = ref('');
-    const email = ref('');
-    const password = ref('');
-    const selectedRole = ref(null);
-    const toast = useToast();
-    const router = useRouter();
+const name = ref('');
+const email = ref('');
+const password = ref('');
+const selectedRole = ref(null);
+const toast = useToast();
+const router = useRouter();
+const loginService = new LoginService();
 
-    const handleLogin = async () => {
-      const loginEntity = new LoginEntity(name.value, email.value, password.value, selectedRole.value);
-      try {
-        const user = await LoginService.login(loginEntity);
-        toast.add({ severity: 'success', summary: 'Éxito', detail: `Bienvenid@, ${user.name}`, life: 3000 });
-        router.push('/dashboard');
-      } catch (error) {
-        toast.add({ severity: 'error', summary: 'Error', detail: error, life: 3000 });
-      }
-    };
+const handleLogin = async () => {
+  const loginEntity = new LoginEntity(name.value, email.value, password.value, selectedRole.value);
+  try {
+    const user = await loginService.login(loginEntity);
+    toast.add({ severity: 'success', summary: 'Éxito', detail: `Bienvenid@, ${user.name}`, life: 3000 });
+    setTimeout(() => {
+      router.push('/dashboard');
+    }, 100);
+  } catch (error) {
+    toast.add({ severity: 'error', summary: 'Error', detail: error, life: 3000 });
+  }
+};
 
-    const handleRegister = async () => {
-      if (!name.value || !email.value || !password.value || !selectedRole.value) {
-        toast.add({ severity: 'error', summary: 'Error', detail: 'Todos los campos son obligatorios', life: 3000 });
-        return;
-      }
+const handleRegister = async () => {
+  if (!name.value || !email.value || !password.value || !selectedRole.value) {
+    toast.add({ severity: 'error', summary: 'Error', detail: 'Todos los campos son obligatorios', life: 3000 });
+    return;
+  }
 
-      const registerEntity = new RegisterEntity(name.value, email.value, password.value, selectedRole.value);
-      try {
-        const response = await LoginService.register(registerEntity);
-        toast.add({ severity: 'success', summary: 'Éxito', detail: 'Registro exitoso', life: 3000 });
-        await handleLogin();
-      } catch (error) {
-        toast.add({ severity: 'error', summary: 'Error', detail: error, life: 3000 });
-      }
-    };
-
-    return {
-      name,
-      email,
-      password,
-      selectedRole,
-      handleLogin,
-      handleRegister
-    };
+  const registerEntity = new RegisterEntity(name.value, email.value, password.value, selectedRole.value);
+  try {
+    const response = await loginService.register(registerEntity);
+    toast.add({ severity: 'success', summary: 'Éxito', detail: 'Registro exitoso', life: 3000 });
+    await handleLogin();
+  } catch (error) {
+    toast.add({ severity: 'error', summary: 'Error', detail: error, life: 3000 });
   }
 };
 </script>
 
 <template>
   <div class="form-container">
-    <pv-toast></pv-toast>
     <div class="login-box">
       <div class="logo">
         <img src="../../assets/logo-oscuro.png" alt="Toca Aquí" />
@@ -125,7 +111,14 @@ export default {
   </div>
 </template>
 
-<style scoped>
+<style>
+:root {
+  &.dark {
+    .login-box {
+      background-color: var(--surface-card);
+    }
+  }
+}
 
 .form-container {
   display: flex;
@@ -136,7 +129,7 @@ export default {
 }
 
 .login-box {
-  background-color: #f5f5f5;
+  background-color: var(--surface-card);
   border-radius: 8px;
   padding: 2rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -181,12 +174,12 @@ export default {
 }
 
 .error {
-  color: red;
+  color: var(--red-500);
   margin-top: 1rem;
 }
 
 .success {
-  color: green;
+  color: var(--green-500);
   margin-top: 1rem;
 }
 

@@ -21,9 +21,9 @@
     </div>
 
     <div v-else class="grid">
-      <div v-for="event in filteredEvents" :key="event.id" class="col-12 md:col-6 lg:col-4 xl:col-4">
+      <div v-for="application in filteredApplications" :key="application.id" class="col-12 md:col-6 lg:col-4 xl:col-4">
         <event-card 
-          :event="event"
+          :event="application"
           @view-detail="viewApplicationDetail"
         />
       </div>
@@ -35,7 +35,6 @@
 import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
-import { EventApplication } from '../model/event-application.model';
 import { EventApplicationService } from '../services/event-application.service';
 import EventCard from '../components/event-card.component.vue';
 
@@ -54,28 +53,29 @@ const statusOptions = [
   { label: t('eventApplications.status.rejected'), value: 'rejected' }
 ];
 
-const filteredEvents = computed(() => {
+const filteredApplications = computed(() => {
   if (!statusFilter.value) return applications.value;
-  return applications.value.filter(event => event.status === statusFilter.value);
+  return applications.value.filter(application => application.status === statusFilter.value);
 });
 
-const fetchEvents = async () => {
+const fetchApplications = async () => {
   try {
     loading.value = true;
-    applications.value = await eventApplicationService.getAll();
+    const response = await eventApplicationService.getAll();
+    applications.value = response;
   } catch (error) {
-    console.error('Error fetching events:', error);
+    console.error('Error fetching applications:', error);
   } finally {
     loading.value = false;
   }
 };
 
-const viewApplicationDetail = (eventId) => {
-  router.push(`/applications/${eventId}`);
+const viewApplicationDetail = (applicationId) => {
+  router.push(`/applications/${applicationId}`);
 };
 
 onMounted(() => {
-  fetchEvents();
+  fetchApplications();
 });
 </script>
 

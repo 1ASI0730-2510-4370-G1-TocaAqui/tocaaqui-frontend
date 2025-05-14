@@ -18,7 +18,8 @@
         "mainMenu": "Menú principal",
         "close": "Cerrar",
         "toggleMenu": "Alternar menú",
-        "userProfile": "Perfil de usuario"
+        "userProfile": "Perfil de usuario",
+        "logout": "Cerrar Sesión"
     },
     "menu": {
         "dashboard": "Dashboard",

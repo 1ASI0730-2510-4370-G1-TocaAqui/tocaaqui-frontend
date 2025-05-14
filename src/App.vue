@@ -1,78 +1,82 @@
 // @summary Root component of the application
 // @author [Tu nombre]
 
-<script>
-import { useI18n } from 'vue-i18n'
-import { useRoute, useRouter } from 'vue-router'
-import { computed } from 'vue'
-import Sidebar from './shared/components/Sidebar.vue'
-import ThemeToggle from './shared/components/ThemeToggle.vue'
-import LanguageToggle from './shared/components/LanguageToggle.vue'
-import LoginService from './login/services/login.service'
+<script setup>
+import { ref, onMounted, onUnmounted } from 'vue';
+import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
+import Sidebar from './shared/components/Sidebar.vue';
+import ThemeToggle from './shared/components/ThemeToggle.vue';
+import LanguageToggle from './shared/components/LanguageToggle.vue';
+import { LoginService } from './login/services/login.service';
 
-export default {
-  name: 'App',
-  components: {
-    Sidebar,
-    ThemeToggle,
-    LanguageToggle
-  },
-  setup() {
-    const { t } = useI18n()
-    const route = useRoute()
-    const router = useRouter()
+const router = useRouter();
+const { t } = useI18n();
+const isAuthenticated = ref(false);
+const userName = ref('');
+const isUserMenuVisible = ref(false);
+const isSidebarVisible = ref(false);
+const loginService = new LoginService();
 
-    const currentTitle = computed(() => {
-      const path = route.path.split('/')[1] || 'dashboard'
-      return t(`menu.${path}`)
-    })
+const toggleSidebar = () => {
+  isSidebarVisible.value = !isSidebarVisible.value;
+};
 
-    const isLoginPage = computed(() => {
-      return route.path === '/login'
-    })
+const toggleUserMenu = () => {
+  isUserMenuVisible.value = !isUserMenuVisible.value;
+};
 
-    const userName = computed(() => {
-      const userStr = localStorage.getItem('user')
-      if (userStr) {
-        const user = JSON.parse(userStr)
-        return user.name
-      }
-      return ''
-    })
+const handleLogout = () => {
+  loginService.logout();
+  isAuthenticated.value = false;
+  userName.value = '';
+  router.push('/login');
+};
 
-    const handleLogout = () => {
-      LoginService.logout()
-      router.push('/login')
-    }
-
-    return { 
-      t, 
-      currentTitle, 
-      isLoginPage,
-      userName,
-      handleLogout
-    }
-  },
-  data() {
-    return {
-      isSidebarVisible: false,
-      isUserMenuVisible: false
-    }
-  },
-  methods: {
-    toggleSidebar() {
-      this.isSidebarVisible = !this.isSidebarVisible
-    },
-    toggleUserMenu() {
-      this.isUserMenuVisible = !this.isUserMenuVisible
-    }
+// Cerrar el menú de usuario cuando se hace clic fuera
+const handleClickOutside = (event) => {
+  const userMenu = document.querySelector('.user-menu');
+  if (userMenu && !userMenu.contains(event.target)) {
+    isUserMenuVisible.value = false;
   }
-}
+};
+
+// Manejadores de eventos de login/logout
+const handleLoginSuccess = (event) => {
+  const user = event.detail;
+  isAuthenticated.value = true;
+  userName.value = user.name;
+};
+
+const handleLogoutEvent = () => {
+  isAuthenticated.value = false;
+  userName.value = '';
+  router.push('/login');
+};
+
+onMounted(() => {
+  const userStr = localStorage.getItem('user');
+  if (userStr) {
+    const user = JSON.parse(userStr);
+    isAuthenticated.value = true;
+    userName.value = user.name;
+  }
+  
+  document.addEventListener('click', handleClickOutside);
+  window.addEventListener('login-success', handleLoginSuccess);
+  window.addEventListener('logout', handleLogoutEvent);
+});
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside);
+  window.removeEventListener('login-success', handleLoginSuccess);
+  window.removeEventListener('logout', handleLogoutEvent);
+});
 </script>
 
 <template>
   <div class="app-container">
-    <template v-if="!isLoginPage">
+    <template v-if="isAuthenticated">
       <!-- Overlay para móvil -->
       <div 
         v-show="isSidebarVisible" 
@@ -91,7 +95,7 @@ export default {
       <main :class="['main-content', { 'sidebar-pushed': isSidebarVisible }]">
         <!-- Header -->
         <header class="header">
-          <div class="flex justify-content-between align-items-center">
+          <div class="flex justify-content-between align-items-center p-3">
             <div class="flex align-items-center gap-3">
               <button 
                 class="menu-toggle"
@@ -100,8 +104,9 @@ export default {
               >
                 <i class="pi pi-bars"></i>
               </button>
-              <h1 class="text-xl">{{ currentTitle }}</h1>
+              <h1 class="text-xl">{{ t('menu.dashboard') }}</h1>
             </div>
+            
             <div class="flex align-items-center gap-3">
               <LanguageToggle />
               <ThemeToggle />
@@ -131,7 +136,7 @@ export default {
                     <li>
                       <a @click="handleLogout" class="dropdown-item">
                         <i class="pi pi-sign-out mr-2"></i>
-                        Cerrar Sesión
+                        {{ t('common.logout') }}
                       </a>
                     </li>
                   </ul>
@@ -173,7 +178,7 @@ export default {
   position: fixed;
   left: 0;
   top: 0;
-  background-color: var(--surface-0);
+  background-color: var(--surface-card);
   border-right: 1px solid var(--surface-border);
   transform: translateX(0);
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -192,7 +197,7 @@ export default {
 }
 
 .header {
-  background-color: var(--surface-0);
+  background-color: var(--surface-card);
   padding: 1rem 2rem;
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
   position: sticky;
@@ -255,8 +260,8 @@ export default {
   position: absolute;
   right: 0;
   top: 100%;
-  background-color: var(--surface-0);
-  border: 1px solid var(--surface-200);
+  background-color: var(--surface-card);
+  border: 1px solid var(--surface-border);
   border-radius: 6px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   min-width: 200px;
@@ -275,15 +280,13 @@ export default {
 }
 
 .dropdown-item:hover {
-  background-color: var(--surface-100);
+  background-color: var(--surface-hover);
 }
 
 /* Responsive */
 @media (max-width: 768px) {
   .sidebar {
     transform: translateX(-100%);
-    background: #FFFFFF;
-    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
   }
 
   .sidebar-active {
@@ -316,29 +319,31 @@ export default {
 }
 
 /* Dark mode */
-:deep(.app-dark) {
-  .menu-toggle {
-    background: var(--surface-card);
-    border-color: var(--surface-border);
-  }
+:root {
+  &.dark {
+    .menu-toggle {
+      background: var(--surface-card);
+      border-color: var(--surface-border);
+    }
 
-  .menu-toggle:hover {
-    background: var(--surface-hover);
-  }
+    .menu-toggle:hover {
+      background: var(--surface-hover);
+    }
 
-  .sidebar {
-    background: var(--surface-card);
-    border-color: var(--surface-border);
-  }
-
-  .sidebar-overlay {
-    background-color: rgba(0, 0, 0, 0.8);
-  }
-
-  @media (max-width: 768px) {
     .sidebar {
-      background: var(--surface-900);
-      box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
+      background: var(--surface-card);
+      border-color: var(--surface-border);
+    }
+
+    .sidebar-overlay {
+      background-color: rgba(0, 0, 0, 0.8);
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        background: var(--surface-900);
+        box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
+      }
     }
   }
 }

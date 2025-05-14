@@ -4,8 +4,8 @@ import App from './App.vue';
 
 // PrimeVue y temas
 import PrimeVue from 'primevue/config';
-import Material from '@primeuix/themes/material';
-import Aura from '@primevue/themes/aura';
+import 'primevue/resources/themes/aura-light-green/theme.css';     // tema claro
+import 'primevue/resources/primevue.min.css';
 
 // PrimeVue componentes
 import Button from 'primevue/button';
@@ -15,7 +15,6 @@ import Column from 'primevue/column';
 import ConfirmDialog from 'primevue/confirmdialog';
 import DataTable from 'primevue/datatable';
 import Dialog from 'primevue/dialog';
-import Drawer from 'primevue/drawer';
 import Dropdown from 'primevue/dropdown';
 import FileUpload from 'primevue/fileupload';
 import FloatLabel from 'primevue/floatlabel';
@@ -26,7 +25,6 @@ import InputText from 'primevue/inputtext';
 import Menu from 'primevue/menu';
 import Rating from 'primevue/rating';
 import Row from 'primevue/row';
-import Select from 'primevue/select';
 import SelectButton from 'primevue/selectbutton';
 import Tag from 'primevue/tag';
 import Textarea from 'primevue/textarea';
@@ -56,57 +54,53 @@ import router from './router';
 // Crear app
 const app = createApp(App);
 
-// PrimeVue configuración (puedes alternar entre Material y Aura fácilmente)
-const useTheme = 'Aura'; // Cambia a 'Material' si lo prefieres
-
+// PrimeVue configuración
 app.use(PrimeVue, {
     ripple: true,
-    theme: {
-        preset: useTheme === 'Aura' ? Aura : Material,
-        options: useTheme === 'Aura' ? { darkModeSelector: '.app-dark' } : {}
-    }
+    unstyled: false
 });
 
-// Servicios globales
-app.use(router);
-app.use(i18n);
+// Registrar componentes
+app.component('pv-button', Button);
+app.component('pv-card', Card);
+app.component('pv-checkbox', Checkbox);
+app.component('pv-column', Column);
+app.component('pv-confirm-dialog', ConfirmDialog);
+app.component('pv-data-table', DataTable);
+app.component('pv-dialog', Dialog);
+app.component('pv-dropdown', Dropdown);
+app.component('pv-file-upload', FileUpload);
+app.component('pv-float-label', FloatLabel);
+app.component('pv-icon-field', IconField);
+app.component('pv-input-icon', InputIcon);
+app.component('pv-input-number', InputNumber);
+app.component('pv-input-text', InputText);
+app.component('pv-menu', Menu);
+app.component('pv-rating', Rating);
+app.component('pv-row', Row);
+app.component('pv-select-button', SelectButton);
+app.component('pv-tag', Tag);
+app.component('pv-textarea', Textarea);
+app.component('pv-toast', Toast);
+app.component('pv-toolbar', Toolbar);
+app.component('pv-password', Password);
+app.component('pv-message', Message);
+app.component('pv-progress-spinner', ProgressSpinner);
+app.component('pv-avatar', Avatar);
+
+// Registrar servicios
 app.use(ToastService);
 app.use(ConfirmationService);
 app.use(DialogService);
 
-// Registrar componentes globales
-app
-    .component('pv-button', Button)
-    .component('pv-card', Card)
-    .component('pv-checkbox', Checkbox)
-    .component('pv-column', Column)
-    .component('pv-confirm-dialog', ConfirmDialog)
-    .component('pv-data-table', DataTable)
-    .component('pv-dialog', Dialog)
-    .component('pv-drawer', Drawer)
-    .component('pv-dropdown', Dropdown)
-    .component('pv-file-upload', FileUpload)
-    .component('pv-float-label', FloatLabel)
-    .component('pv-icon-field', IconField)
-    .component('pv-input-icon', InputIcon)
-    .component('pv-input-number', InputNumber)
-    .component('pv-input-text', InputText)
-    .component('pv-menu', Menu)
-    .component('pv-rating', Rating)
-    .component('pv-row', Row)
-    .component('pv-select', Select)
-    .component('pv-select-button', SelectButton)
-    .component('pv-tag', Tag)
-    .component('pv-textarea', Textarea)
-    .component('pv-toast', Toast)
-    .component('pv-toolbar', Toolbar)
-    .component('pv-password', Password)
-    .component('pv-message', Message)
-    .component('pv-progress-spinner', ProgressSpinner)
-    .component('pv-avatar', Avatar);
-
-// Directivas
+// Registrar directivas
 app.directive('tooltip', Tooltip);
+
+// Registrar i18n
+app.use(i18n);
+
+// Registrar router
+app.use(router);
 
 // Montar app
 app.mount('#app');
