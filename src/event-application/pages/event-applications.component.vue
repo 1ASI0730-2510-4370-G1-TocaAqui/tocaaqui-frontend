@@ -16,7 +16,7 @@
       <pv-progress-spinner />
     </div>
 
-    <div v-else-if="applications.length === 0" class="text-center">
+    <div v-else-if="userApplications.length === 0" class="text-center">
       <pv-message severity="info" :closable="false">{{ $t('eventApplications.noApplications') }}</pv-message>
     </div>
 
@@ -42,9 +42,12 @@ const router = useRouter();
 const { t } = useI18n();
 const eventApplicationService = new EventApplicationService();
 
-const applications = ref([]);
+const userApplications = ref([]);
 const loading = ref(true);
 const statusFilter = ref('');
+
+// Usuario hardcodeado para pruebas (en una aplicación real vendría del sistema de autenticación)
+const currentUserId = 1;
 
 const statusOptions = [
   { label: t('eventApplications.allStatuses'), value: '' },
@@ -54,17 +57,31 @@ const statusOptions = [
 ];
 
 const filteredApplications = computed(() => {
-  if (!statusFilter.value) return applications.value;
-  return applications.value.filter(application => application.status === statusFilter.value);
+  if (!statusFilter.value) return userApplications.value;
+  return userApplications.value.filter(application => application.status === statusFilter.value);
 });
 
-const fetchApplications = async () => {
+const fetchUserApplications = async () => {
   try {
     loading.value = true;
-    const response = await eventApplicationService.getAll();
-    applications.value = response;
+    // Obtener las postulaciones del usuario
+    const applicants = await eventApplicationService.getUserApplications(currentUserId);
+    
+    // Obtener los detalles de los eventos correspondientes
+    const eventPromises = applicants.map(applicant => 
+      eventApplicationService.getById(applicant.eventId)
+        .then(event => ({
+          ...event,
+          status: applicant.status,
+          applicationDate: applicant.applicationDate,
+          contractSigned: applicant.contractSigned,
+          riderUploaded: applicant.riderUploaded
+        }))
+    );
+    
+    userApplications.value = await Promise.all(eventPromises);
   } catch (error) {
-    console.error('Error fetching applications:', error);
+    console.error('Error fetching user applications:', error);
   } finally {
     loading.value = false;
   }
@@ -75,7 +92,7 @@ const viewApplicationDetail = (applicationId) => {
 };
 
 onMounted(() => {
-  fetchApplications();
+  fetchUserApplications();
 });
 </script>
 

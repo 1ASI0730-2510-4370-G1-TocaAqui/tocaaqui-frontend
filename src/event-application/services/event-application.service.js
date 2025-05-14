@@ -2,21 +2,20 @@
 // @author [Tu nombre]
 
 import httpInstance from "../../shared/services/http.instance.js";
-import { EventApplication, Contract, RiderTechnical } from '../model/event-application.model';
+import { EventApplication, Contract, RiderTechnical, EventApplicant } from '../model/event-application.model';
 
 export class EventApplicationService {
     resourceEndpoint = '/events';
-    applicationsEndpoint = '/applications';
+    applicantsEndpoint = '/event_applicants';
     contractsEndpoint = '/contracts';
     documentsEndpoint = '/documents';
 
     async getAll() {
         try {
             const response = await httpInstance.get(this.resourceEndpoint);
-            return response.data.map(app => new EventApplication(app));
+            return response.data.map(event => new EventApplication(event));
         } catch (error) {
-            console.error('Error fetching applications:', error);
-            throw error;
+            throw this.handleError(error);
         }
     }
 
@@ -59,13 +58,55 @@ export class EventApplicationService {
         }
     }
 
-    async uploadRider(applicationId, riderFile) {
+    async getUserApplications(userId) {
+        try {
+            const response = await httpInstance.get(`${this.applicantsEndpoint}?userId=${userId}`);
+            return response.data.map(applicant => new EventApplicant(applicant));
+        } catch (error) {
+            throw this.handleError(error);
+        }
+    }
+
+    async getEventApplicants(eventId) {
+        try {
+            const response = await httpInstance.get(`${this.applicantsEndpoint}?eventId=${eventId}`);
+            return response.data.map(applicant => new EventApplicant(applicant));
+        } catch (error) {
+            throw this.handleError(error);
+        }
+    }
+
+    async applyToEvent(eventId, userId) {
+        try {
+            const applicant = new EventApplicant({
+                eventId,
+                userId,
+                applicationDate: new Date().toISOString()
+            });
+            const response = await httpInstance.post(this.applicantsEndpoint, applicant);
+            return new EventApplicant(response.data);
+        } catch (error) {
+            throw this.handleError(error);
+        }
+    }
+
+    async updateApplicationStatus(applicantId, status) {
+        try {
+            const response = await httpInstance.patch(`${this.applicantsEndpoint}/${applicantId}`, { status });
+            return new EventApplicant(response.data);
+        } catch (error) {
+            throw this.handleError(error);
+        }
+    }
+
+    async uploadRider(eventId, userId, file) {
         try {
             const formData = new FormData();
-            formData.append('rider', riderFile);
+            formData.append('rider', file);
+            formData.append('userId', userId);
             
             const response = await httpInstance.post(
-                `/applications/${applicationId}/rider`,
+                `${this.resourceEndpoint}/${eventId}/riders`,
                 formData,
                 {
                     headers: {
@@ -73,32 +114,51 @@ export class EventApplicationService {
                     }
                 }
             );
+
+            // Actualizamos el estado del rider en la postulación
+            const applicant = await this.getEventApplicant(eventId, userId);
+            if (applicant) {
+                await this.updateApplicationStatus(applicant.id, { riderUploaded: true });
+            }
+            
             return response.data;
         } catch (error) {
-            console.error('Error uploading rider:', error);
-            throw error;
+            throw this.handleError(error);
         }
     }
 
-    async signContract(applicationId, signature) {
+    async signContract(eventId, userId, signature) {
         try {
-            // Primero firmamos el contrato
-            const signResponse = await httpInstance.post(`${this.applicationsEndpoint}/${applicationId}/sign`, { signature });
-            
-            // Luego actualizamos el estado del evento a accepted
-            const eventResponse = await this.getById(applicationId);
-            const updatedEvent = await this.update(applicationId, {
-                ...eventResponse,
-                status: 'accepted'
+            const contract = new Contract({
+                eventApplicationId: eventId,
+                userId: userId,
+                signature: signature,
+                signedDate: new Date().toISOString()
             });
-
-            return {
-                contract: signResponse.data,
-                event: updatedEvent
-            };
+            const response = await httpInstance.post(`${this.resourceEndpoint}/${eventId}/contracts`, contract);
+            
+            // Actualizamos el estado de la postulación
+            const applicant = await this.getEventApplicant(eventId, userId);
+            if (applicant) {
+                await this.updateApplicationStatus(applicant.id, { 
+                    status: 'accepted',
+                    contractSigned: true 
+                });
+            }
+            
+            return response.data;
         } catch (error) {
-            console.error('Error signing contract:', error);
-            throw error;
+            throw this.handleError(error);
+        }
+    }
+
+    async getEventApplicant(eventId, userId) {
+        try {
+            const response = await httpInstance.get(`${this.applicantsEndpoint}?eventId=${eventId}&userId=${userId}`);
+            const applicants = response.data;
+            return applicants.length > 0 ? new EventApplicant(applicants[0]) : null;
+        } catch (error) {
+            throw this.handleError(error);
         }
     }
 
@@ -119,12 +179,7 @@ export class EventApplicationService {
     }
 
     handleError(error) {
-        if (error.response) {
-            return new Error(error.response.data.message || 'Error en el servidor');
-        }
-        if (error.request) {
-            return new Error('No se pudo conectar con el servidor');
-        }
-        return new Error('Error al procesar la solicitud');
+        console.error('Service error:', error);
+        return new Error(error.response?.data?.message || 'Error en el servicio');
     }
 } 
