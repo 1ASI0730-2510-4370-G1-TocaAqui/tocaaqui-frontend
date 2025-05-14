@@ -20,6 +20,20 @@
       "password": "123456",
       "name": "Mario Torres",
       "role": "musico"
+    },
+    {
+      "name": "Azul",
+      "email": "di36o14oficial@gmail.com",
+      "password": "1234",
+      "role": "musico",
+      "id": 3
+    },
+    {
+      "name": "Rojo",
+      "email": "fabrizioleiva@gmail.com",
+      "password": "1234",
+      "role": "promotor",
+      "id": 4
     }
   ],
   "riders": [

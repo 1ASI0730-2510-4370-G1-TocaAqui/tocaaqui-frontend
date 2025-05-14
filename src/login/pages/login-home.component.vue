@@ -58,7 +58,7 @@ const handleRegister = async () => {
               :outlined="selectedRole !== 'musico'"
               :severity="selectedRole === 'musico' ? 'primary' : null"
               label="Músico / Banda"
-              icon="pi pi-headphones"
+              icon="pi pi-heart"
               icon-pos="top"
               @click="selectedRole = 'musico'"
           />
@@ -135,7 +135,7 @@ const handleRegister = async () => {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   width: 100%;
   margin: auto;
-  max-height: 700px;
+  max-height: 800px;
 }
 
 .role-buttons {
@@ -148,10 +148,6 @@ const handleRegister = async () => {
   flex: 1;
   padding: 2rem 0.5rem;
   font-size: 1rem;
-}
-
-.p-password {
-  width: 100% !important;
 }
 
 .p-field {
@@ -171,16 +167,6 @@ const handleRegister = async () => {
 
 .text-center {
   text-align: center;
-}
-
-.error {
-  color: var(--red-500);
-  margin-top: 1rem;
-}
-
-.success {
-  color: var(--green-500);
-  margin-top: 1rem;
 }
 
 .logo img {
