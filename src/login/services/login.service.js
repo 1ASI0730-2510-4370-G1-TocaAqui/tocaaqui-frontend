@@ -1,6 +1,6 @@
 import httpInstance from "../../shared/services/http.instance.js";
 
-class LoginService {
+export class LoginService {
     async login(loginEntity) {
         try {
             const response = await httpInstance.get('/users'); // Obtiene todos los usuarios
@@ -15,6 +15,9 @@ class LoginService {
 
             // Guardar el usuario en localStorage
             localStorage.setItem('user', JSON.stringify(user));
+            
+            // Emitir evento de login exitoso
+            window.dispatchEvent(new CustomEvent('login-success', { detail: user }));
 
             return user; // Devuelve el usuario encontrado
         } catch (error) {
@@ -47,7 +50,7 @@ class LoginService {
 
     logout() {
         localStorage.removeItem('user');
+        // Emitir evento de logout
+        window.dispatchEvent(new CustomEvent('logout'));
     }
 }
-
-export default new LoginService();
