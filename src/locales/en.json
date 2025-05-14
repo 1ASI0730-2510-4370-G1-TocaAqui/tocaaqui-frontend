@@ -151,5 +151,49 @@
             "dragDropText": "Drag and drop the PDF file here or click to select it",
             "sizeNote": "* File must be in PDF format and must not exceed 5MB"
         }
+    },
+    "promoter": {
+    "dashboard": {
+      "title": "Promoter Dashboard",
+      "welcome": "Welcome, {name}",
+      "createEvent": "Create Event",
+      "myEvents": "My Events",
+      "noEvents": "You have no events created",
+      "stats": {
+        "activeEvents": {
+          "title": "Active Events",
+          "empty": "No active events"
+        },
+        "applicants": {
+          "title": "Applicants",
+          "empty": "No applicants"
+        },
+        "revenue": {
+          "title": "Revenue",
+          "empty": "No revenue"
+        },
+        "venues": {
+          "title": "Venues",
+          "empty": "No venues"
+        }
+      },
+      "filters": {
+        "title": "Filters",
+        "name": "Name",
+        "location": "Location",
+        "status": "Status",
+        "dateFrom": "Date from",
+        "dateTo": "Date to",
+        "apply": "Apply",
+        "clear": "Clear"
+      },
+      "eventStatus": {
+        "draft": "Draft",
+        "published": "Published",
+        "cancelled": "Cancelled",
+        "completed": "Completed",
+        "pending": "Pending"
+      }
     }
+  }
 } 

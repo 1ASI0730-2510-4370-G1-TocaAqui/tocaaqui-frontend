@@ -1,162 +1,206 @@
 {
-    "common": {
-        "add": "Agregar",
-        "edit": "Editar",
-        "delete": "Eliminar",
-        "save": "Guardar",
-        "cancel": "Cancelar",
-        "confirm": "Confirmar",
-        "actions": "Acciones",
-        "loading": "Cargando",
-        "search": "Buscar",
-        "notifications": "Notificaciones",
-        "darkMode": "Modo oscuro",
-        "lightMode": "Modo claro",
-        "language": "Idioma",
-        "success": "Éxito",
-        "error": "Error",
-        "mainMenu": "Menú principal",
-        "close": "Cerrar",
-        "toggleMenu": "Alternar menú",
-        "userProfile": "Perfil de usuario",
-        "logout": "Cerrar Sesión"
+  "common": {
+    "add": "Agregar",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "actions": "Acciones",
+    "loading": "Cargando",
+    "search": "Buscar",
+    "notifications": "Notificaciones",
+    "darkMode": "Modo oscuro",
+    "lightMode": "Modo claro",
+    "language": "Idioma",
+    "success": "Éxito",
+    "error": "Error",
+    "mainMenu": "Menú principal",
+    "close": "Cerrar",
+    "toggleMenu": "Alternar menú",
+    "userProfile": "Perfil de usuario",
+    "logout": "Cerrar Sesión"
+  },
+  "menu": {
+    "dashboard": "Dashboard",
+    "profile": "Mi Perfil",
+    "applications": "Postulaciones",
+    "search": "Buscar espacio",
+    "agenda": "Agenda",
+    "evaluations": "Evaluaciones",
+    "payments": "Pagos Recibidos"
+  },
+  "rider": {
+    "application": {
+      "title": "Postulación para Rider",
+      "location": "Elige tu ubicación",
+      "genre": "Elige tu género",
+      "paymentMethod": "Elige tu forma de pago",
+      "document": "Sube tu documento",
+      "documentHelp": "Máximo 10MB - PDF o Word",
+      "submit": "Enviar postulación",
+      "success": "Tu postulación ha sido enviada correctamente",
+      "error": "Error al enviar la postulación",
+      "documentSuccess": "Documento subido correctamente",
+      "documentError": "Error al subir el documento",
+      "options": {
+        "locations": {
+          "lima": "Lima",
+          "callao": "Callao"
+        },
+        "genres": {
+          "M": "Masculino",
+          "F": "Femenino",
+          "O": "Otro"
+        },
+        "payments": {
+          "cash": "Efectivo",
+          "transfer": "Transferencia"
+        }
+      }
+    }
+  },
+  "login": {
+    "title": "Iniciar Sesión",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "submit": "Ingresar",
+    "error": "Credenciales inválidas"
+  },
+  "dashboard": {
+    "welcome": "Bienvenido {name}",
+    "stats": {
+      "nextEvents": {
+        "title": "Próximos Eventos",
+        "empty": "No hay eventos próximos"
+      },
+      "pendingPayments": {
+        "title": "Pagos Pendientes",
+        "empty": "No hay pagos pendientes"
+      },
+      "rating": {
+        "title": "Calificación",
+        "empty": "Sin calificaciones"
+      },
+      "bookings": {
+        "title": "Reservas",
+        "empty": "No hay reservas"
+      }
     },
-    "menu": {
-        "dashboard": "Dashboard",
-        "profile": "Mi Perfil",
-        "applications": "Postulaciones",
-        "search": "Buscar espacio",
-        "agenda": "Agenda",
-        "evaluations": "Evaluaciones",
-        "payments": "Pagos Recibidos"
+    "sections": {
+      "upcomingEvents": {
+        "title": "Próximos Eventos",
+        "empty": "No tienes eventos próximos"
+      },
+      "recentActivity": {
+        "title": "Actividad Reciente",
+        "empty": "No hay actividad reciente"
+      }
+    }
+  },
+  "eventApplications": {
+    "title": "Solicitudes de Eventos",
+    "searchPlaceholder": "Buscar por nombre o lugar",
+    "allStatuses": "Todos los estados",
+    "pending": "Pendiente",
+    "accepted": "Aceptado",
+    "rejected": "Rechazado",
+    "noApplications": "No hay solicitudes disponibles",
+    "status": {
+      "pending": "Pendiente",
+      "accepted": "Aceptado",
+      "rejected": "Rechazado"
+    },
+    "venue": "Lugar",
+    "payment": "Pago",
+    "apply": "Postular",
+    "viewApplication": "Ver postulación"
+  },
+  "applicationDetail": {
+    "title": "Detalle de la Postulación",
+    "back": "Volver a solicitudes",
+    "errorLoading": "Error al cargar los detalles de la solicitud",
+    "eventDetails": "Detalles del Evento",
+    "requirements": "Requisitos",
+    "description": "Descripción",
+    "venue": "Lugar",
+    "payment": "Pago",
+    "duration": "Duración",
+    "hours": "horas",
+    "genre": "Género musical",
+    "equipment": "Equipamiento",
+    "accept": "Aceptar solicitud",
+    "reject": "Rechazar solicitud",
+    "status": {
+      "pending": "Pendiente",
+      "accepted": "Aceptado",
+      "rejected": "Rechazado"
+    },
+    "technicalDetails": "Detalles Técnicos",
+    "publishDate": "Fecha de Publicación",
+    "eventDate": "Fecha del Evento",
+    "eventTime": "Hora del Evento",
+    "location": "Localización",
+    "soundcheckDate": "Fecha Prueba de Sonido",
+    "soundcheckTime": "Hora Prueba de Sonido",
+    "venueCapacity": "Capacidad del Local",
+    "availableTickets": "Entradas Disponibles",
+    "contract": {
+      "title": "Contrato del Evento",
+      "reject": "Rechazar",
+      "signAndAccept": "Firmar y Aceptar"
     },
     "rider": {
-        "application": {
-            "title": "Postulación para Rider",
-            "location": "Elige tu ubicación",
-            "genre": "Elige tu género",
-            "paymentMethod": "Elige tu forma de pago",
-            "document": "Sube tu documento",
-            "documentHelp": "Máximo 10MB - PDF o Word",
-            "submit": "Enviar postulación",
-            "success": "Tu postulación ha sido enviada correctamente",
-            "error": "Error al enviar la postulación",
-            "documentSuccess": "Documento subido correctamente",
-            "documentError": "Error al subir el documento",
-            "options": {
-                "locations": {
-                    "lima": "Lima",
-                    "callao": "Callao"
-                },
-                "genres": {
-                    "M": "Masculino",
-                    "F": "Femenino",
-                    "O": "Otro"
-                },
-                "payments": {
-                    "cash": "Efectivo",
-                    "transfer": "Transferencia"
-                }
-            }
-        }
-    },
-    "login": {
-        "title": "Iniciar Sesión",
-        "email": "Correo electrónico",
-        "password": "Contraseña",
-        "submit": "Ingresar",
-        "error": "Credenciales inválidas"
-    },
-    "dashboard": {
-        "welcome": "Bienvenido {name}",
-        "stats": {
-            "nextEvents": {
-                "title": "Próximos Eventos",
-                "empty": "No hay eventos próximos"
-            },
-            "pendingPayments": {
-                "title": "Pagos Pendientes",
-                "empty": "No hay pagos pendientes"
-            },
-            "rating": {
-                "title": "Calificación",
-                "empty": "Sin calificaciones"
-            },
-            "bookings": {
-                "title": "Reservas",
-                "empty": "No hay reservas"
-            }
-        },
-        "sections": {
-            "upcomingEvents": {
-                "title": "Próximos Eventos",
-                "empty": "No tienes eventos próximos"
-            },
-            "recentActivity": {
-                "title": "Actividad Reciente",
-                "empty": "No hay actividad reciente"
-            }
-        }
-    },
-    "eventApplications": {
-        "title": "Solicitudes de Eventos",
-        "searchPlaceholder": "Buscar por nombre o lugar",
-        "allStatuses": "Todos los estados",
-        "pending": "Pendiente",
-        "accepted": "Aceptado",
-        "rejected": "Rechazado",
-        "noApplications": "No hay solicitudes disponibles",
-        "status": {
-            "pending": "Pendiente",
-            "accepted": "Aceptado",
-            "rejected": "Rechazado"
-        },
-        "venue": "Lugar",
-        "payment": "Pago",
-        "apply": "Postular",
-        "viewApplication": "Ver postulación"
-    },
-    "applicationDetail": {
-        "title": "Detalle de la Postulación",
-        "back": "Volver a solicitudes",
-        "errorLoading": "Error al cargar los detalles de la solicitud",
-        "eventDetails": "Detalles del Evento",
-        "requirements": "Requisitos",
-        "description": "Descripción",
-        "venue": "Lugar",
-        "payment": "Pago",
-        "duration": "Duración",
-        "hours": "horas",
-        "genre": "Género musical",
-        "equipment": "Equipamiento",
-        "accept": "Aceptar solicitud",
-        "reject": "Rechazar solicitud",
-        "status": {
-            "pending": "Pendiente",
-            "accepted": "Aceptado",
-            "rejected": "Rechazado"
-        },
-        "technicalDetails": "Detalles Técnicos",
-        "publishDate": "Fecha de Publicación",
-        "eventDate": "Fecha del Evento",
-        "eventTime": "Hora del Evento",
-        "location": "Localización",
-        "soundcheckDate": "Fecha Prueba de Sonido",
-        "soundcheckTime": "Hora Prueba de Sonido",
-        "venueCapacity": "Capacidad del Local",
-        "availableTickets": "Entradas Disponibles",
-        "contract": {
-            "title": "Contrato del Evento",
-            "reject": "Rechazar",
-            "signAndAccept": "Firmar y Aceptar"
-        },
-        "rider": {
-            "title": "Subir Rider Técnico",
-            "chooseLabel": "Seleccionar Rider",
-            "uploadLabel": "Subir",
-            "cancelLabel": "Cancelar",
-            "dragDropText": "Arrastra y suelta el archivo PDF aquí o haz clic para seleccionarlo",
-            "sizeNote": "* El archivo debe estar en formato PDF y no debe exceder los 5MB"
-        }
+      "title": "Subir Rider Técnico",
+      "chooseLabel": "Seleccionar Rider",
+      "uploadLabel": "Subir",
+      "cancelLabel": "Cancelar",
+      "dragDropText": "Arrastra y suelta el archivo PDF aquí o haz clic para seleccionarlo",
+      "sizeNote": "* El archivo debe estar en formato PDF y no debe exceder los 5MB"
     }
-} 
+  },
+  "promoter": {
+    "dashboard": {
+      "title": "Panel de Promotor",
+      "welcome": "Bienvenido, {name}",
+      "createEvent": "Crear Evento",
+      "myEvents": "Mis Eventos",
+      "noEvents": "No tienes eventos creados",
+      "stats": {
+        "activeEvents": {
+          "title": "Eventos Activos",
+          "empty": "No hay eventos activos"
+        },
+        "applicants": {
+          "title": "Postulantes",
+          "empty": "No hay postulantes"
+        },
+        "revenue": {
+          "title": "Ingresos",
+          "empty": "Sin ingresos"
+        },
+        "venues": {
+          "title": "Locales",
+          "empty": "No hay locales"
+        }
+      },
+      "filters": {
+        "title": "Filtros",
+        "name": "Nombre",
+        "location": "Ubicación",
+        "status": "Estado",
+        "dateFrom": "Fecha desde",
+        "dateTo": "Fecha hasta",
+        "apply": "Aplicar",
+        "clear": "Limpiar"
+      },
+      "eventStatus": {
+        "draft": "Borrador",
+        "published": "Publicado",
+        "cancelled": "Cancelado",
+        "completed": "Completado",
+        "pending": "Pendiente"
+      }
+    }
+  }
+}
