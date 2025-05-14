@@ -6,6 +6,7 @@ import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import Card from 'primevue/card';
+import { EventApplicationService } from '../../event-application/services/event-application.service';
 
 export default {
     name: 'ArtistDashboard',
@@ -17,11 +18,13 @@ export default {
         const { t } = useI18n();
         const user = ref(null);
         const isLoading = ref(true);
+        const eventApplicationService = new EventApplicationService();
+        const upcomingEvents = ref([]);
 
         // Estados computados para mostrar mensajes descriptivos
         const statsConfig = computed(() => ({
             nextEvents: {
-                value: 0,
+                value: upcomingEvents.value.length,
                 title: t('dashboard.stats.nextEvents.title'),
                 empty: t('dashboard.stats.nextEvents.empty'),
                 icon: 'pi pi-calendar',
@@ -58,12 +61,69 @@ export default {
             }
             user.value = JSON.parse(userStr);
             isLoading.value = false;
+            await fetchUpcomingEvents();
         });
+
+        const getStatusSeverity = (status) => {
+            const severities = {
+                pending: 'warning',
+                accepted: 'success',
+                rejected: 'danger'
+            };
+            return severities[status] || 'info';
+        };
+
+        const formatDate = (date) => {
+            if (!date) return '';
+            return new Date(date).toLocaleDateString('es-ES', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        };
+
+        const fetchUpcomingEvents = async () => {
+            try {
+                isLoading.value = true;
+                // Obtener las postulaciones del usuario
+                const applicants = await eventApplicationService.getUserApplications(user.value.id);
+                
+                // Obtener los detalles de los eventos correspondientes
+                const eventPromises = applicants.map(applicant => 
+                    eventApplicationService.getById(applicant.eventId)
+                        .then(event => ({
+                            ...event,
+                            status: applicant.status,
+                            applicationDate: applicant.applicationDate,
+                            contractSigned: applicant.contractSigned,
+                            riderUploaded: applicant.riderUploaded
+                        }))
+                );
+                
+                const events = await Promise.all(eventPromises);
+                
+                // Ordenar eventos por fecha
+                upcomingEvents.value = events.sort((a, b) => new Date(a.date) - new Date(b.date));
+            } catch (error) {
+                console.error('Error fetching upcoming events:', error);
+            } finally {
+                isLoading.value = false;
+            }
+        };
+
+        const viewEventDetail = (eventId) => {
+            router.push(`/applications/${eventId}`);
+        };
 
         return {
             user,
             isLoading,
-            statsConfig
+            statsConfig,
+            getStatusSeverity,
+            formatDate,
+            upcomingEvents,
+            viewEventDetail
         };
     }
 };
@@ -71,26 +131,28 @@ export default {
 
 <template>
     <div class="dashboard-container">
-        <div class="welcome-section p-4">
-            <h1 class="text-3xl font-bold mb-4">{{ $t('dashboard.welcome', { name: user?.name || '' }) }}</h1>
+        <div class="welcome-section py-3">
+            <div class="dashboard-content px-4">
+                <h1 class="text-4xl font-bold mb-2">{{ $t('dashboard.welcome', { name: user?.name || '' }) }}</h1>
+            </div>
         </div>
 
         <div class="dashboard-content p-4">
-            <!-- Estadísticas -->
+            <!-- Stats Cards -->
             <div class="grid">
-                <div v-for="(stat, key) in statsConfig" :key="key" class="col-12 md:col-6 lg:col-3">
+                <div v-for="(stat, key) in statsConfig" :key="key" class="col-12 sm:col-6 lg:col-3">
                     <Card class="dashboard-card">
                         <template #header>
-                            <i :class="[stat.icon, stat.color, 'text-4xl']"></i>
-                        </template>
-                        <template #title>
-                            <span class="block text-lg font-semibold">{{ stat.title }}</span>
+                            <div class="flex justify-content-center">
+                                <i :class="[stat.icon, stat.color, 'text-4xl']"></i>
+                            </div>
                         </template>
                         <template #content>
-                            <div class="text-center">
-                                <span v-if="stat.value > 0" class="text-4xl font-bold block mb-3">{{ stat.value }}</span>
-                                <span v-else class="text-sm text-500">{{ stat.empty }}</span>
-                            </div>
+                            <h3 class="text-xl font-semibold mb-2">{{ stat.title }}</h3>
+                            <p v-if="stat.value === 0 || stat.value === '-'" class="text-500">
+                                {{ stat.empty }}
+                            </p>
+                            <p v-else class="text-2xl font-bold">{{ stat.value }}</p>
                         </template>
                     </Card>
                 </div>
@@ -107,7 +169,53 @@ export default {
                             </div>
                         </template>
                         <template #content>
-                            <p class="text-center text-500">{{ $t('dashboard.sections.upcomingEvents.empty') }}</p>
+                            <div v-if="isLoading" class="flex justify-content-center">
+                                <Card class="p-3">
+                                    <template #title>
+                                        <div class="flex justify-content-center">
+                                            <i class="pi pi-spin pi-spinner text-4xl"></i>
+                                        </div>
+                                    </template>
+                                </Card>
+                            </div>
+                            <p v-else-if="upcomingEvents.length === 0" class="text-center text-500">
+                                {{ $t('dashboard.sections.upcomingEvents.empty') }}
+                            </p>
+                            <div v-else class="upcoming-events">
+                                <div v-for="event in upcomingEvents" :key="event.id" 
+                                     class="event-item p-3 mb-3 border-round surface-100">
+                                    <div class="flex align-items-center justify-content-between">
+                                        <div class="flex align-items-center">
+                                            <img :src="event.imageUrl" :alt="event.name" 
+                                                 class="event-thumbnail mr-3" />
+                                            <div>
+                                                <h3 class="text-xl font-semibold mb-2">{{ event.name }}</h3>
+                                                <div class="flex align-items-center text-600 mb-2">
+                                                    <i class="pi pi-calendar mr-2"></i>
+                                                    <span>{{ formatDate(event.date) }}</span>
+                                                    <i class="pi pi-clock ml-3 mr-2"></i>
+                                                    <span>{{ event.time }}</span>
+                                                </div>
+                                                <div class="flex align-items-center text-600">
+                                                    <i class="pi pi-map-marker mr-2"></i>
+                                                    <span>{{ event.location }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="flex flex-column align-items-end">
+                                            <pv-tag :value="$t(`eventApplications.status.${event.status}`)"
+                                                   :severity="getStatusSeverity(event.status)"
+                                                   class="mb-2" />
+                                            <pv-button 
+                                                icon="pi pi-eye" 
+                                                @click="viewEventDetail(event.id)"
+                                                text
+                                                :label="$t('eventApplications.viewApplication')"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </template>
                     </Card>
                 </div>
@@ -160,5 +268,25 @@ export default {
     background-color: var(--surface-0);
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.event-item {
+    transition: all 0.2s;
+}
+
+.event-item:hover {
+    background-color: var(--surface-200);
+}
+
+.event-thumbnail {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+:deep(.p-tag) {
+    font-size: 0.875rem;
+    padding: 0.3rem 0.75rem;
 }
 </style> 
