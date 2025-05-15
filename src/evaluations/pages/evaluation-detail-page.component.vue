@@ -1,8 +1,8 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { evaluationService } from '@/evaluations/services/evaluation.service.js'
-import EvaluationDetailCard from '@/evaluations/components/evaluation-detail-card.component.vue'
+import { evaluationService } from '../services/evaluation.service.js'
+import EvaluationDetailCard from '../components/evaluation-detail-card.component.vue'
 
 const route = useRoute()
 const router = useRouter()
