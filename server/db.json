@@ -1,28 +1,4 @@
 {
-  "eventos": [
-    {
-      "id": 1,
-      "name": "Rock Night Fest",
-      "date": "2025-05-14",
-      "time": "20:00",
-      "location": "Salón de Eventos Royal",
-      "status": "confirmed",
-      "contractSigned": true,
-      "paidPercent": 50,
-      "imageUrl": "https://picsum.photos/seed/rock/600/400"
-    },
-    {
-      "id": 2,
-      "name": "Jazz Under Stars",
-      "date": "2025-04-17",
-      "time": "19:30",
-      "location": "Central Park, NY",
-      "status": "pending",
-      "contractSigned": true,
-      "paidPercent": 0,
-      "imageUrl": "https://picsum.photos/seed/jazz/600/400"
-    }
-  ],
   "users": [
     {
       "name": "Celeste",
@@ -67,188 +43,17 @@
       "id": 5
     }
   ],
-  "riders": [
-    {
-      "id": 1,
-      "firstName": "Juan",
-      "lastName": "Pérez",
-      "documentType": "DNI",
-      "documentNumber": "45678912",
-      "email": "juan.perez@email.com",
-      "phone": "+51987654321",
-      "location": "lima",
-      "genre": "M",
-      "paymentMethod": "cash",
-      "status": "pending",
-      "documents": [
-        {
-          "id": 1,
-          "type": "dni",
-          "url": "https://example.com/docs/dni.pdf",
-          "uploadedAt": "2024-03-15T10:30:00Z"
-        }
-      ],
-      "createdAt": "2024-03-15T10:00:00Z",
-      "updatedAt": "2024-03-15T10:30:00Z"
-    },
-    {
-      "id": 2,
-      "firstName": "María",
-      "lastName": "García",
-      "documentType": "DNI",
-      "documentNumber": "78912345",
-      "email": "maria.garcia@email.com",
-      "phone": "+51987123456",
-      "location": "callao",
-      "genre": "F",
-      "paymentMethod": "transfer",
-      "status": "approved",
-      "documents": [
-        {
-          "id": 2,
-          "type": "dni",
-          "url": "https://example.com/docs/dni2.pdf",
-          "uploadedAt": "2024-03-14T15:30:00Z"
-        },
-        {
-          "id": 3,
-          "type": "license",
-          "url": "https://example.com/docs/license2.pdf",
-          "uploadedAt": "2024-03-14T15:35:00Z"
-        }
-      ],
-      "createdAt": "2024-03-14T15:00:00Z",
-      "updatedAt": "2024-03-14T16:00:00Z"
-    }
-  ],
-  "applications": [
-    {
-      "id": 1,
-      "riderId": 1,
-      "status": "accepted",
-      "comments": [
-        {
-          "id": 1,
-          "text": "Documentos recibidos, en revisión",
-          "createdAt": "2024-03-15T10:31:00Z",
-          "author": "admin"
-        }
-      ],
-      "stages": [
-        {
-          "name": "document_verification",
-          "status": "in_progress",
-          "completedAt": null
-        },
-        {
-          "name": "background_check",
-          "status": "pending",
-          "completedAt": null
-        },
-        {
-          "name": "training",
-          "status": "pending",
-          "completedAt": null
-        }
-      ],
-      "createdAt": "2024-03-15T10:00:00Z",
-      "updatedAt": "2024-03-15T10:31:00Z"
-    },
-    {
-      "id": 2,
-      "riderId": 2,
-      "status": "accepted",
-      "comments": [
-        {
-          "id": 2,
-          "text": "Documentos verificados correctamente",
-          "createdAt": "2024-03-14T15:40:00Z",
-          "author": "admin"
-        },
-        {
-          "id": 3,
-          "text": "Verificación de antecedentes completada",
-          "createdAt": "2024-03-14T16:00:00Z",
-          "author": "admin"
-        }
-      ],
-      "stages": [
-        {
-          "name": "document_verification",
-          "status": "completed",
-          "completedAt": "2024-03-14T15:40:00Z"
-        },
-        {
-          "name": "background_check",
-          "status": "completed",
-          "completedAt": "2024-03-14T16:00:00Z"
-        },
-        {
-          "name": "training",
-          "status": "completed",
-          "completedAt": "2024-03-14T16:30:00Z"
-        }
-      ],
-      "createdAt": "2024-03-14T15:00:00Z",
-      "updatedAt": "2024-03-14T16:30:00Z"
-    }
-  ],
-  "locations": [
-    {
-      "id": "lima",
-      "name": "Lima",
-      "isActive": true
-    },
-    {
-      "id": "callao",
-      "name": "Callao",
-      "isActive": true
-    }
-  ],
-  "document_types": [
-    {
-      "id": "dni",
-      "name": "DNI",
-      "required": true,
-      "maxSize": 5000000,
-      "allowedFormats": [
-        "pdf",
-        "jpg",
-        "png"
-      ]
-    },
-    {
-      "id": "license",
-      "name": "Licencia de conducir",
-      "required": true,
-      "maxSize": 5000000,
-      "allowedFormats": [
-        "pdf",
-        "jpg",
-        "png"
-      ]
-    },
-    {
-      "id": "criminal_record",
-      "name": "Antecedentes penales",
-      "required": true,
-      "maxSize": 5000000,
-      "allowedFormats": [
-        "pdf"
-      ]
-    }
-  ],
   "events": [
     {
       "id": 1,
       "name": "Rock Night Fest",
-      "date": "2024-11-24",
+      "date": "2024-12-01",
       "time": "20:00",
-      "location": "Downtown Arena, NY",
+      "location": "Salón de Eventos Royal",
       "imageUrl": "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14",
-      "status": "pending",
-      "publishDate": "2024-10-24",
-      "soundcheckDate": "2024-11-24",
+      "status": "confirmed",
+      "publishDate": "2024-11-02",
+      "soundcheckDate": "2024-12-01",
       "soundcheckTime": "14:00",
       "capacity": 5000,
       "availableTickets": 3000,
@@ -258,13 +63,13 @@
     {
       "id": 2,
       "name": "Jazz Under Stars",
-      "date": "2024-12-02",
+      "date": "2024-12-17",
       "time": "19:30",
       "location": "Central Park, NY",
       "imageUrl": "https://images.unsplash.com/photo-1415201364774-f6f0bb35f28f",
       "status": "pending",
-      "publishDate": "2024-11-02",
-      "soundcheckDate": "2024-12-02",
+      "publishDate": "2024-11-17",
+      "soundcheckDate": "2024-12-17",
       "soundcheckTime": "15:00",
       "capacity": 3000,
       "availableTickets": 2000,
@@ -373,59 +178,6 @@
           "status": "COMPLETED",
           "timestamp": "2024-03-19T16:00:00Z",
           "comment": "Transferencia completada exitosamente"
-        }
-      ]
-    },
-    {
-      "id": 3,
-      "amount": 1800.00,
-      "eventId": 3,
-      "musicoId": 1,
-      "promotorId": 4,
-      "status": "PENDING",
-      "paymentMethod": "bank_transfer",
-      "bankInfo": {
-        "accountNumber": "****1234",
-        "bankName": "Banco de Crédito",
-        "accountType": "savings"
-      },
-      "description": "Pago por presentación de Celeste en Electro Beats Fest",
-      "createdAt": "2024-03-21T09:00:00Z",
-      "updatedAt": "2024-03-21T09:00:00Z",
-      "statusHistory": [
-        {
-          "status": "PENDING",
-          "timestamp": "2024-03-21T09:00:00Z",
-          "comment": "Pago creado"
-        }
-      ]
-    },
-    {
-      "id": 4,
-      "amount": 2500.00,
-      "eventId": 1,
-      "musicoId": 2,
-      "promotorId": 4,
-      "status": "CANCELLED",
-      "paymentMethod": "bank_transfer",
-      "bankInfo": {
-        "accountNumber": "****5678",
-        "bankName": "BBVA",
-        "accountType": "checking"
-      },
-      "description": "Pago cancelado - Oscar Antayhua en Rock Night Fest",
-      "createdAt": "2024-03-18T14:00:00Z",
-      "updatedAt": "2024-03-18T15:30:00Z",
-      "statusHistory": [
-        {
-          "status": "PENDING",
-          "timestamp": "2024-03-18T14:00:00Z",
-          "comment": "Pago creado"
-        },
-        {
-          "status": "CANCELLED",
-          "timestamp": "2024-03-18T15:30:00Z",
-          "comment": "Pago cancelado por cambio en la programación"
         }
       ]
     }
