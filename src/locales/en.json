@@ -1,252 +1,341 @@
-{    "evaluations": {
+{
+  "evaluations": {
     "title": "Evaluations",
     "filters": {
-        "all": "All",
-        "done": "Completed",
-        "pending": "Pending"
+      "all": "All",
+      "done": "Completed",
+      "pending": "Pending"
     },
     "writePlaceholder": "Evaluate your experience at {event}",
     "rating": "Rating",
     "comment": "Comment",
     "checklist": "Checklist",
     "checklistItems": {
-        "punctual": "Timely Payment",
-        "communication": "Good Communication",
-        "rider": "Technical Rider Respected"
+      "punctual": "Timely Payment",
+      "communication": "Good Communication",
+      "rider": "Technical Rider Respected"
     },
     "submit": "Save Evaluation",
     "successMessage": "Evaluation saved successfully",
     "errorMessage": "There was an error saving the evaluation"
-},
-    "common": {
-        "add": "Add",
-        "edit": "Edit",
-        "delete": "Delete",
-        "save": "Save",
-        "cancel": "Cancel",
-        "confirm": "Confirm",
-        "actions": "Actions",
-        "loading": "Loading",
-        "search": "Search",
-        "notifications": "Notifications",
-        "darkMode": "Dark Mode",
-        "lightMode": "Light Mode",
-        "language": "Language",
-        "success": "Success",
-        "error": "Error",
-        "mainMenu": "Main Menu",
-        "close": "Close",
-        "toggleMenu": "Toggle Menu",
-        "userProfile": "User Profile",
-        "logout": "Logout"
+  },
+  "common": {
+    "add": "Add",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "actions": "Actions",
+    "loading": "Loading",
+    "search": "Search",
+    "notifications": "Notifications",
+    "darkMode": "Dark Mode",
+    "lightMode": "Light Mode",
+    "language": "Language",
+    "success": "Success",
+    "error": "Error",
+    "mainMenu": "Main Menu",
+    "close": "Close",
+    "toggleMenu": "Toggle Menu",
+    "userProfile": "User Profile",
+    "logout": "Logout",
+    "status": "State"
+  },
+  "schedule": {
+    "confirmed": "Confirmed Events",
+    "noConfirmed": "No confirmed events yet",
+    "year": "2025"
+  },
+  "menu": {
+    "dashboard": "Dashboard",
+    "profile": "My Profile",
+    "applications": "Applications",
+    "search": "Search Space",
+    "agenda": "Schedule",
+    "evaluations": "Evaluations",
+    "payments": "Received Payments"
+  },
+  "payments": {
+    "noPayments": "No payments registered",
+    "loading": "Loading payments...",
+    "columns": {
+      "id": "ID",
+      "event": "Event",
+      "amount": "Amount",
+      "status": "Status",
+      "date": "Date",
+      "actions": "Actions"
     },
-    "schedule": {
-        "confirmed":   "Confirmed Events",
-        "noConfirmed": "No confirmed events yet",
-        "year": "2025"
+    "details": {
+      "title": "Payment Details",
+      "eventInfo": "Event Information",
+      "name": "Name",
+      "musician": "Musician",
+      "promoter": "Promoter",
+      "paymentInfo": "Payment Information",
+      "amount": "Amount",
+      "paymentMethod": "Payment Method",
+      "description": "Description",
+      "bank": "Bank",
+      "accountNumber": "Account Number",
+      "createdAt": "Created At",
+      "updatedAt": "Last Update"
     },
-    "menu": {
-        "dashboard": "Dashboard",
-        "profile": "My Profile",
-        "applications": "Applications",
-        "search": "Search Space",
-        "agenda": "Schedule",
-        "evaluations": "Evaluations",
-        "payments": "Received Payments"
+    "status": {
+      "pending": "Pending",
+      "held": "Held",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
     },
-    "payments": {
-        "noPayments": "No payments registered",
-        "loading": "Loading payments...",
-        "columns": {
-            "id": "ID",
-            "event": "Event",
-            "amount": "Amount",
-            "status": "Status",
-            "date": "Date",
-            "actions": "Actions"
+    "paymentMethods": {
+      "bank_transfer": "Bank Transfer",
+      "credit_card": "Credit Card",
+      "debit_card": "Debit Card",
+      "cash": "Cash"
+    },
+    "tracking": {
+      "pending": "Pending",
+      "held": "Held",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "actions": {
+      "viewDetails": "View details",
+      "title": "Actions"
+    }
+  },
+  "rider": {
+    "application": {
+      "title": "Rider Application",
+      "location": "Choose your location",
+      "genre": "Choose your gender",
+      "paymentMethod": "Choose your payment method",
+      "document": "Upload your document",
+      "documentHelp": "Maximum 10MB - PDF or Word",
+      "submit": "Submit application",
+      "success": "Your application has been submitted successfully",
+      "error": "Error submitting application",
+      "documentSuccess": "Document uploaded successfully",
+      "documentError": "Error uploading document",
+      "options": {
+        "locations": {
+          "lima": "Lima",
+          "callao": "Callao"
         },
-        "details": {
-            "title": "Payment Details",
-            "eventInfo": "Event Information",
-            "name": "Name",
-            "musician": "Musician",
-            "promoter": "Promoter",
-            "paymentInfo": "Payment Information",
-            "amount": "Amount",
-            "paymentMethod": "Payment Method",
-            "description": "Description",
-            "bank": "Bank",
-            "accountNumber": "Account Number",
-            "createdAt": "Created At",
-            "updatedAt": "Last Update"
+        "genres": {
+          "M": "Male",
+          "F": "Female",
+          "O": "Other"
         },
-        "status": {
-            "pending": "Pending",
-            "held": "Held",
-            "completed": "Completed",
-            "cancelled": "Cancelled"
-        },
-        "paymentMethods": {
-            "bank_transfer": "Bank Transfer",
-            "credit_card": "Credit Card",
-            "debit_card": "Debit Card",
-            "cash": "Cash"
-        },
-        "tracking": {
-            "pending": "Pending",
-            "held": "Held",
-            "completed": "Completed",
-            "cancelled": "Cancelled"
-        },
-        "actions": {
-            "viewDetails": "View details",
-            "title": "Actions"
+        "payments": {
+          "cash": "Cash",
+          "transfer": "Bank Transfer"
         }
+      }
+    }
+  },
+  "dashboard": {
+    "welcome": "Welcome {name}",
+    "stats": {
+      "nextEvents": {
+        "title": "Next Events",
+        "empty": "No upcoming events"
+      },
+      "pendingPayments": {
+        "title": "Payments to Collect",
+        "empty": "No payments to collect",
+        "summary": "Payments to collect summary"
+      },
+      "rating": {
+        "title": "Rating",
+        "empty": "No ratings"
+      },
+      "bookings": {
+        "title": "Bookings",
+        "empty": "No bookings"
+      }
+    },
+    "sections": {
+      "upcomingEvents": {
+        "title": "Upcoming Events",
+        "empty": "No upcoming events"
+      },
+      "recentActivity": {
+        "title": "Recent Activity",
+        "empty": "No recent activity"
+      }
+    },
+    "viewAll": "View all"
+  },
+  "eventApplications": {
+    "title": "Event Applications",
+    "searchPlaceholder": "Search by name or location",
+    "locationPlaceholder": "Search or location",
+    "statePlaceholder": "Search or state",
+    "allStatuses": "All statuses",
+    "pending": "Pending",
+    "accepted": "Accepted",
+    "rejected": "Rejected",
+    "noApplications": "No applications available",
+    "status": {
+      "pending": "Pending",
+      "accepted": "Accepted",
+      "rejected": "Rejected"
+    },
+    "venue": "Venue",
+    "payment": "Payment",
+    "apply": "Apply",
+    "viewApplication": "View application"
+  },
+  "applicationDetail": {
+    "title": "Application Detail",
+    "back": "Back to applications",
+    "errorLoading": "Error loading application details",
+    "eventDetails": "Event Details",
+    "requirements": "Requirements",
+    "description": "Description",
+    "venue": "Venue",
+    "payment": "Payment",
+    "duration": "Duration",
+    "hours": "hours",
+    "genre": "Musical genre",
+    "equipment": "Equipment",
+    "accept": "Accept application",
+    "reject": "Reject application",
+    "status": {
+      "pending": "Pending",
+      "accepted": "Accepted",
+      "rejected": "Rejected",
+      "confirmed": "Accepted"
+    },
+    "technicalDetails": "Technical Details",
+    "publishDate": "Publish Date",
+    "eventDate": "Event Date",
+    "eventTime": "Event Time",
+    "location": "Location",
+    "soundcheckDate": "Soundcheck Date",
+    "soundcheckTime": "Soundcheck Time",
+    "venueCapacity": "Venue Capacity",
+    "availableTickets": "Available Tickets",
+    "contract": {
+      "title": "Event Contract",
+      "reject": "Reject",
+      "signAndAccept": "Sign and Accept",
+      "success": "Contract signed successfully",
+      "error": "Error signing contract",
+      "noUser": "No authenticated user",
+      "notFound": "Application not found",
+      "serverError": "Server error processing contract"
     },
     "rider": {
-        "application": {
-            "title": "Rider Application",
-            "location": "Choose your location",
-            "genre": "Choose your gender",
-            "paymentMethod": "Choose your payment method",
-            "document": "Upload your document",
-            "documentHelp": "Maximum 10MB - PDF or Word",
-            "submit": "Submit application",
-            "success": "Your application has been submitted successfully",
-            "error": "Error submitting application",
-            "documentSuccess": "Document uploaded successfully",
-            "documentError": "Error uploading document",
-            "options": {
-                "locations": {
-                    "lima": "Lima",
-                    "callao": "Callao"
-                },
-                "genres": {
-                    "M": "Male",
-                    "F": "Female",
-                    "O": "Other"
-                },
-                "payments": {
-                    "cash": "Cash",
-                    "transfer": "Bank Transfer"
-                }
-            }
-        }
-    },
-    "dashboard": {
-        "welcome": "Welcome {name}",
-        "stats": {
-            "nextEvents": {
-                "title": "Next Events",
-                "empty": "No upcoming events"
-            },
-            "pendingPayments": {
-                "title": "Payments to Collect",
-                "empty": "No payments to collect",
-                "summary": "Payments to collect summary"
-            },
-            "rating": {
-                "title": "Rating",
-                "empty": "No ratings"
-            },
-            "bookings": {
-                "title": "Bookings",
-                "empty": "No bookings"
-            }
-        },
-        "sections": {
-            "upcomingEvents": {
-                "title": "Upcoming Events",
-                "empty": "No upcoming events"
-            },
-            "recentActivity": {
-                "title": "Recent Activity",
-                "empty": "No recent activity"
-            }
-        },
-        "viewAll": "View all"
-    },
-    "eventApplications": {
-        "title": "Event Applications",
-        "searchPlaceholder": "Search by name or location",
-        "allStatuses": "All statuses",
-        "pending": "Pending",
-        "accepted": "Accepted",
-        "rejected": "Rejected",
-        "noApplications": "No applications available",
-        "status": {
-            "pending": "Pending",
-            "accepted": "Accepted",
-            "rejected": "Rejected"
-        },
-        "venue": "Venue",
-        "payment": "Payment",
-        "apply": "Apply",
-        "viewApplication": "View application"
-    },
-    "applicationDetail": {
-        "title": "Application Detail",
-        "back": "Back to applications",
-        "errorLoading": "Error loading application details",
-        "eventDetails": "Event Details",
-        "requirements": "Requirements",
-        "description": "Description",
-        "venue": "Venue",
-        "payment": "Payment",
-        "duration": "Duration",
-        "hours": "hours",
-        "genre": "Musical genre",
-        "equipment": "Equipment",
-        "accept": "Accept application",
-        "reject": "Reject application",
-        "status": {
-            "pending": "Pending",
-            "accepted": "Accepted",
-            "rejected": "Rejected",
-            "confirmed": "Accepted"
-        },
-        "technicalDetails": "Technical Details",
-        "publishDate": "Publish Date",
-        "eventDate": "Event Date",
-        "eventTime": "Event Time",
-        "location": "Location",
-        "soundcheckDate": "Soundcheck Date",
-        "soundcheckTime": "Soundcheck Time",
-        "venueCapacity": "Venue Capacity",
-        "availableTickets": "Available Tickets",
-        "contract": {
-            "title": "Event Contract",
-            "reject": "Reject",
-            "signAndAccept": "Sign and Accept",
-            "success": "Contract signed successfully",
-            "error": "Error signing contract",
-            "noUser": "No authenticated user",
-            "notFound": "Application not found",
-            "serverError": "Server error processing contract"
-        },
-        "rider": {
-            "title": "Upload Technical Rider",
-            "chooseLabel": "Select Rider",
-            "uploadLabel": "Upload",
-            "cancelLabel": "Cancel",
-            "dragDropText": "Drag and drop the PDF file here or click to select it",
-            "sizeNote": "* File must be in PDF format and must not exceed 5MB"
-        }
-    },
-    "calendar": {
-        "weekDays": {
-            "sunday": "Sun",
-            "monday": "Mon",
-            "tuesday": "Tue",
-            "wednesday": "Wed",
-            "thursday": "Thu",
-            "friday": "Fri",
-            "saturday": "Sat"
-        },
-        "legend": {
-            "events": "Events",
-            "soundchecks": "Sound Checks"
-        },
-        "today": "Today"
+      "title": "Upload Technical Rider",
+      "chooseLabel": "Select Rider",
+      "uploadLabel": "Upload",
+      "cancelLabel": "Cancel",
+      "dragDropText": "Drag and drop the PDF file here or click to select it",
+      "sizeNote": "* File must be in PDF format and must not exceed 5MB"
     }
-} 
+  },
+  "calendar": {
+    "weekDays": {
+      "sunday": "Sun",
+      "monday": "Mon",
+      "tuesday": "Tue",
+      "wednesday": "Wed",
+      "thursday": "Thu",
+      "friday": "Fri",
+      "saturday": "Sat"
+    },
+    "legend": {
+      "events": "Events",
+      "soundchecks": "Sound Checks"
+    },
+    "today": "Today"
+  },
+  "promoter": {
+    "dashboard": {
+      "title": "Promoter Dashboard",
+      "welcome": "Welcome, {name}",
+      "createEvent": "Create Event",
+      "myEvents": "My Events",
+      "noEvents": "You have no events created",
+      "stats": {
+        "activeEvents": {
+          "title": "Active Events",
+          "empty": "No active events"
+        },
+        "applicants": {
+          "title": "Applicants",
+          "empty": "No applicants"
+        },
+        "revenue": {
+          "title": "Revenue",
+          "empty": "No revenue"
+        },
+        "venues": {
+          "title": "Venues",
+          "empty": "No venues"
+        }
+      },
+      "filters": {
+        "title": "Filters",
+        "name": "Name",
+        "location": "Location",
+        "status": "Status",
+        "dateFrom": "Date from",
+        "dateTo": "Date to",
+        "apply": "Apply",
+        "clear": "Clear"
+      },
+      "eventStatus": {
+        "draft": "Draft",
+        "published": "Published",
+        "cancelled": "Cancelled",
+        "completed": "Completed",
+        "pending": "Pending"
+      }
+    }
+  },
+
+  "ticket": {
+    "management": "Ticket Management",
+    "create": "Create Ticket",
+    "edit": "Edit Ticket",
+    "delete": "Delete Ticket",
+    "confirmDelete": "Are you sure you want to delete this ticket?",
+    "noTickets": "No tickets created",
+    "event": "Event",
+    "selectEvent": "Select an event",
+    "type": "Ticket Type",
+    "typePlaceholder": "Ex: General, VIP, Backstage",
+    "price": "Price",
+    "validUntil": "Valid Until",
+    "status": "Status",
+    "statusActive": "Active",
+    "statusUsed": "Used",
+    "statusCancelled": "Cancelled",
+    "code": "Code",
+    "qrCode": "QR Code",
+    "generated": "Automatically generated",
+    "notGenerated": "Not generated",
+    "creation": "Ticket Creation",
+    "statistics": "Promotion Statistics",
+    "viewStats": "View statistics",
+    "share": "Share",
+    "shareOn": "Share on social media",
+    "stats": {
+      "clicks": "Link clicks",
+      "uniqueVisits": "Unique visits",
+      "confirmations": "Attendance confirmations",
+      "issued": "Tickets issued",
+      "scanned": "Tickets scanned"
+    },
+    "platforms": {
+      "facebook": "Facebook",
+      "instagram": "Instagram",
+      "twitter": "Twitter/X",
+      "whatsapp": "WhatsApp"
+    }
+  }
+}
