@@ -8,6 +8,5 @@ import ConfirmedEventsList  from '../../schedule/components/confirmed-events-lis
 <template>
   <div class="p-4">
     <MonthGrid />
-    <ConfirmedEventsList />
   </div>
 </template>

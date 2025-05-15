@@ -15,7 +15,8 @@ const emit = defineEmits(['view-detail']);
 
 const formattedDate = computed(() => {
   if (!props.event.date) return '';
-  return new Date(props.event.date).toLocaleDateString(locale.value, {
+  const date = new Date(props.event.date + 'T00:00:00')
+  return date.toLocaleDateString(locale.value, {
     weekday: 'long',
     year: 'numeric',
     month: 'long',
