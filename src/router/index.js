@@ -17,6 +17,13 @@ const routes = [
         meta: { requiresAuth: true }
     },
     {
+        path: '/agenda',
+        name: 'Agenda',
+        component: ()=> import('../schedule/pages/schedule-page.component.vue'),
+        meta: { requiresAuth: true }
+    },
+
+    {
         path: '/applications',
         name: 'EventApplications',
         component: () => import('../event-application/pages/event-applications.component.vue'),

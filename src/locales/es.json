@@ -21,6 +21,12 @@
         "userProfile": "Perfil de usuario",
         "logout": "Cerrar Sesión"
     },
+
+    "schedule": {
+        "confirmed":   "Eventos Confirmados",
+        "noConfirmed": "No hay eventos confirmados aún",
+        "year": "2025"
+    },
     "menu": {
         "dashboard": "Dashboard",
         "profile": "Mi Perfil",
