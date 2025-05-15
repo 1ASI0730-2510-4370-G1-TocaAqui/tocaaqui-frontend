@@ -22,6 +22,14 @@ const routes = [
         component: ()=> import('../schedule/pages/schedule-page.component.vue'),
         meta: { requiresAuth: true }
     },
+    {
+        path: '/evaluations',
+        component: () => import('@/evaluations/pages/evaluations-page.component.vue')
+    },
+    {
+        path: '/evaluations/:id',
+        component: () => import('@/evaluations/pages/evaluation-detail-page.component.vue')
+    },
 
     {
         path: '/applications',

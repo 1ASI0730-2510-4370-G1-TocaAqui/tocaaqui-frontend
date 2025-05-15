@@ -1,4 +1,20 @@
 {
+  "evaluations": [
+    {
+      "id": 1,
+      "eventId": 1,
+      "musicianId": 1,
+      "promoterId": 4,
+      "rating": 5,
+      "comment": "Todo estuvo muy bien organizado. La prueba de sonido se realizó a tiempo...",
+      "createdAt": "2025-01-05T12:00:00Z"
+    }
+  ],
+  "evaluation_checklist": [
+    { "id": 1, "evaluationId": 1, "label": "Pago puntual",           "value": true  },
+    { "id": 2, "evaluationId": 1, "label": "Buena comunicación",    "value": true  },
+    { "id": 3, "evaluationId": 1, "label": "Rider técnico respetado","value": true  }
+  ],
   "eventos": [
     {
       "id": 1,

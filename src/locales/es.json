@@ -1,4 +1,23 @@
-{
+{    "evaluations": {
+    "title": "Evaluaciones",
+    "filters": {
+        "all": "Todas",
+        "done": "Completadas",
+        "pending": "Pendientes"
+    },
+    "writePlaceholder": "Evalúa tu experiencia en {event}",
+    "rating": "Calificación",
+    "comment": "Comentario",
+    "checklist": "Checklist",
+    "checklistItems": {
+        "punctual": "Pago puntual",
+        "communication": "Buena comunicación",
+        "rider": "Rider técnico respetado"
+    },
+    "submit": "Guardar evaluación",
+    "successMessage": "Evaluación guardada correctamente",
+    "errorMessage": "Hubo un error al guardar la evaluación"
+},
     "common": {
         "add": "Agregar",
         "edit": "Editar",

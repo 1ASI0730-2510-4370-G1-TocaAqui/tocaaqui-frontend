@@ -1,4 +1,23 @@
-{
+{    "evaluations": {
+    "title": "Evaluations",
+    "filters": {
+        "all": "All",
+        "done": "Completed",
+        "pending": "Pending"
+    },
+    "writePlaceholder": "Evaluate your experience at {event}",
+    "rating": "Rating",
+    "comment": "Comment",
+    "checklist": "Checklist",
+    "checklistItems": {
+        "punctual": "Timely Payment",
+        "communication": "Good Communication",
+        "rider": "Technical Rider Respected"
+    },
+    "submit": "Save Evaluation",
+    "successMessage": "Evaluation saved successfully",
+    "errorMessage": "There was an error saving the evaluation"
+},
     "common": {
         "add": "Add",
         "edit": "Edit",
