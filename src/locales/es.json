@@ -46,6 +46,18 @@
         "noConfirmed": "No hay eventos confirmados aún",
         "year": "2025"
     },
+
+    "profile": {
+        "title": "Perfil del Usuario",
+        "name": "Nombre",
+        "email": "Correo",
+        "role": "Rol",
+        "password": "Contraseña",
+        "editProfile": "Editar Perfil",
+        "successUpdate": "Perfil actualizado correctamente",
+        "errorUpdate": "No se pudo actualizar el perfil"
+    },
+
     "menu": {
         "dashboard": "Dashboard",
         "profile": "Mi Perfil",

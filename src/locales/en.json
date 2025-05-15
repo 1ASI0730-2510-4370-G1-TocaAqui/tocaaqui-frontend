@@ -45,6 +45,18 @@
         "noConfirmed": "No confirmed events yet",
         "year": "2025"
     },
+
+    "profile": {
+        "title": "User Profile",
+        "name": "Name",
+        "email": "Email",
+        "role": "Role",
+        "password": "Password",
+        "editProfile": "Edit Profile",
+        "successUpdate": "Profile updated successfully",
+        "errorUpdate": "Failed to update profile"
+    },
+
     "menu": {
         "dashboard": "Dashboard",
         "profile": "My Profile",

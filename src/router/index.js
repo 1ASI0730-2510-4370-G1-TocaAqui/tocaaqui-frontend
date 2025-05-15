@@ -51,6 +51,12 @@ const routes = [
         props: route => ({
             userId: Number(JSON.parse(localStorage.getItem('user'))?.id)
         })
+    },
+    {
+        path: '/profile',
+        name: 'Profile',
+        component: () => import('../profile/pages/profile-page.component.vue'),
+        meta: { requiresAuth: true }
     }
 ];
 
