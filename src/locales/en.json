@@ -217,7 +217,12 @@
         "contract": {
             "title": "Event Contract",
             "reject": "Reject",
-            "signAndAccept": "Sign and Accept"
+            "signAndAccept": "Sign and Accept",
+            "success": "Contract signed successfully",
+            "error": "Error signing contract",
+            "noUser": "No authenticated user",
+            "notFound": "Application not found",
+            "serverError": "Server error processing contract"
         },
         "rider": {
             "title": "Upload Technical Rider",

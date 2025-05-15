@@ -11,9 +11,24 @@
     }
   ],
   "evaluation_checklist": [
-    { "id": 1, "evaluationId": 1, "label": "Pago puntual",           "value": true  },
-    { "id": 2, "evaluationId": 1, "label": "Buena comunicación",    "value": true  },
-    { "id": 3, "evaluationId": 1, "label": "Rider técnico respetado","value": true  }
+    {
+      "id": 1,
+      "evaluationId": 1,
+      "label": "Pago puntual",
+      "value": true
+    },
+    {
+      "id": 2,
+      "evaluationId": 1,
+      "label": "Buena comunicación",
+      "value": true
+    },
+    {
+      "id": 3,
+      "evaluationId": 1,
+      "label": "Rider técnico respetado",
+      "value": true
+    }
   ],
   "users": [
     {
@@ -99,14 +114,20 @@
       "time": "22:00",
       "location": "Pier 17, NY",
       "imageUrl": "https://images.unsplash.com/photo-1470225620780-dba8ba36b745",
-      "status": "pending",
+      "status": "accepted",
       "publishDate": "2024-11-10",
       "soundcheckDate": "2024-12-10",
       "soundcheckTime": "16:00",
       "capacity": 4000,
       "availableTickets": 2500,
       "adminName": "Rojo",
-      "adminId": 4
+      "adminId": 4,
+      "contract": {
+        "userId": 1,
+        "signature": "firma-digital",
+        "signedDate": "2025-05-15T18:28:52.749Z",
+        "status": "signed"
+      }
     }
   ],
   "event_applicants": [
@@ -132,16 +153,16 @@
       "id": 3,
       "userId": 1,
       "eventId": 3,
-      "status": "pending",
+      "status": "accepted",
       "applicationDate": "2024-03-21T09:00:00Z",
-      "contractSigned": false,
+      "contractSigned": true,
       "riderUploaded": false
     }
   ],
   "payments": [
     {
       "id": 1,
-      "amount": 1500.00,
+      "amount": 1500,
       "eventId": 1,
       "musicoId": 1,
       "promotorId": 4,
@@ -170,7 +191,7 @@
     },
     {
       "id": 2,
-      "amount": 2000.00,
+      "amount": 2000,
       "eventId": 2,
       "musicoId": 2,
       "promotorId": 5,

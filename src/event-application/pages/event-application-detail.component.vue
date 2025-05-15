@@ -3,6 +3,7 @@ import { ref, onMounted, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { EventApplicationService } from '../services/event-application.service';
+import { useToast } from 'primevue/usetoast';
 
 export default {
   name: 'EventApplicationDetail',
@@ -11,6 +12,7 @@ export default {
     const router = useRouter();
     const { t, locale } = useI18n();
     const eventApplicationService = new EventApplicationService();
+    const toast = useToast();
 
     const application = ref(null);
     const loading = ref(true);
@@ -125,12 +127,47 @@ Cualquier modificación a este contrato deberá ser acordada por escrito entre a
     const signContract = async () => {
       try {
         updating.value = true;
-        const result = await eventApplicationService.signContract(route.params.id, artistSignature.value);
-        application.value = result.event;
-        hasSignedContract.value = true;
-        showContractDialog.value = false;
+        // Obtener el usuario del localStorage
+        const userStr = localStorage.getItem('user');
+        if (!userStr) {
+          toast.add({ 
+            severity: 'error', 
+            summary: t('applicationDetail.contract.error'), 
+            detail: t('applicationDetail.contract.noUser')
+          });
+          return;
+        }
+        const user = JSON.parse(userStr);
+        
+        const result = await eventApplicationService.signContract(
+          route.params.id,
+          user.id,
+          'firma-digital'
+        );
+        
+        if (result) {
+          // Actualizar el estado de la aplicación
+          application.value = result;
+          hasSignedContract.value = true;
+          showContractDialog.value = false;
+          
+          // Mostrar mensaje de éxito
+          toast.add({ 
+            severity: 'success', 
+            summary: t('common.success'), 
+            detail: t('applicationDetail.contract.success')
+          });
+          
+          // Recargar los detalles de la aplicación
+          await fetchApplicationDetail();
+        }
       } catch (error) {
         console.error('Error al firmar el contrato:', error);
+        toast.add({ 
+          severity: 'error', 
+          summary: t('common.error'), 
+          detail: t('applicationDetail.contract.error')
+        });
       } finally {
         updating.value = false;
       }

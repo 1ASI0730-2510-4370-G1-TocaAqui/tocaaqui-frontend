@@ -225,7 +225,12 @@
         "contract": {
             "title": "Contrato del Evento",
             "reject": "Rechazar",
-            "signAndAccept": "Firmar y Aceptar"
+            "signAndAccept": "Firmar y Aceptar",
+            "success": "Contrato firmado correctamente",
+            "error": "Error al firmar el contrato",
+            "noUser": "No hay usuario autenticado",
+            "notFound": "No se encontró la postulación",
+            "serverError": "Error en el servidor al procesar el contrato"
         },
         "rider": {
             "title": "Subir Rider Técnico",

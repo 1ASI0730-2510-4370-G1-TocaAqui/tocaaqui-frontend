@@ -129,25 +129,46 @@ export class EventApplicationService {
 
     async signContract(eventId, userId, signature) {
         try {
-            const contract = new Contract({
-                eventApplicationId: eventId,
+            // 1. Obtener la postulación actual
+            const applicantsResponse = await httpInstance.get(
+                `${this.applicantsEndpoint}?eventId=${eventId}&userId=${userId}`
+            );
+
+            if (!applicantsResponse.data || applicantsResponse.data.length === 0) {
+                throw new Error('No se encontró la postulación');
+            }
+
+            const applicant = applicantsResponse.data[0];
+
+            // 2. Actualizar el estado de la postulación a aceptado
+            await httpInstance.patch(
+                `${this.applicantsEndpoint}/${applicant.id}`,
+                {
+                    status: 'accepted',
+                    contractSigned: true
+                }
+            );
+
+            // 3. Crear el contrato como un campo más en el evento
+            const contract = {
                 userId: userId,
                 signature: signature,
-                signedDate: new Date().toISOString()
-            });
-            const response = await httpInstance.post(`${this.resourceEndpoint}/${eventId}/contracts`, contract);
-            
-            // Actualizamos el estado de la postulación
-            const applicant = await this.getEventApplicant(eventId, userId);
-            if (applicant) {
-                await this.updateApplicationStatus(applicant.id, { 
-                    status: 'accepted',
-                    contractSigned: true 
-                });
-            }
-            
-            return response.data;
+                signedDate: new Date().toISOString(),
+                status: 'signed'
+            };
+
+            // 4. Actualizar el evento con el contrato
+            const eventResponse = await httpInstance.patch(
+                `${this.resourceEndpoint}/${eventId}`,
+                { 
+                    contract: contract,
+                    status: 'accepted'
+                }
+            );
+
+            return eventResponse.data;
         } catch (error) {
+            console.error('Error en signContract:', error);
             throw this.handleError(error);
         }
     }
