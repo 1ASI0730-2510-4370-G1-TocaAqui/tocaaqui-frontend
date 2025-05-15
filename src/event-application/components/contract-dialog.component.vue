@@ -1,3 +1,35 @@
+<script setup>
+import { ref } from 'vue';
+import { eventApplicationService } from '../services/event-application.service';
+
+const props = defineProps({
+  visible: {
+    type: Boolean,
+    required: true
+  },
+  applicationId: {
+    type: String,
+    required: true
+  },
+  contractText: {
+    type: String,
+    required: true
+  }
+});
+
+const emit = defineEmits(['update:visible', 'signed']);
+
+const handleSign = async () => {
+  try {
+    await eventApplicationService.signContract(props.applicationId, 'firma-digital');
+    emit('signed');
+    emit('update:visible', false);
+  } catch (error) {
+    console.error('Error al firmar el contrato:', error);
+  }
+};
+</script>
+
 <template>
   <pv-dialog
     v-model:visible="visible"
@@ -25,33 +57,6 @@
     </template>
   </pv-dialog>
 </template>
-
-<script setup lang="ts">
-import { ref } from 'vue';
-import type { Contract } from '../model/event-application.model';
-import { eventApplicationService } from '../services/event-application.service';
-
-const props = defineProps<{
-  visible: boolean;
-  applicationId: string;
-  contractText: string;
-}>();
-
-const emit = defineEmits<{
-  (e: 'update:visible', value: boolean): void;
-  (e: 'signed'): void;
-}>();
-
-const handleSign = async () => {
-  try {
-    await eventApplicationService.signContract(props.applicationId, 'firma-digital');
-    emit('signed');
-    emit('update:visible', false);
-  } catch (error) {
-    console.error('Error al firmar el contrato:', error);
-  }
-};
-</script>
 
 <style scoped>
 .contract-text {

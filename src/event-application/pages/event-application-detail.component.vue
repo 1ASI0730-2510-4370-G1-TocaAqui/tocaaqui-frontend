@@ -1,3 +1,179 @@
+<script>
+import { ref, onMounted, computed } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
+import { EventApplicationService } from '../services/event-application.service';
+
+export default {
+  name: 'EventApplicationDetail',
+  setup() {
+    const route = useRoute();
+    const router = useRouter();
+    const { t, locale } = useI18n();
+    const eventApplicationService = new EventApplicationService();
+
+    const application = ref(null);
+    const loading = ref(true);
+    const error = ref(null);
+    const updating = ref(false);
+    const showContractDialog = ref(false);
+    const showRiderDialog = ref(false);
+    const artistSignature = ref('');
+    const hasSignedContract = ref(false);
+    const hasUploadedRider = ref(false);
+
+    const formatDate = (date) => {
+      if (!date) return '';
+      return new Date(date).toLocaleDateString(locale.value, {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+    };
+
+    const formatTime = (time) => {
+      if (!time) return '';
+      return new Date(`2000-01-01T${time}`).toLocaleTimeString(locale.value, {
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    };
+
+    const formattedData = computed(() => {
+      if (!application.value) return {};
+      return {
+        date: formatDate(application.value.date),
+        time: formatTime(application.value.time),
+        publishDate: formatDate(application.value.publishDate),
+        soundcheckDate: formatDate(application.value.soundcheckDate),
+        soundcheckTime: formatTime(application.value.soundcheckTime)
+      };
+    });
+
+    const generateContract = (event) => {
+      return `CONTRATO DE PRESENTACIÓN ARTÍSTICA
+
+Este contrato se celebra entre ${event.location} y el artista, en adelante denominado "el Artista".
+
+1. OBJETO DEL CONTRATO
+El Artista se compromete a realizar una presentación musical en vivo en ${event.location} en la fecha y hora especificadas.
+
+2. FECHA Y HORA
+- Fecha del evento: ${formattedData.value.date}
+- Hora de inicio: ${formattedData.value.time}
+- Duración de la presentación: 2 horas
+
+3. PRUEBA DE SONIDO
+- Fecha: ${formattedData.value.soundcheckDate}
+- Hora: ${formattedData.value.soundcheckTime}
+
+4. REMUNERACIÓN
+El Artista recibirá como pago por su presentación la cantidad acordada según el tipo de evento.
+
+5. OBLIGACIONES DEL VENUE
+- Proporcionar equipo de sonido profesional
+- Garantizar la seguridad del Artista
+- Proporcionar camerino
+- Cumplir con los requerimientos técnicos
+
+6. OBLIGACIONES DEL ARTISTA
+- Llegar puntualmente
+- Realizar la presentación acordada
+- Cumplir con el repertorio
+- Mantener conducta profesional
+
+7. CANCELACIÓN
+La cancelación del evento por cualquiera de las partes deberá ser notificada con al menos 48 horas de anticipación.
+
+8. OTROS TÉRMINOS
+Cualquier modificación a este contrato deberá ser acordada por escrito entre ambas partes.`;
+    };
+
+    const contractText = ref('');
+
+    const fetchApplicationDetail = async () => {
+      try {
+        loading.value = true;
+        const response = await eventApplicationService.getById(route.params.id);
+        application.value = response;
+        contractText.value = generateContract(response);
+      } catch (err) {
+        error.value = t('applicationDetail.errorLoading');
+        console.error('Error fetching application details:', err);
+      } finally {
+        loading.value = false;
+      }
+    };
+
+    const formatCurrency = (amount) => {
+      return new Intl.NumberFormat('es-ES', {
+        style: 'currency',
+        currency: 'EUR'
+      }).format(amount);
+    };
+
+    const getStatusSeverity = (status) => {
+      const severities = {
+        pending: 'warning',
+        accepted: 'success',
+        rejected: 'danger'
+      };
+      return severities[status] || 'info';
+    };
+
+    const signContract = async () => {
+      try {
+        updating.value = true;
+        const result = await eventApplicationService.signContract(route.params.id, artistSignature.value);
+        application.value = result.event;
+        hasSignedContract.value = true;
+        showContractDialog.value = false;
+      } catch (error) {
+        console.error('Error al firmar el contrato:', error);
+      } finally {
+        updating.value = false;
+      }
+    };
+
+    const onRiderUpload = async (event) => {
+      try {
+        updating.value = true;
+        await eventApplicationService.uploadRider(route.params.id, event.files[0]);
+        hasUploadedRider.value = true;
+        showRiderDialog.value = false;
+      } catch (error) {
+        console.error('Error al subir el rider técnico:', error);
+      } finally {
+        updating.value = false;
+      }
+    };
+
+    onMounted(() => {
+      fetchApplicationDetail();
+    });
+
+    return {
+      application,
+      loading,
+      error,
+      updating,
+      router,
+      formattedData,
+      getStatusSeverity,
+      showContractDialog,
+      showRiderDialog,
+      artistSignature,
+      hasSignedContract,
+      hasUploadedRider,
+      contractText,
+      signContract,
+      onRiderUpload
+    };
+  }
+};
+</script>
+
 <template>
   <div class="application-detail-container">
     <pv-toolbar class="mb-4 surface-0">
@@ -204,202 +380,6 @@
     </pv-dialog>
   </div>
 </template>
-
-<script>
-import { ref, onMounted, computed } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import { useI18n } from 'vue-i18n';
-import { EventApplicationService } from '../services/event-application.service';
-import Panel from 'primevue/panel';
-import Card from 'primevue/card';
-import Button from 'primevue/button';
-import Dialog from 'primevue/dialog';
-import FileUpload from 'primevue/fileupload';
-import Tag from 'primevue/tag';
-import Message from 'primevue/message';
-import ProgressSpinner from 'primevue/progressspinner';
-import Toolbar from 'primevue/toolbar';
-
-export default {
-  name: 'EventApplicationDetail',
-  components: {
-    'pv-panel': Panel,
-    'pv-card': Card,
-    'pv-button': Button,
-    'pv-dialog': Dialog,
-    'pv-file-upload': FileUpload,
-    'pv-tag': Tag,
-    'pv-message': Message,
-    'pv-progress-spinner': ProgressSpinner,
-    'pv-toolbar': Toolbar
-  },
-  setup() {
-    const route = useRoute();
-    const router = useRouter();
-    const { t, locale } = useI18n();
-    const eventApplicationService = new EventApplicationService();
-
-    const application = ref(null);
-    const loading = ref(true);
-    const error = ref(null);
-    const updating = ref(false);
-    const showContractDialog = ref(false);
-    const showRiderDialog = ref(false);
-    const artistSignature = ref('');
-    const hasSignedContract = ref(false);
-    const hasUploadedRider = ref(false);
-
-    const formatDate = (date) => {
-      if (!date) return '';
-      return new Date(date).toLocaleDateString(locale.value, {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      });
-    };
-
-    const formatTime = (time) => {
-      if (!time) return '';
-      return new Date(`2000-01-01T${time}`).toLocaleTimeString(locale.value, {
-        hour: '2-digit',
-        minute: '2-digit'
-      });
-    };
-
-    const formattedData = computed(() => {
-      if (!application.value) return {};
-      return {
-        date: formatDate(application.value.date),
-        time: formatTime(application.value.time),
-        publishDate: formatDate(application.value.publishDate),
-        soundcheckDate: formatDate(application.value.soundcheckDate),
-        soundcheckTime: formatTime(application.value.soundcheckTime)
-      };
-    });
-
-    const generateContract = (event) => {
-      return `CONTRATO DE PRESENTACIÓN ARTÍSTICA
-
-Este contrato se celebra entre ${event.location} y el artista, en adelante denominado "el Artista".
-
-1. OBJETO DEL CONTRATO
-El Artista se compromete a realizar una presentación musical en vivo en ${event.location} en la fecha y hora especificadas.
-
-2. FECHA Y HORA
-- Fecha del evento: ${formattedData.value.date}
-- Hora de inicio: ${formattedData.value.time}
-- Duración de la presentación: 2 horas
-
-3. PRUEBA DE SONIDO
-- Fecha: ${formattedData.value.soundcheckDate}
-- Hora: ${formattedData.value.soundcheckTime}
-
-4. REMUNERACIÓN
-El Artista recibirá como pago por su presentación la cantidad acordada según el tipo de evento.
-
-5. OBLIGACIONES DEL VENUE
-- Proporcionar equipo de sonido profesional
-- Garantizar la seguridad del Artista
-- Proporcionar camerino
-- Cumplir con los requerimientos técnicos
-
-6. OBLIGACIONES DEL ARTISTA
-- Llegar puntualmente
-- Realizar la presentación acordada
-- Cumplir con el repertorio
-- Mantener conducta profesional
-
-7. CANCELACIÓN
-La cancelación del evento por cualquiera de las partes deberá ser notificada con al menos 48 horas de anticipación.
-
-8. OTROS TÉRMINOS
-Cualquier modificación a este contrato deberá ser acordada por escrito entre ambas partes.`;
-    };
-
-    const contractText = ref('');
-
-    const fetchApplicationDetail = async () => {
-      try {
-        loading.value = true;
-        const response = await eventApplicationService.getById(route.params.id);
-        application.value = response;
-        contractText.value = generateContract(response);
-      } catch (err) {
-        error.value = t('applicationDetail.errorLoading');
-        console.error('Error fetching application details:', err);
-      } finally {
-        loading.value = false;
-      }
-    };
-
-    const formatCurrency = (amount) => {
-      return new Intl.NumberFormat('es-ES', {
-        style: 'currency',
-        currency: 'EUR'
-      }).format(amount);
-    };
-
-    const getStatusSeverity = (status) => {
-      const severities = {
-        pending: 'warning',
-        accepted: 'success',
-        rejected: 'danger'
-      };
-      return severities[status] || 'info';
-    };
-
-    const signContract = async () => {
-      try {
-        updating.value = true;
-        const result = await eventApplicationService.signContract(route.params.id, artistSignature.value);
-        application.value = result.event;
-        hasSignedContract.value = true;
-        showContractDialog.value = false;
-      } catch (error) {
-        console.error('Error al firmar el contrato:', error);
-      } finally {
-        updating.value = false;
-      }
-    };
-
-    const onRiderUpload = async (event) => {
-      try {
-        updating.value = true;
-        await eventApplicationService.uploadRider(route.params.id, event.files[0]);
-        hasUploadedRider.value = true;
-        showRiderDialog.value = false;
-      } catch (error) {
-        console.error('Error al subir el rider técnico:', error);
-      } finally {
-        updating.value = false;
-      }
-    };
-
-    onMounted(() => {
-      fetchApplicationDetail();
-    });
-
-    return {
-      application,
-      loading,
-      error,
-      updating,
-      router,
-      formattedData,
-      getStatusSeverity,
-      showContractDialog,
-      showRiderDialog,
-      artistSignature,
-      hasSignedContract,
-      hasUploadedRider,
-      contractText,
-      signContract,
-      onRiderUpload
-    };
-  }
-};
-</script>
 
 <style scoped>
 .application-detail-container {

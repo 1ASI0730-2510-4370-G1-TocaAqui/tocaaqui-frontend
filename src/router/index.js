@@ -44,10 +44,13 @@ const routes = [
         meta: { requiresAuth: true }
     },
     {
-        path:  '/payments',
-        name: 'Payments',
-        component: () => import('../payments/component/artistpayments.vue'),
-        meta: { requiresAuth: true }
+        path: '/payments',
+        name: 'PaymentSummary',
+        component: () => import('../payments/pages/payment-summary.page.vue'),
+        meta: { requiresAuth: true },
+        props: route => ({
+            userId: Number(JSON.parse(localStorage.getItem('user'))?.id)
+        })
     }
 ];
 

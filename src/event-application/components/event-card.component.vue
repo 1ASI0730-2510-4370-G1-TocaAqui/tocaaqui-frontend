@@ -1,3 +1,39 @@
+<script setup>
+import { useI18n } from 'vue-i18n';
+import { computed } from 'vue';
+
+const { t, locale } = useI18n();
+
+const props = defineProps({
+  event: {
+    type: Object,
+    required: true
+  }
+});
+
+const emit = defineEmits(['view-detail']);
+
+const formattedDate = computed(() => {
+  if (!props.event.date) return '';
+  const date = new Date(props.event.date + 'T00:00:00')
+  return date.toLocaleDateString(locale.value, {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+});
+
+const getStatusSeverity = (status) => {
+  const severities = {
+    pending: 'warning',
+    accepted: 'success',
+    rejected: 'danger'
+  };
+  return severities[status] || 'info';
+};
+</script>
+
 <template>
   <div class="relative">
     <img 
@@ -36,41 +72,6 @@
     />
   </div>
 </template>
-
-<script setup lang="ts">
-import { useI18n } from 'vue-i18n';
-import { computed } from 'vue';
-import type { EventApplication } from '../model/event-application.model';
-
-const { t, locale } = useI18n();
-
-const props = defineProps<{
-  event: EventApplication
-}>();
-
-const emit = defineEmits<{
-  (e: 'view-detail', id: string): void
-}>();
-
-const formattedDate = computed(() => {
-  if (!props.event.date) return '';
-  return new Date(props.event.date).toLocaleDateString(locale.value, {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
-});
-
-const getStatusSeverity = (status: string) => {
-  const severities = {
-    pending: 'warning',
-    accepted: 'success',
-    rejected: 'danger'
-  };
-  return severities[status as keyof typeof severities] || 'info';
-};
-</script>
 
 <style scoped>
 .h-15rem {
