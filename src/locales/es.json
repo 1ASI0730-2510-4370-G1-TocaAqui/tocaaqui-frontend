@@ -235,5 +235,21 @@
             "dragDropText": "Arrastra y suelta el archivo PDF aquí o haz clic para seleccionarlo",
             "sizeNote": "* El archivo debe estar en formato PDF y no debe exceder los 5MB"
         }
+    },
+    "calendar": {
+        "weekDays": {
+            "sunday": "Dom",
+            "monday": "Lun",
+            "tuesday": "Mar",
+            "wednesday": "Mié",
+            "thursday": "Jue",
+            "friday": "Vie",
+            "saturday": "Sáb"
+        },
+        "legend": {
+            "events": "Eventos",
+            "soundchecks": "Pruebas de sonido"
+        },
+        "today": "Hoy"
     }
 } 

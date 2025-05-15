@@ -227,5 +227,21 @@
             "dragDropText": "Drag and drop the PDF file here or click to select it",
             "sizeNote": "* File must be in PDF format and must not exceed 5MB"
         }
+    },
+    "calendar": {
+        "weekDays": {
+            "sunday": "Sun",
+            "monday": "Mon",
+            "tuesday": "Tue",
+            "wednesday": "Wed",
+            "thursday": "Thu",
+            "friday": "Fri",
+            "saturday": "Sat"
+        },
+        "legend": {
+            "events": "Events",
+            "soundchecks": "Sound Checks"
+        },
+        "today": "Today"
     }
 } 

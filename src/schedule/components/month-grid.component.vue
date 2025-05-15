@@ -3,8 +3,10 @@
 <!-- @author Juan Paul Llamccaya Arone                               -->
 <script setup>
 import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import EventService from '../services/event-calendar.service.js'
 
+const { locale } = useI18n()
 const pivot = ref(new Date('2024-12-01'))           // ancla del mes
 const events = ref([])                  // eventos del usuario
 
@@ -13,7 +15,7 @@ const MS_IN_DAY = 86_400_000            // milisegundos en un día
 
 const monthYear = computed(() => {
   const date = pivot.value
-  const month = date.toLocaleString('es-ES', { month: 'long' })
+  const month = date.toLocaleString(locale.value, { month: 'long' })
   // Capitalizar primera letra del mes
   const capitalizedMonth = month.charAt(0).toUpperCase() + month.slice(1)
   return `${capitalizedMonth} ${date.getFullYear()}`
@@ -121,7 +123,7 @@ loadEvents()
       <div class="month-chip">{{ monthYear }}</div>
       <div class="flex gap-2 navigation-buttons align-items-center">
         <pv-button icon="pi pi-chevron-left" text @click="prevWeek" />
-        <pv-button label="Hoy" 
+        <pv-button :label="$t('calendar.today')" 
                   class="today-button" 
                   @click="goToToday"
                   severity="secondary"
@@ -134,18 +136,26 @@ loadEvents()
     <div class="legend flex align-items-center gap-4 mb-3">
       <div class="legend-item flex align-items-center gap-2">
         <div class="legend-color event-color"></div>
-        <span class="text-sm">Eventos</span>
+        <span class="text-sm">{{ $t('calendar.legend.events') }}</span>
       </div>
       <div class="legend-item flex align-items-center gap-2">
         <div class="legend-color soundcheck-color"></div>
-        <span class="text-sm">Pruebas de sonido</span>
+        <span class="text-sm">{{ $t('calendar.legend.soundchecks') }}</span>
       </div>
     </div>
 
     <!-- rejilla 7 columnas -->
     <div class="grid-7">
       <span
-          v-for="d in ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb']"
+          v-for="d in [
+            $t('calendar.weekDays.sunday'),
+            $t('calendar.weekDays.monday'),
+            $t('calendar.weekDays.tuesday'),
+            $t('calendar.weekDays.wednesday'),
+            $t('calendar.weekDays.thursday'),
+            $t('calendar.weekDays.friday'),
+            $t('calendar.weekDays.saturday')
+          ]"
           :key="d"
           class="day-name"
       >{{ d }}</span>
