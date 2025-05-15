@@ -30,6 +30,55 @@
         "evaluations": "Evaluaciones",
         "payments": "Pagos Recibidos"
     },
+    "payments": {
+        "noPayments": "No hay pagos registrados",
+        "loading": "Cargando pagos...",
+        "columns": {
+            "id": "ID",
+            "event": "Evento",
+            "amount": "Monto",
+            "status": "Estado",
+            "date": "Fecha",
+            "actions": "Acciones"
+        },
+        "details": {
+            "title": "Detalles del Pago",
+            "eventInfo": "Información del Evento",
+            "name": "Nombre",
+            "musician": "Músico",
+            "promoter": "Promotor",
+            "paymentInfo": "Información del Pago",
+            "amount": "Monto",
+            "paymentMethod": "Método de Pago",
+            "description": "Descripción",
+            "bank": "Banco",
+            "accountNumber": "Número de Cuenta",
+            "createdAt": "Fecha de Creación",
+            "updatedAt": "Última Actualización"
+        },
+        "status": {
+            "pending": "Pendiente",
+            "held": "Retenido",
+            "completed": "Completado",
+            "cancelled": "Cancelado"
+        },
+        "paymentMethods": {
+            "bank_transfer": "Transferencia Bancaria",
+            "credit_card": "Tarjeta de Crédito",
+            "debit_card": "Tarjeta de Débito",
+            "cash": "Efectivo"
+        },
+        "tracking": {
+            "pending": "Pendiente",
+            "held": "Retenido",
+            "completed": "Completado",
+            "cancelled": "Cancelado"
+        },
+        "actions": {
+            "viewDetails": "Ver detalles",
+            "title": "Acciones"
+        }
+    },
     "rider": {
         "application": {
             "title": "Postulación para Rider",
@@ -69,14 +118,16 @@
     },
     "dashboard": {
         "welcome": "Bienvenido {name}",
+        "viewAll": "Ver todos",
         "stats": {
             "nextEvents": {
                 "title": "Próximos Eventos",
                 "empty": "No hay eventos próximos"
             },
             "pendingPayments": {
-                "title": "Pagos Pendientes",
-                "empty": "No hay pagos pendientes"
+                "title": "Pagos por Cobrar",
+                "empty": "No hay pagos por cobrar",
+                "summary": "Resumen de pagos por cobrar"
             },
             "rating": {
                 "title": "Calificación",

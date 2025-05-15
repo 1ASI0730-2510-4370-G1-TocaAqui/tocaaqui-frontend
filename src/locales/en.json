@@ -30,6 +30,55 @@
         "evaluations": "Evaluations",
         "payments": "Received Payments"
     },
+    "payments": {
+        "noPayments": "No payments registered",
+        "loading": "Loading payments...",
+        "columns": {
+            "id": "ID",
+            "event": "Event",
+            "amount": "Amount",
+            "status": "Status",
+            "date": "Date",
+            "actions": "Actions"
+        },
+        "details": {
+            "title": "Payment Details",
+            "eventInfo": "Event Information",
+            "name": "Name",
+            "musician": "Musician",
+            "promoter": "Promoter",
+            "paymentInfo": "Payment Information",
+            "amount": "Amount",
+            "paymentMethod": "Payment Method",
+            "description": "Description",
+            "bank": "Bank",
+            "accountNumber": "Account Number",
+            "createdAt": "Created At",
+            "updatedAt": "Last Update"
+        },
+        "status": {
+            "pending": "Pending",
+            "held": "Held",
+            "completed": "Completed",
+            "cancelled": "Cancelled"
+        },
+        "paymentMethods": {
+            "bank_transfer": "Bank Transfer",
+            "credit_card": "Credit Card",
+            "debit_card": "Debit Card",
+            "cash": "Cash"
+        },
+        "tracking": {
+            "pending": "Pending",
+            "held": "Held",
+            "completed": "Completed",
+            "cancelled": "Cancelled"
+        },
+        "actions": {
+            "viewDetails": "View details",
+            "title": "Actions"
+        }
+    },
     "rider": {
         "application": {
             "title": "Rider Application",
@@ -68,8 +117,9 @@
                 "empty": "No upcoming events"
             },
             "pendingPayments": {
-                "title": "Pending Payments",
-                "empty": "No pending payments"
+                "title": "Payments to Collect",
+                "empty": "No payments to collect",
+                "summary": "Payments to collect summary"
             },
             "rating": {
                 "title": "Rating",
@@ -89,7 +139,8 @@
                 "title": "Recent Activity",
                 "empty": "No recent activity"
             }
-        }
+        },
+        "viewAll": "View all"
     },
     "eventApplications": {
         "title": "Event Applications",
