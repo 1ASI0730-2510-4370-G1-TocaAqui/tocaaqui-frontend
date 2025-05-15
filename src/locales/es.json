@@ -21,6 +21,18 @@
         "userProfile": "Perfil de usuario",
         "logout": "Cerrar Sesión"
     },
+
+    "profile": {
+        "title": "Perfil del Usuario",
+        "name": "Nombre",
+        "email": "Correo",
+        "role": "Rol",
+        "password": "Contraseña",
+        "editProfile": "Editar Perfil",
+        "successUpdate": "Perfil actualizado correctamente",
+        "errorUpdate": "No se pudo actualizar el perfil"
+    },
+
     "menu": {
         "dashboard": "Dashboard",
         "profile": "Mi Perfil",

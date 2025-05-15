@@ -34,12 +34,15 @@ import Password from 'primevue/password';
 import Message from 'primevue/message';
 import ProgressSpinner from 'primevue/progressspinner';
 import Avatar from 'primevue/avatar';
+import Slider from "primevue/slider";
+import Divider from "primevue/divider";
 
 // PrimeVue servicios
 import ToastService from 'primevue/toastservice';
 import ConfirmationService from 'primevue/confirmationservice';
 import DialogService from 'primevue/dialogservice';
 import Tooltip from 'primevue/tooltip';
+
 
 // Estilos de PrimeVue
 import 'primeicons/primeicons.css';
@@ -87,6 +90,8 @@ app.component('pv-password', Password);
 app.component('pv-message', Message);
 app.component('pv-progress-spinner', ProgressSpinner);
 app.component('pv-avatar', Avatar);
+app.component('pv-slider', Slider);
+app.component('pv-divider', Divider);
 
 // Registrar servicios
 app.use(ToastService);

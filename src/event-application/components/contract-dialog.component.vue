@@ -29,7 +29,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import type { Contract } from '../model/event-application.model';
-import { eventApplicationService } from '../services/event-application.service';
+import { EventApplicationService } from '../services/event-application.service';
 
 const props = defineProps<{
   visible: boolean;

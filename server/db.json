@@ -1,39 +1,25 @@
 {
   "users": [
     {
-      "name": "Celeste",
-      "email": "dicabrerabuitron@gmail.com",
-      "password": "1234",
+      "name": "Skyblue",
+      "email": "di@gmail.com",
+      "password": "12333",
       "role": "musico",
       "id": 1
     },
     {
+      "id": 2,
       "name": "Oscar Antayhua",
       "email": "123@gmail.com",
       "password": "1234",
-      "role": "musico",
-      "id": 2
-    },
-    {
-      "id": 1,
-      "email": "musico@test.com",
-      "password": "123456",
-      "name": "Mario Torres",
       "role": "musico"
     },
     {
+      "id": 3,
       "name": "Azul",
       "email": "di36o14oficial@gmail.com",
       "password": "1234",
-      "role": "musico",
-      "id": 3
-    },
-    {
-      "name": "Rojo",
-      "email": "fabrizioleiva@gmail.com",
-      "password": "1234",
-      "role": "promotor",
-      "id": 4
+      "role": "musico"
     }
   ],
   "riders": [
