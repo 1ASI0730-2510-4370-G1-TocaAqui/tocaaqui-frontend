@@ -74,7 +74,9 @@ export default {
 
         const formatDate = (date) => {
             if (!date) return '';
-            return new Date(date).toLocaleDateString('es-ES', {
+            // Asegurarnos de que la fecha se procese en la zona horaria local
+            const localDate = new Date(date + 'T00:00:00');
+            return localDate.toLocaleDateString('es-ES', {
                 weekday: 'long',
                 year: 'numeric',
                 month: 'long',
