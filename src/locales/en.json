@@ -17,8 +17,8 @@
         "error": "Error",
         "mainMenu": "Main Menu",
         "close": "Close",
-        "toggleMenu": "Toggle menu",
-        "userProfile": "User profile",
+        "toggleMenu": "Toggle Menu",
+        "userProfile": "User Profile",
         "logout": "Logout"
     },
     "schedule": {
@@ -183,7 +183,8 @@
         "status": {
             "pending": "Pending",
             "accepted": "Accepted",
-            "rejected": "Rejected"
+            "rejected": "Rejected",
+            "confirmed": "Accepted"
         },
         "technicalDetails": "Technical Details",
         "publishDate": "Publish Date",

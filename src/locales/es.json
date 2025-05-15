@@ -191,7 +191,8 @@
         "status": {
             "pending": "Pendiente",
             "accepted": "Aceptado",
-            "rejected": "Rechazado"
+            "rejected": "Rechazado",
+            "confirmed": "Aceptado"
         },
         "technicalDetails": "Detalles Técnicos",
         "publishDate": "Fecha de Publicación",
