@@ -1,10 +1,19 @@
-{    "evaluations": {
+{   "evaluations": {
     "title": "Evaluaciones",
     "filters": {
         "all": "Todas",
         "done": "Completadas",
         "pending": "Pendientes"
     },
+
+    "evaluationDetail": {
+        "rateVenue": "Califica el local",
+        "commentPlaceholder": "Escribe un comentario sobre el local...",
+        "ratingSuccess": "¡Calificación enviada con éxito!",
+        "ratingError": "Error al enviar la calificación.",
+        "errorLoading": "Error al cargar la evaluación."
+    },
+
     "writePlaceholder": "Evalúa tu experiencia en {event}",
     "rating": "Calificación",
     "comment": "Comentario",

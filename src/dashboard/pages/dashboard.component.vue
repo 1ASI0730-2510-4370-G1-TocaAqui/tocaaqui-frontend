@@ -4,9 +4,10 @@ import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { EventApplicationService } from '../../event-application/services/event-application.service';
 import { PaymentService } from '../../payments/services/payment.service';
+import { EvaluationService } from '../../evaluations/services/evaluation.service';
 
 export default {
-    name: 'ArtistDashboard',
+    name: 'Dashboard',
     setup() {
         const router = useRouter();
         const { t } = useI18n();
@@ -14,8 +15,11 @@ export default {
         const isLoading = ref(true);
         const eventApplicationService = new EventApplicationService();
         const paymentService = new PaymentService();
+        const evaluationService = new EvaluationService();
         const upcomingEvents = ref([]);
         const pendingPayments = ref([]);
+        const evaluations = ref([]);
+        const averageRating = ref(0);
 
         // Estados computados para mostrar mensajes descriptivos
         const statsConfig = computed(() => ({
@@ -34,7 +38,7 @@ export default {
                 color: 'text-orange-500'
             },
             rating: {
-                value: '-',
+                value: user.value?.role === 'promotor' ? averageRating.value.toFixed(1) : '-',
                 title: t('dashboard.stats.rating.title'),
                 empty: t('dashboard.stats.rating.empty'),
                 icon: 'pi pi-star-fill',
@@ -59,7 +63,8 @@ export default {
             isLoading.value = false;
             await Promise.all([
                 fetchUpcomingEvents(),
-                fetchPendingPayments()
+                fetchPendingPayments(),
+                user.value?.role === 'promotor' ? fetchEvaluations() : Promise.resolve()
             ]);
         });
 
@@ -131,6 +136,21 @@ export default {
             }
         };
 
+        const fetchEvaluations = async () => {
+            try {
+                const evaluationsData = await evaluationService.getEvaluationsByPromoter(user.value.id);
+                evaluations.value = evaluationsData;
+                
+                // Calcular el promedio de calificaciones
+                if (evaluationsData.length > 0) {
+                    const sum = evaluationsData.reduce((acc, curr) => acc + curr.rating, 0);
+                    averageRating.value = sum / evaluationsData.length;
+                }
+            } catch (error) {
+                console.error('Error al obtener evaluaciones:', error);
+            }
+        };
+
         const viewEventDetail = (eventId) => {
             router.push(`/applications/${eventId}`);
         };
@@ -148,6 +168,7 @@ export default {
             formatCurrency,
             upcomingEvents,
             pendingPayments,
+            evaluations,
             viewEventDetail,
             navigateToPayments
         };
@@ -178,6 +199,10 @@ export default {
                             <p v-if="stat.value === 0 || stat.value === '-'" class="text-500">
                                 {{ stat.empty }}
                             </p>
+                            <div v-else-if="key === 'rating'" class="flex align-items-center justify-content-center">
+                                <span class="text-2xl font-bold mr-2">{{ stat.value }}</span>
+                                <pv-rating :modelValue="Number(stat.value)" readonly :cancel="false" />
+                            </div>
                             <p v-else class="text-2xl font-bold">{{ stat.value }}</p>
                         </template>
                     </pv-card>
