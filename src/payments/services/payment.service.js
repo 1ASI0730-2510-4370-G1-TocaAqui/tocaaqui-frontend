@@ -1,23 +1,11 @@
-import axios from 'axios';
+import httpInstance from "../../shared/services/http.instance.js";
 import { Payment, PaymentStatus } from '../model/payment.model';
 
-// Usar la misma URL base que el resto de la aplicación
-const API_BASE_URL = import.meta.env.VITE_API_URL;
-
 export class PaymentService {
-    constructor() {
-        this.axios = axios.create({
-            baseURL: API_BASE_URL,
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-    }
-
     async createPayment(eventId, amount, userId, promotorId) {
         try {
             console.log('Creating payment:', { eventId, amount, userId, promotorId });
-            const response = await this.axios.post('/payments', {
+            const response = await httpInstance.post('/payments', {
                 eventId: Number(eventId),
                 amount: Number(amount),
                 musicoId: Number(userId),
@@ -36,12 +24,13 @@ export class PaymentService {
     async getPaymentsByUser(userId) {
         try {
             // 1. Obtener el usuario
-            const userResponse = await this.axios.get(`/users/${userId}`);
+            const userResponse = await httpInstance.get(`/users/${userId}`);
             const user = userResponse.data;
 
             // 2. Obtener todos los pagos
-            const paymentsResponse = await this.axios.get('/payments');
-            const payments = paymentsResponse.data;
+            const paymentsResponse = await httpInstance.get('/payments');
+            // Asegurarse de que payments sea un array
+            const payments = Array.isArray(paymentsResponse.data) ? paymentsResponse.data : [];
 
             // 3. Filtrar pagos según el rol del usuario
             const userPayments = payments.filter(payment => {
@@ -57,11 +46,19 @@ export class PaymentService {
             // 4. Obtener información adicional para cada pago
             const enrichedPayments = await Promise.all(
                 userPayments.map(async (payment) => {
-                    const eventResponse = await this.axios.get(`/events/${payment.eventId}`);
-                    return new Payment({
-                        ...payment,
-                        eventName: eventResponse.data.name
-                    });
+                    try {
+                        const eventResponse = await httpInstance.get(`/events/${payment.eventId}`);
+                        return new Payment({
+                            ...payment,
+                            eventName: eventResponse.data.name
+                        });
+                    } catch (error) {
+                        console.error(`Error al obtener información del evento ${payment.eventId}:`, error);
+                        return new Payment({
+                            ...payment,
+                            eventName: 'Evento no encontrado'
+                        });
+                    }
                 })
             );
 
@@ -74,7 +71,7 @@ export class PaymentService {
 
     async updatePaymentStatus(paymentId, newStatus) {
         try {
-            const { data } = await this.axios.patch(`/payments/${paymentId}`, {
+            const { data } = await httpInstance.patch(`/payments/${paymentId}`, {
                 status: newStatus,
                 updatedAt: new Date().toISOString()
             });
@@ -97,15 +94,15 @@ export class PaymentService {
         try {
             console.log('Enriching payment data:', payment);
             // Obtener información del evento
-            const eventResponse = await this.axios.get(`/events/${Number(payment.eventId)}`);
+            const eventResponse = await httpInstance.get(`/events/${Number(payment.eventId)}`);
             const event = eventResponse.data;
 
             // Obtener información del músico
-            const musicoResponse = await this.axios.get(`/users/${Number(payment.musicoId)}`);
+            const musicoResponse = await httpInstance.get(`/users/${Number(payment.musicoId)}`);
             const musico = musicoResponse.data;
 
             // Obtener información del promotor
-            const promotorResponse = await this.axios.get(`/users/${Number(payment.promotorId)}`);
+            const promotorResponse = await httpInstance.get(`/users/${Number(payment.promotorId)}`);
             const promotor = promotorResponse.data;
 
             const enrichedPayment = new Payment(
