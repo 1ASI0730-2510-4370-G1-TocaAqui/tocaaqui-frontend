@@ -230,15 +230,21 @@
             "error": "Error al firmar el contrato",
             "noUser": "No hay usuario autenticado",
             "notFound": "No se encontró la postulación",
-            "serverError": "Error en el servidor al procesar el contrato"
+            "serverError": "Error en el servidor al procesar el contrato",
+            "view": "Ver Contrato"
         },
         "rider": {
             "title": "Subir Rider Técnico",
-            "chooseLabel": "Seleccionar Rider",
+            "chooseLabel": "Seleccionar Archivo",
             "uploadLabel": "Subir",
             "cancelLabel": "Cancelar",
-            "dragDropText": "Arrastra y suelta el archivo PDF aquí o haz clic para seleccionarlo",
-            "sizeNote": "* El archivo debe estar en formato PDF y no debe exceder los 5MB"
+            "dragDropText": "Arrastra y suelta el archivo PDF o Word aquí o haz clic para seleccionarlo",
+            "sizeNote": "* El archivo debe estar en formato PDF o Word y no debe exceder los 5MB",
+            "upload": "Subir Rider Técnico",
+            "uploadSuccess": "Rider técnico subido correctamente",
+            "uploadError": "Error al subir el rider técnico",
+            "invalidType": "Tipo de archivo no válido. Solo se permiten archivos PDF y Word",
+            "invalidSize": "El archivo excede el tamaño máximo permitido de 5MB"
         }
     },
     "calendar": {

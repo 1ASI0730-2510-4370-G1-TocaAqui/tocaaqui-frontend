@@ -46,13 +46,6 @@
       "id": 2
     },
     {
-      "name": "Mario Torres",
-      "email": "musico@test.com",
-      "password": "123456",
-      "role": "musico",
-      "id": 6
-    },
-    {
       "name": "Azul",
       "email": "di36o14oficial@gmail.com",
       "password": "1234",
@@ -128,6 +121,29 @@
         "signedDate": "2025-05-15T18:28:52.749Z",
         "status": "signed"
       }
+    },
+    {
+      "id": "jazz-night-2024",
+      "name": "Jazz Night Special",
+      "date": "2024-12-15",
+      "time": "21:00",
+      "publishDate": "2024-11-15",
+      "soundcheckDate": "2024-12-15",
+      "soundcheckTime": "16:00",
+      "location": "Blue Note Club",
+      "imageUrl": "https://images.unsplash.com/photo-1415201364774-f6f0bb35f28f",
+      "capacity": 300,
+      "availableTickets": 200,
+      "status": "accepted",
+      "adminName": "John Manager",
+      "adminContact": "+1 234-567-8900",
+      "adminId": 4,
+      "contract": {
+        "userId": 1,
+        "signature": "firma-digital",
+        "signedDate": "2025-05-15T19:27:49.725Z",
+        "status": "signed"
+      }
     }
   ],
   "event_applicants": [
@@ -155,6 +171,15 @@
       "eventId": 3,
       "status": "accepted",
       "applicationDate": "2024-03-21T09:00:00Z",
+      "contractSigned": true,
+      "riderUploaded": false
+    },
+    {
+      "id": "jazz-night-2024-celeste",
+      "eventId": "jazz-night-2024",
+      "userId": 1,
+      "applicationDate": "2024-11-15T10:00:00.000Z",
+      "status": "accepted",
       "contractSigned": true,
       "riderUploaded": false
     }

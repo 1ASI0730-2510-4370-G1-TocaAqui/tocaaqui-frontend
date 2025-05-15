@@ -222,15 +222,21 @@
             "error": "Error signing contract",
             "noUser": "No authenticated user",
             "notFound": "Application not found",
-            "serverError": "Server error processing contract"
+            "serverError": "Server error processing contract",
+            "view": "View Contract"
         },
         "rider": {
             "title": "Upload Technical Rider",
-            "chooseLabel": "Select Rider",
+            "chooseLabel": "Select File",
             "uploadLabel": "Upload",
             "cancelLabel": "Cancel",
-            "dragDropText": "Drag and drop the PDF file here or click to select it",
-            "sizeNote": "* File must be in PDF format and must not exceed 5MB"
+            "dragDropText": "Drag and drop PDF or Word file here or click to select",
+            "sizeNote": "* File must be in PDF or Word format and must not exceed 5MB",
+            "upload": "Upload Technical Rider",
+            "uploadSuccess": "Technical rider uploaded successfully",
+            "uploadError": "Error uploading technical rider",
+            "invalidType": "Invalid file type. Only PDF and Word files are allowed",
+            "invalidSize": "File exceeds maximum allowed size of 5MB"
         }
     },
     "calendar": {
