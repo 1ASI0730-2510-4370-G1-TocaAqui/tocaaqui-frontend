@@ -5,9 +5,9 @@
 import { ref, onMounted, onUnmounted, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
-import Sidebar from './shared/components/Sidebar.vue';
-import ThemeToggle from './shared/components/ThemeToggle.vue';
-import LanguageToggle from './shared/components/LanguageToggle.vue';
+import Sidebar from './shared/components/sidebar.component.vue';
+import ThemeToggle from './shared/components/theme-toggle.component.vue';
+import LanguageToggle from './shared/components/language-toggle.component.vue';
 import { LoginService } from './login/services/login.service';
 
 const router = useRouter();
