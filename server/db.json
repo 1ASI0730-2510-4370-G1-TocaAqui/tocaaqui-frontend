@@ -72,6 +72,20 @@
       "password": "1234",
       "role": "promotor",
       "id": 5
+    },
+    {
+      "name": "juan",
+      "email": "sadsd@gmil.vom",
+      "password": "1232dsadas",
+      "role": "promotor",
+      "id": 7
+    },
+    {
+      "name": "sdf",
+      "email": "dsffds@sdfsd.com",
+      "password": "ewdfiuwehduewhue",
+      "role": "musico",
+      "id": 8
     }
   ],
   "events": [
@@ -152,6 +166,72 @@
         "signedDate": "2025-05-15T18:28:52.749Z",
         "status": "signed"
       }
+    },
+    {
+      "id": 4,
+      "name": "sad",
+      "date": "2025-05-21",
+      "time": "23:04",
+      "publishDate": "2025-05-15",
+      "location": "asd",
+      "status": "pending",
+      "soundcheckDate": "2025-05-19",
+      "soundcheckTime": "03:42",
+      "capacity": 32,
+      "availableTickets": 32,
+      "adminName": "juan",
+      "adminContact": "432342",
+      "imageUrl": "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14",
+      "documents": [],
+      "applicants": []
+    },
+    {
+      "id": 5,
+      "promoterId": 4,
+      "name": "ads",
+      "date": "2025-05-16",
+      "time": "03:24",
+      "publishDate": "2025-05-15",
+      "location": "asd",
+      "imageUrl": "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14",
+      "status": "pending",
+      "soundcheckDate": "2025-05-15",
+      "soundcheckTime": "03:42",
+      "capacity": 432,
+      "availableTickets": 432,
+      "adminName": "Rojo",
+      "adminId": 4,
+      "adminContact": "324",
+      "requirements": "342",
+      "description": "324",
+      "payment": "asd",
+      "duration": 234,
+      "genre": "Rock",
+      "equipment": "432"
+    },
+    {
+      "id": 6,
+      "promoterId": 4,
+      "name": "asd",
+      "date": "2222-12-12",
+      "time": "21:21",
+      "publishDate": "2025-05-15",
+      "location": "das",
+      "imageUrl": "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14",
+      "status": "pending",
+      "soundcheckDate": "2025-05-23",
+      "soundcheckTime": "21:12",
+      "capacity": 324,
+      "availableTickets": 324,
+      "adminName": "Rojo",
+      "adminId": 4,
+      "adminContact": "12122121",
+      "requirements": "das",
+      "description": "ads",
+      "payment": "dsa",
+      "duration": 324,
+      "genre": "Rock",
+      "equipment": "dsa"
     }
   ],
   "riders": [
@@ -298,21 +378,31 @@
       "name": "DNI",
       "required": true,
       "maxSize": 5000000,
-      "allowedFormats": ["pdf", "jpg", "png"]
+      "allowedFormats": [
+        "pdf",
+        "jpg",
+        "png"
+      ]
     },
     {
       "id": "license",
       "name": "Licencia de conducir",
       "required": true,
       "maxSize": 5000000,
-      "allowedFormats": ["pdf", "jpg", "png"]
+      "allowedFormats": [
+        "pdf",
+        "jpg",
+        "png"
+      ]
     },
     {
       "id": "criminal_record",
       "name": "Antecedentes penales",
       "required": true,
       "maxSize": 5000000,
-      "allowedFormats": ["pdf"]
+      "allowedFormats": [
+        "pdf"
+      ]
     }
   ],
   "event_applicants": [

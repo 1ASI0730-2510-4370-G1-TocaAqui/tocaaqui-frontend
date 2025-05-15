@@ -40,7 +40,8 @@
     "toggleMenu": "Toggle Menu",
     "userProfile": "User Profile",
     "logout": "Logout",
-    "status": "State"
+    "status": "State",
+    "required": "This field is required"
   },
   "schedule": {
     "confirmed": "Confirmed Events",
@@ -137,6 +138,7 @@
   },
   "dashboard": {
     "welcome": "Welcome {name}",
+    "viewAll": "View all",
     "stats": {
       "nextEvents": {
         "title": "Next Events",
@@ -165,14 +167,13 @@
         "title": "Recent Activity",
         "empty": "No recent activity"
       }
-    },
-    "viewAll": "View all"
+    }
   },
   "eventApplications": {
     "title": "Event Applications",
     "searchPlaceholder": "Search by name or location",
-    "locationPlaceholder": "Search or location",
-    "statePlaceholder": "Search or state",
+    "locationPlaceholder": "Search by location",
+    "statePlaceholder": "Search by state",
     "allStatuses": "All statuses",
     "pending": "Pending",
     "accepted": "Accepted",
@@ -193,6 +194,8 @@
     "back": "Back to applications",
     "errorLoading": "Error loading application details",
     "eventDetails": "Event Details",
+    "eventName": "Event name",
+    "image": "Image",
     "requirements": "Requirements",
     "description": "Description",
     "venue": "Venue",
@@ -218,6 +221,7 @@
     "soundcheckTime": "Soundcheck Time",
     "venueCapacity": "Venue Capacity",
     "availableTickets": "Available Tickets",
+    "adminContact": "Admin Contact",
     "contract": {
       "title": "Event Contract",
       "reject": "Reject",
@@ -257,9 +261,18 @@
     "dashboard": {
       "title": "Promoter Dashboard",
       "welcome": "Welcome, {name}",
-      "createEvent": "Create Event",
       "myEvents": "My Events",
       "noEvents": "You have no events created",
+      "events": {
+        "fetchError": "Error loading events"
+      },
+      "createEvent": {
+        "title": "Create Event",
+        "preview": "Event Preview",
+        "success": "Event created successfully",
+        "error": "Error creating event",
+        "validationError": "Please complete all required fields"
+      },
       "stats": {
         "activeEvents": {
           "title": "Active Events",
@@ -293,11 +306,13 @@
         "published": "Published",
         "cancelled": "Cancelled",
         "completed": "Completed",
-        "pending": "Pending"
+        "pending": "Pending",
+        "confirmed": "Confirmed",
+        "accepted": "Accepted",
+        "rejected": "Rejected"
       }
     }
   },
-
   "ticket": {
     "management": "Ticket Management",
     "create": "Create Ticket",

@@ -40,9 +40,9 @@
     "toggleMenu": "Alternar menú",
     "userProfile": "Perfil de usuario",
     "logout": "Cerrar Sesión",
-    "status": "Estado"
+    "status": "Estado",
+    "required": "Este campo es requerido"
   },
-
   "schedule": {
     "confirmed": "Eventos Confirmados",
     "noConfirmed": "No hay eventos confirmados aún",
@@ -180,7 +180,7 @@
     "title": "Solicitudes de Eventos",
     "searchPlaceholder": "Buscar por nombre o lugar",
     "locationPlaceholder": "Buscar por lugar",
-    "statePlaceholder": " Buscar por estado",
+    "statePlaceholder": "Buscar por estado",
     "allStatuses": "Todos los estados",
     "pending": "Pendiente",
     "accepted": "Aceptado",
@@ -201,6 +201,8 @@
     "back": "Volver a solicitudes",
     "errorLoading": "Error al cargar los detalles de la solicitud",
     "eventDetails": "Detalles del Evento",
+    "eventName": "Nombre del evento",
+    "image": "Imagen",
     "requirements": "Requisitos",
     "description": "Descripción",
     "venue": "Lugar",
@@ -226,6 +228,7 @@
     "soundcheckTime": "Hora Prueba de Sonido",
     "venueCapacity": "Capacidad del Local",
     "availableTickets": "Entradas Disponibles",
+    "adminContact": "Contacto del Administrador",
     "contract": {
       "title": "Contrato del Evento",
       "reject": "Rechazar",
@@ -260,15 +263,23 @@
       "soundchecks": "Pruebas de sonido"
     },
     "today": "Hoy"
-  }
-  ,
+  },
   "promoter": {
     "dashboard": {
       "title": "Panel de Promotor",
       "welcome": "Bienvenido, {name}",
-      "createEvent": "Crear Evento",
       "myEvents": "Mis Eventos",
       "noEvents": "No tienes eventos creados",
+      "events": {
+        "fetchError": "Error al cargar los eventos"
+      },
+      "createEvent": {
+        "title": "Crear Evento",
+        "preview": "Vista previa del evento",
+        "success": "Evento creado exitosamente",
+        "error": "Error al crear el evento",
+        "validationError": "Por favor, complete todos los campos requeridos"
+      },
       "stats": {
         "activeEvents": {
           "title": "Eventos Activos",
@@ -302,7 +313,10 @@
         "published": "Publicado",
         "cancelled": "Cancelado",
         "completed": "Completado",
-        "pending": "Pendiente"
+        "pending": "Pendiente",
+        "confirmed": "Confirmado",
+        "accepted": "Aceptado",
+        "rejected": "Rechazado"
       }
     }
   },

@@ -4,38 +4,50 @@
 export class EventApplication {
     constructor({
         id = null,
+        promoterId = null,
         name = '',
         date = '',
         time = '',
         publishDate = '',
         location = '',
+        imageUrl = '',
         status = 'pending',
         soundcheckDate = '',
         soundcheckTime = '',
         capacity = 0,
         availableTickets = 0,
         adminName = '',
+        adminId = null,
         adminContact = '',
-        imageUrl = '',
-        documents = [],
-        applicants = [] // Array de IDs de usuarios que han postulado
+        requirements = '',
+        description = '',
+        payment = '',
+        duration = null,
+        genre = '',
+        equipment = ''
     } = {}) {
         this.id = id
+        this.promoterId = promoterId
         this.name = name
         this.date = date
         this.time = time
         this.publishDate = publishDate
         this.location = location
+        this.imageUrl = imageUrl
         this.status = status
         this.soundcheckDate = soundcheckDate
         this.soundcheckTime = soundcheckTime
         this.capacity = capacity
         this.availableTickets = availableTickets
         this.adminName = adminName
+        this.adminId = adminId
         this.adminContact = adminContact
-        this.imageUrl = imageUrl
-        this.documents = documents
-        this.applicants = applicants
+        this.requirements = requirements
+        this.description = description
+        this.payment = payment
+        this.duration = duration
+        this.genre = genre
+        this.equipment = equipment
     }
 }
 
@@ -90,4 +102,4 @@ export class RiderTechnical {
         this.filePath = filePath
         this.uploadDate = uploadDate
     }
-} 
+}

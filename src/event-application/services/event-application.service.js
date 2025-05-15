@@ -203,4 +203,4 @@ export class EventApplicationService {
         console.error('Service error:', error);
         return new Error(error.response?.data?.message || 'Error en el servicio');
     }
-} 
+}
