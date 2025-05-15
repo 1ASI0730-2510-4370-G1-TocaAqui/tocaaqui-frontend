@@ -1,7 +1,7 @@
 <!-- @summary “Eventos confirmados” con estilo PrimeVue + borde azul -->
 <script setup>
 import { ref, onMounted } from 'vue';
-import EventService from '@/schedule/services/event-calendar.service.js';
+import EventService from '../../schedule/services/event-calendar.service.js';
 
 import Button from 'primevue/button';
 import Tag    from 'primevue/tag';
