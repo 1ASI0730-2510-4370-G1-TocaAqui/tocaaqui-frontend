@@ -1,4 +1,4 @@
-import httpInstance from '../../shared/services/http.instance.js';
+import httpInstance from '../../shared/services/http.instance';
 
 export class EvaluationService {
     async getAllEvents() {
@@ -31,10 +31,31 @@ export class EvaluationService {
     async getEvaluatedEvents() {
         try {
             const response = await httpInstance.get('/evaluations');
-            return response.data.filter(evaluation => evaluation.status === 'evaluated');
+            return response.data;
         } catch (error) {
             console.error('Error al obtener eventos evaluados:', error);
-            throw error;
+            throw new Error('No se pudieron cargar los eventos evaluados');
+        }
+    }
+
+    async getEvaluationsByPromoter(promoterId) {
+        try {
+            // 1. Obtener todas las evaluaciones
+            const evaluations = await this.getEvaluatedEvents();
+            
+            // 2. Obtener todos los eventos del promotor
+            const eventsResponse = await httpInstance.get('/events');
+            const promoterEvents = eventsResponse.data.filter(event => event.adminId === promoterId);
+            
+            // 3. Filtrar las evaluaciones que corresponden a los eventos del promotor
+            const promoterEvaluations = evaluations.filter(evaluation => 
+                promoterEvents.some(event => event.id === evaluation.eventId)
+            );
+            
+            return promoterEvaluations;
+        } catch (error) {
+            console.error('Error al obtener evaluaciones del promotor:', error);
+            throw new Error('No se pudieron cargar las evaluaciones del promotor');
         }
     }
 }

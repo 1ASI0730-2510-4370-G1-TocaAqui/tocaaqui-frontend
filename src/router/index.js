@@ -13,7 +13,7 @@ const routes = [
     {
         path: '/dashboard',
         name: 'Dashboard',
-        component: () => import('../artist/pages/artist-dashboard.component.vue'),
+        component: () => import('../dashboard/pages/dashboard.component.vue'),
         meta: { requiresAuth: true }
     },
     {
