@@ -1,0 +1,43 @@
+{
+  "posts": [
+    {
+      "id": 1,
+      "title": "json-server",
+      "author": "typicode"
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "body": "some comment",
+      "postId": 1
+    }
+  ],
+  "profile": {
+    "name": "typicode"
+  },
+  "eventos": [
+    {
+      "id": 1,
+      "name": "Rock Night Fest",
+      "date": "2025-05-14",
+      "time": "20:00",
+      "location": "Salón de Eventos Royal",
+      "status": "confirmed",
+      "contractSigned": true,
+      "paidPercent": 50,
+      "imageUrl": "https://picsum.photos/seed/rock/600/400"
+    },
+    {
+      "id": 2,
+      "name": "Jazz Under Stars",
+      "date": "2025-04-17",
+      "time": "19:30",
+      "location": "Central Park, NY",
+      "status": "pending",
+      "contractSigned": true,
+      "paidPercent": 0,
+      "imageUrl": "https://picsum.photos/seed/jazz/600/400"
+    }
+  ]
+}
