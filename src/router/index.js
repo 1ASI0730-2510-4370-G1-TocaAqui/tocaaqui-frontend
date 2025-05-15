@@ -51,6 +51,11 @@ const routes = [
         props: route => ({
             userId: Number(JSON.parse(localStorage.getItem('user'))?.id)
         })
+    },
+    {
+        path: '/evaluations/evaluated',
+        name: 'EvaluatedEvents',
+        component: () => import('../evaluations/components/evaluated-events.component.vue')
     }
 ];
 

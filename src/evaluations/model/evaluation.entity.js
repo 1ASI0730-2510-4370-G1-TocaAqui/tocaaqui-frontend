@@ -1,4 +1,3 @@
-// src/evaluations/model/evaluation.entity.js
 export class Evaluation {
     constructor({
                     id = null,
@@ -7,9 +6,11 @@ export class Evaluation {
                     promoterId = null,
                     rating = 0,
                     comment = '',
-                    checklist = [],          // [{ id, label, value }]
+                    venueRating = 0,
+                    venueComment = '',
+                    checklist = [],
                     createdAt = new Date().toISOString()
                 } = {}) {
-        Object.assign(this, { id, eventId, musicianId, promoterId, rating, comment, checklist, createdAt })
+        Object.assign(this, { id, eventId, musicianId, promoterId, rating, comment, venueRating, venueComment, checklist, createdAt });
     }
 }

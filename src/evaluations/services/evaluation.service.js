@@ -1,33 +1,42 @@
-// src/evaluations/services/evaluation.service.js
-import http from '../../shared/services/http.instance.js'
-import { Evaluation } from '../model/evaluation.entity.js'
+import httpInstance from '../../shared/services/http.instance.js';
 
 export class EvaluationService {
-    endpoint = '/evaluations'
-    checklistEndpoint = '/evaluation_checklist'
-
-    async getAll () {
-        const { data } = await http.get(this.endpoint + '?_expand=event')
-        return data.map(e => new Evaluation(e))
+    async getAllEvents() {
+        try {
+            const response = await httpInstance.get('/events');
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching events:', error);
+            throw error;
+        }
     }
 
-    async getById (id) {
-        const { data } = await http.get(`${this.endpoint}/${id}?_expand=event`)
-        if (!data) throw new Error('No se encontró la evaluación')
-        // checklist aparte
-        const { data: list } = await http.get(`${this.checklistEndpoint}?evaluationId=${id}`)
-        return new Evaluation({ ...data, checklist: list })
+    async saveEvaluation(evaluationData) {
+        try {
+            const response = await httpInstance.post('/evaluations', {
+                ...evaluationData,
+                name: evaluationData.eventName,
+                date: evaluationData.eventDate,
+                location: evaluationData.eventLocation,
+                imageUrl: evaluationData.eventImageUrl,
+                status: 'evaluated'
+            });
+            return response.data;
+        } catch (error) {
+            console.error("Error saving evaluation:", error);
+            throw error;
+        }
     }
 
-    async create (dto) {
-        const { data } = await http.post(this.endpoint, dto)
-        return new Evaluation(data)
-    }
-
-    async update (id, dto) {
-        const { data } = await http.put(`${this.endpoint}/${id}`, dto)
-        return new Evaluation(data)
+    async getEvaluatedEvents() {
+        try {
+            const response = await httpInstance.get('/evaluations');
+            return response.data.filter(evaluation => evaluation.status === 'evaluated');
+        } catch (error) {
+            console.error('Error al obtener eventos evaluados:', error);
+            throw error;
+        }
     }
 }
 
-export const evaluationService = new EvaluationService()
+export const evaluationService = new EvaluationService();
