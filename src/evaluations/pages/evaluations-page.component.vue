@@ -2,8 +2,8 @@
 import { onMounted, ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { evaluationService } from '@/evaluations/services/evaluation.service.js'
-import EvaluationCard from '@/evaluations/components/evaluation-card.component.vue'
+import { evaluationService } from '../services/evaluation.service'
+import EvaluationCard from '../components/evaluation-card.component.vue'
 
 const router = useRouter()
 const { t } = useI18n()

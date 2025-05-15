@@ -24,11 +24,11 @@ const routes = [
     },
     {
         path: '/evaluations',
-        component: () => import('@/evaluations/pages/evaluations-page.component.vue')
+        component: () => import('../evaluations/pages/evaluations-page.component.vue')
     },
     {
         path: '/evaluations/:id',
-        component: () => import('@/evaluations/pages/evaluation-detail-page.component.vue')
+        component: () => import('../evaluations/pages/evaluation-detail-page.component.vue')
     },
 
     {

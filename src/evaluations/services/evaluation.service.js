@@ -1,5 +1,5 @@
 // src/evaluations/services/evaluation.service.js
-import http from '@/shared/services/http.instance.js'
+import http from '../../shared/services/http.instance.js'
 import { Evaluation } from '../model/evaluation.entity.js'
 
 export class EvaluationService {
