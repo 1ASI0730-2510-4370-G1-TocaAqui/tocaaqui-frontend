@@ -6,6 +6,15 @@
       "done": "Completadas",
       "pending": "Pendientes"
     },
+
+    "evaluationDetail": {
+        "rateVenue": "Califica el local",
+        "commentPlaceholder": "Escribe un comentario sobre el local...",
+        "ratingSuccess": "¡Calificación enviada con éxito!",
+        "ratingError": "Error al enviar la calificación.",
+        "errorLoading": "Error al cargar la evaluación."
+    },
+
     "writePlaceholder": "Evalúa tu experiencia en {event}",
     "rating": "Calificación",
     "comment": "Comentario",
@@ -48,6 +57,16 @@
     "noConfirmed": "No hay eventos confirmados aún",
     "year": "2025"
   },
+  "profile": {
+        "title": "Perfil del Usuario",
+        "name": "Nombre",
+        "email": "Correo",
+        "role": "Rol",
+        "password": "Contraseña",
+        "editProfile": "Editar Perfil",
+        "successUpdate": "Perfil actualizado correctamente",
+        "errorUpdate": "No se pudo actualizar el perfil"
+    },
   "menu": {
     "dashboard": "Dashboard",
     "profile": "Mi Perfil",

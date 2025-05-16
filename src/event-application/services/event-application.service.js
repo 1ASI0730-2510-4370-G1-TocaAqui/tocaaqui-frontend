@@ -25,6 +25,10 @@ export class EventApplicationService {
             if (!response.data) {
                 throw new Error('No se encontró el evento');
             }
+            // Normalizar el estado si es 'confirmed' a 'accepted'
+            if (response.data.status?.toLowerCase() === 'confirmed') {
+                response.data.status = 'accepted';
+            }
             return new EventApplication(response.data);
         } catch (error) {
             console.error('Error fetching application:', error);
@@ -92,37 +96,62 @@ export class EventApplicationService {
 
     async updateApplicationStatus(applicantId, status) {
         try {
-            const response = await httpInstance.patch(`${this.applicantsEndpoint}/${applicantId}`, { status });
+            // Normalizar el estado si es 'confirmed' a 'accepted'
+            const normalizedStatus = status.toLowerCase() === 'confirmed' ? 'accepted' : status.toLowerCase();
+            const response = await httpInstance.patch(`${this.applicantsEndpoint}/${applicantId}`, { 
+                status: normalizedStatus 
+            });
             return new EventApplicant(response.data);
         } catch (error) {
             throw this.handleError(error);
         }
     }
 
-    async uploadRider(eventId, userId, file) {
+    async uploadRider(eventId, file) {
         try {
-            const formData = new FormData();
-            formData.append('rider', file);
-            formData.append('userId', userId);
-            
-            const response = await httpInstance.post(
-                `${this.resourceEndpoint}/${eventId}/riders`,
-                formData,
-                {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
+            // 1. Obtener el usuario actual
+            const userStr = localStorage.getItem('user');
+            if (!userStr) {
+                throw new Error('No hay usuario autenticado');
+            }
+            const user = JSON.parse(userStr);
+
+            // 2. Obtener la postulación actual
+            const applicantsResponse = await httpInstance.get(
+                `${this.applicantsEndpoint}?eventId=${eventId}&userId=${user.id}`
+            );
+
+            if (!applicantsResponse.data || applicantsResponse.data.length === 0) {
+                throw new Error('No se encontró la postulación');
+            }
+
+            const applicant = applicantsResponse.data[0];
+
+            // 3. Actualizar el estado del rider en la postulación
+            await httpInstance.patch(
+                `${this.applicantsEndpoint}/${applicant.id}`,
+                { riderUploaded: true }
+            );
+
+            // 4. Guardar la información del rider en el evento
+            const riderInfo = {
+                fileName: file.name,
+                uploadDate: new Date().toISOString(),
+                uploadedBy: user.id,
+                fileType: file.type
+            };
+
+            const eventResponse = await httpInstance.patch(
+                `${this.resourceEndpoint}/${eventId}`,
+                { 
+                    rider: riderInfo,
+                    status: 'accepted'
                 }
             );
 
-            // Actualizamos el estado del rider en la postulación
-            const applicant = await this.getEventApplicant(eventId, userId);
-            if (applicant) {
-                await this.updateApplicationStatus(applicant.id, { riderUploaded: true });
-            }
-            
-            return response.data;
+            return eventResponse.data;
         } catch (error) {
+            console.error('Error al subir el rider:', error);
             throw this.handleError(error);
         }
     }

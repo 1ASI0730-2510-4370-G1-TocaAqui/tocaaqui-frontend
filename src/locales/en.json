@@ -6,6 +6,15 @@
       "done": "Completed",
       "pending": "Pending"
     },
+
+    "evaluationDetail": {
+        "rateVenue": "Califica el local",
+        "commentPlaceholder": "Escribe un comentario sobre el local...",
+        "ratingSuccess": "¡Calificación enviada con éxito!",
+        "ratingError": "Error al enviar la calificación.",
+        "errorLoading": "Error al cargar la evaluación."
+    },
+
     "writePlaceholder": "Evaluate your experience at {event}",
     "rating": "Rating",
     "comment": "Comment",

@@ -13,7 +13,7 @@ const routes = [
     {
         path: '/dashboard',
         name: 'Dashboard',
-        component: () => import('../artist/pages/artist-dashboard.component.vue'),
+        component: () => import('../dashboard/pages/dashboard.component.vue'),
         meta: { requiresAuth: true }
     },
     {
@@ -64,6 +64,17 @@ const routes = [
         props: route => ({
             userId: Number(JSON.parse(localStorage.getItem('user'))?.id)
         })
+    },
+    {
+        path: '/profile',
+        name: 'Profile',
+        component: () => import('../profile/pages/profile-page.component.vue'),
+        meta: { requiresAuth: true }
+    },
+    {
+        path: '/evaluations/evaluated',
+        name: 'EvaluatedEvents',
+        component: () => import('../evaluations/components/evaluated-events.component.vue')
     }
 ];
 

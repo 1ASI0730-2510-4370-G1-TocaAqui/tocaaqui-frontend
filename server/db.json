@@ -1,13 +1,36 @@
 {
   "evaluations": [
     {
-      "id": 1,
-      "eventId": 1,
-      "musicianId": 1,
-      "promoterId": 4,
+      "eventId": 2,
+      "eventName": "Jazz Under Stars",
+      "eventDate": "2024-12-17",
+      "eventLocation": "Central Park, NY",
+      "eventImageUrl": "https://images.unsplash.com/photo-1415201364774-f6f0bb35f28f",
       "rating": 5,
-      "comment": "Todo estuvo muy bien organizado. La prueba de sonido se realizó a tiempo...",
-      "createdAt": "2025-01-05T12:00:00Z"
+      "comment": "asdsadasd",
+      "suggestions": "dsdasd",
+      "name": "Jazz Under Stars",
+      "date": "2024-12-17",
+      "location": "Central Park, NY",
+      "imageUrl": "https://images.unsplash.com/photo-1415201364774-f6f0bb35f28f",
+      "status": "evaluated",
+      "id": 1
+    },
+    {
+      "eventId": 3,
+      "eventName": "Electro Beats Fest",
+      "eventDate": "2024-12-10",
+      "eventLocation": "Pier 17, NY",
+      "eventImageUrl": "https://images.unsplash.com/photo-1470225620780-dba8ba36b745",
+      "rating": 4,
+      "comment": "dsadasdasdasdsa",
+      "suggestions": "dsadasdasdas",
+      "name": "Electro Beats Fest",
+      "date": "2024-12-10",
+      "location": "Pier 17, NY",
+      "imageUrl": "https://images.unsplash.com/photo-1470225620780-dba8ba36b745",
+      "status": "evaluated",
+      "id": 2
     }
   ],
   "evaluation_checklist": [
@@ -32,9 +55,9 @@
   ],
   "users": [
     {
-      "name": "Celeste",
-      "email": "dicabrerabuitron@gmail.com",
-      "password": "1234",
+      "name": "Skyblue",
+      "email": "di@gmail.com",
+      "password": "12333",
       "role": "musico",
       "id": 1
     },
@@ -44,13 +67,6 @@
       "password": "1234",
       "role": "musico",
       "id": 2
-    },
-    {
-      "name": "Mario Torres",
-      "email": "musico@test.com",
-      "password": "123456",
-      "role": "musico",
-      "id": 6
     },
     {
       "name": "Azul",

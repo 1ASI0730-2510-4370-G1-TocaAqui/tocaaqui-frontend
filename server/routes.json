@@ -1,5 +1,6 @@
 {
   "/auth/login": "/users",
   "/auth/register": "/users",
+  "/users": "/users",
   "/api/v1/*": "/$1"
 }

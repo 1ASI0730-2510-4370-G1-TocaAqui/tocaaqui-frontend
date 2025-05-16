@@ -1,4 +1,3 @@
-<!-- src/evaluations/components/evaluation-detail-card.component.vue -->
 <template>
   <pv-panel :header="event.name">
     <template #headericon>
@@ -22,8 +21,6 @@
 </template>
 
 <script setup>
-import Panel   from 'primevue/panel'
-import Rating  from 'primevue/rating'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 

@@ -1,60 +1,57 @@
-<script>
+<script setup>
 import { ref, onMounted, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { EventApplicationService } from '../services/event-application.service';
 import { useToast } from 'primevue/usetoast';
 
-export default {
-  name: 'EventApplicationDetail',
-  setup() {
-    const route = useRoute();
-    const router = useRouter();
-    const { t, locale } = useI18n();
-    const eventApplicationService = new EventApplicationService();
-    const toast = useToast();
+const route = useRoute();
+const router = useRouter();
+const { t, locale } = useI18n();
+const eventApplicationService = new EventApplicationService();
+const toast = useToast();
 
-    const application = ref(null);
-    const loading = ref(true);
-    const error = ref(null);
-    const updating = ref(false);
-    const showContractDialog = ref(false);
-    const showRiderDialog = ref(false);
-    const artistSignature = ref('');
-    const hasSignedContract = ref(false);
-    const hasUploadedRider = ref(false);
+const application = ref(null);
+const loading = ref(true);
+const error = ref(null);
+const updating = ref(false);
+const showContractDialog = ref(false);
+const showRiderDialog = ref(false);
+const artistSignature = ref('');
+const hasSignedContract = ref(false);
+const hasUploadedRider = ref(false);
 
-    const formatDate = (date) => {
-      if (!date) return '';
-      return new Date(date).toLocaleDateString(locale.value, {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      });
-    };
+const formatDate = (date) => {
+  if (!date) return '';
+  return new Date(date).toLocaleDateString(locale.value, {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+};
 
-    const formatTime = (time) => {
-      if (!time) return '';
-      return new Date(`2000-01-01T${time}`).toLocaleTimeString(locale.value, {
-        hour: '2-digit',
-        minute: '2-digit'
-      });
-    };
+const formatTime = (time) => {
+  if (!time) return '';
+  return new Date(`2000-01-01T${time}`).toLocaleTimeString(locale.value, {
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+};
 
-    const formattedData = computed(() => {
-      if (!application.value) return {};
-      return {
-        date: formatDate(application.value.date),
-        time: formatTime(application.value.time),
-        publishDate: formatDate(application.value.publishDate),
-        soundcheckDate: formatDate(application.value.soundcheckDate),
-        soundcheckTime: formatTime(application.value.soundcheckTime)
-      };
-    });
+const formattedData = computed(() => {
+  if (!application.value) return {};
+  return {
+    date: formatDate(application.value.date),
+    time: formatTime(application.value.time),
+    publishDate: formatDate(application.value.publishDate),
+    soundcheckDate: formatDate(application.value.soundcheckDate),
+    soundcheckTime: formatTime(application.value.soundcheckTime)
+  };
+});
 
-    const generateContract = (event) => {
-      return `CONTRATO DE PRESENTACIÓN ARTÍSTICA
+const generateContract = (event) => {
+  return `CONTRATO DE PRESENTACIÓN ARTÍSTICA
 
 Este contrato se celebra entre ${event.location} y el artista, en adelante denominado "el Artista".
 
@@ -90,125 +87,154 @@ La cancelación del evento por cualquiera de las partes deberá ser notificada c
 
 8. OTROS TÉRMINOS
 Cualquier modificación a este contrato deberá ser acordada por escrito entre ambas partes.`;
-    };
+};
 
-    const contractText = ref('');
+const contractText = ref('');
 
-    const fetchApplicationDetail = async () => {
-      try {
-        loading.value = true;
-        const response = await eventApplicationService.getById(route.params.id);
-        application.value = response;
-        contractText.value = generateContract(response);
-      } catch (err) {
-        error.value = t('applicationDetail.errorLoading');
-        console.error('Error fetching application details:', err);
-      } finally {
-        loading.value = false;
-      }
-    };
-
-    const formatCurrency = (amount) => {
-      return new Intl.NumberFormat('es-ES', {
-        style: 'currency',
-        currency: 'EUR'
-      }).format(amount);
-    };
-
-    const getStatusSeverity = (status) => {
-      const severities = {
-        pending: 'warning',
-        accepted: 'success',
-        rejected: 'danger'
-      };
-      return severities[status] || 'info';
-    };
-
-    const signContract = async () => {
-      try {
-        updating.value = true;
-        // Obtener el usuario del localStorage
-        const userStr = localStorage.getItem('user');
-        if (!userStr) {
-          toast.add({ 
-            severity: 'error', 
-            summary: t('applicationDetail.contract.error'), 
-            detail: t('applicationDetail.contract.noUser')
-          });
-          return;
-        }
-        const user = JSON.parse(userStr);
-        
-        const result = await eventApplicationService.signContract(
-          route.params.id,
-          user.id,
-          'firma-digital'
-        );
-        
-        if (result) {
-          // Actualizar el estado de la aplicación
-          application.value = result;
-          hasSignedContract.value = true;
-          showContractDialog.value = false;
-          
-          // Mostrar mensaje de éxito
-          toast.add({ 
-            severity: 'success', 
-            summary: t('common.success'), 
-            detail: t('applicationDetail.contract.success')
-          });
-          
-          // Recargar los detalles de la aplicación
-          await fetchApplicationDetail();
-        }
-      } catch (error) {
-        console.error('Error al firmar el contrato:', error);
-        toast.add({ 
-          severity: 'error', 
-          summary: t('common.error'), 
-          detail: t('applicationDetail.contract.error')
-        });
-      } finally {
-        updating.value = false;
-      }
-    };
-
-    const onRiderUpload = async (event) => {
-      try {
-        updating.value = true;
-        await eventApplicationService.uploadRider(route.params.id, event.files[0]);
-        hasUploadedRider.value = true;
-        showRiderDialog.value = false;
-      } catch (error) {
-        console.error('Error al subir el rider técnico:', error);
-      } finally {
-        updating.value = false;
-      }
-    };
-
-    onMounted(() => {
-      fetchApplicationDetail();
+const fetchApplicationDetail = async () => {
+  try {
+    loading.value = true;
+    const response = await eventApplicationService.getById(route.params.id);
+    application.value = response;
+    contractText.value = generateContract(response);
+    
+    console.log('Estado de la aplicación:', {
+      status: response.status,
+      statusLowerCase: response.status?.toLowerCase(),
+      hasContract: !!response.contract,
+      hasRider: !!response.rider
     });
-
-    return {
-      application,
-      loading,
-      error,
-      updating,
-      router,
-      formattedData,
-      getStatusSeverity,
-      showContractDialog,
-      showRiderDialog,
-      artistSignature,
-      hasSignedContract,
-      hasUploadedRider,
-      contractText,
-      signContract,
-      onRiderUpload
-    };
+    
+    // Verificar si ya tiene contrato firmado
+    hasSignedContract.value = response.contract?.status === 'signed';
+    // Verificar si ya subió el rider
+    hasUploadedRider.value = !!response.rider;
+  } catch (err) {
+    error.value = t('applicationDetail.errorLoading');
+    console.error('Error fetching application details:', err);
+  } finally {
+    loading.value = false;
   }
 };
+
+const formatCurrency = (amount) => {
+  return new Intl.NumberFormat('es-ES', {
+    style: 'currency',
+    currency: 'EUR'
+  }).format(amount);
+};
+
+const getStatusSeverity = (status) => {
+  if (!status) return 'info';
+  
+  const statusLower = status.toLowerCase();
+  const severities = {
+    pending: 'warning',
+    accepted: 'success',
+    rejected: 'danger'
+  };
+  return severities[statusLower] || 'info';
+};
+
+const signContract = async () => {
+  try {
+    updating.value = true;
+    const userStr = localStorage.getItem('user');
+    if (!userStr) {
+      toast.add({ 
+        severity: 'error', 
+        summary: t('applicationDetail.contract.error'), 
+        detail: t('applicationDetail.contract.noUser')
+      });
+      return;
+    }
+    const user = JSON.parse(userStr);
+    
+    const result = await eventApplicationService.signContract(
+      route.params.id,
+      user.id,
+      'firma-digital'
+    );
+    
+    if (result) {
+      application.value = result;
+      hasSignedContract.value = true;
+      showContractDialog.value = false;
+      
+      toast.add({ 
+        severity: 'success', 
+        summary: t('common.success'), 
+        detail: t('applicationDetail.contract.success')
+      });
+      
+      await fetchApplicationDetail();
+    }
+  } catch (error) {
+    console.error('Error al firmar el contrato:', error);
+    toast.add({ 
+      severity: 'error', 
+      summary: t('common.error'), 
+      detail: t('applicationDetail.contract.error')
+    });
+  } finally {
+    updating.value = false;
+  }
+};
+
+const onRiderUpload = async (event) => {
+  try {
+    updating.value = true;
+    const file = event.files[0];
+    
+    const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+    if (!allowedTypes.includes(file.type)) {
+      toast.add({
+        severity: 'error',
+        summary: t('common.error'),
+        detail: t('applicationDetail.rider.invalidType')
+      });
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast.add({
+        severity: 'error',
+        summary: t('common.error'),
+        detail: t('applicationDetail.rider.invalidSize')
+      });
+      return;
+    }
+
+    const result = await eventApplicationService.uploadRider(route.params.id, file);
+    
+    if (result) {
+      application.value = result;
+      hasUploadedRider.value = true;
+      showRiderDialog.value = false;
+      
+      toast.add({
+        severity: 'success',
+        summary: t('common.success'),
+        detail: t('applicationDetail.rider.uploadSuccess')
+      });
+      
+      await fetchApplicationDetail();
+    }
+  } catch (error) {
+    console.error('Error al subir el rider técnico:', error);
+    toast.add({
+      severity: 'error',
+      summary: t('common.error'),
+      detail: t('applicationDetail.rider.uploadError')
+    });
+  } finally {
+    updating.value = false;
+  }
+};
+
+onMounted(() => {
+  fetchApplicationDetail();
+});
 </script>
 
 <template>
@@ -219,7 +245,7 @@ Cualquier modificación a este contrato deberá ser acordada por escrito entre a
           @click="router.push('/applications')"
           icon="pi pi-arrow-left"
           text
-          :label="$t('applicationDetail.back')"
+          :label="t('applicationDetail.back')"
         />
       </template>
     </pv-toolbar>
@@ -244,7 +270,7 @@ Cualquier modificación a este contrato deberá ser acordada por escrito entre a
               </div>
             </div>
             <pv-tag
-              :value="$t(`applicationDetail.status.${application.status}`)"
+              :value="t(`applicationDetail.status.${application.status}`)"
               :severity="getStatusSeverity(application.status)"
               size="large"
               class="ml-4"
@@ -256,26 +282,26 @@ Cualquier modificación a este contrato deberá ser acordada por escrito entre a
           <div class="content-container">
             <div class="grid">
               <div class="col-12 md:col-6">
-                <pv-panel header="Detalles del Evento" class="h-full">
+                <pv-panel :header="t('applicationDetail.eventDetails')" class="h-full">
                   <div class="flex flex-column gap-3">
                     <div class="flex align-items-center">
                       <i class="pi pi-calendar-plus mr-2"></i>
-                      <span class="font-medium">{{ $t('applicationDetail.publishDate') }}:</span>
+                      <span class="font-medium">{{ t('applicationDetail.publishDate') }}:</span>
                       <span class="ml-2">{{ formattedData.publishDate }}</span>
                     </div>
                     <div class="flex align-items-center">
                       <i class="pi pi-calendar mr-2"></i>
-                      <span class="font-medium">{{ $t('applicationDetail.eventDate') }}:</span>
+                      <span class="font-medium">{{ t('applicationDetail.eventDate') }}:</span>
                       <span class="ml-2">{{ formattedData.date }}</span>
                     </div>
                     <div class="flex align-items-center">
                       <i class="pi pi-clock mr-2"></i>
-                      <span class="font-medium">{{ $t('applicationDetail.eventTime') }}:</span>
+                      <span class="font-medium">{{ t('applicationDetail.eventTime') }}:</span>
                       <span class="ml-2">{{ formattedData.time }}</span>
                     </div>
                     <div class="flex align-items-center">
                       <i class="pi pi-map-marker mr-2"></i>
-                      <span class="font-medium">{{ $t('applicationDetail.location') }}:</span>
+                      <span class="font-medium">{{ t('applicationDetail.location') }}:</span>
                       <span class="ml-2">{{ application.location }}</span>
                     </div>
                   </div>
@@ -283,44 +309,27 @@ Cualquier modificación a este contrato deberá ser acordada por escrito entre a
               </div>
 
               <div class="col-12 md:col-6">
-                <pv-panel header="Detalles Técnicos" class="h-full">
+                <pv-panel :header="t('applicationDetail.technicalDetails')" class="h-full">
                   <div class="flex flex-column gap-3">
                     <div class="flex align-items-center">
                       <i class="pi pi-volume-up mr-2"></i>
-                      <span class="font-medium">{{ $t('applicationDetail.soundcheckDate') }}:</span>
+                      <span class="font-medium">{{ t('applicationDetail.soundcheckDate') }}:</span>
                       <span class="ml-2">{{ formattedData.soundcheckDate }}</span>
                     </div>
                     <div class="flex align-items-center">
                       <i class="pi pi-clock mr-2"></i>
-                      <span class="font-medium">{{ $t('applicationDetail.soundcheckTime') }}:</span>
+                      <span class="font-medium">{{ t('applicationDetail.soundcheckTime') }}:</span>
                       <span class="ml-2">{{ formattedData.soundcheckTime }}</span>
                     </div>
                     <div class="flex align-items-center">
                       <i class="pi pi-users mr-2"></i>
-                      <span class="font-medium">{{ $t('applicationDetail.venueCapacity') }}:</span>
+                      <span class="font-medium">{{ t('applicationDetail.venueCapacity') }}:</span>
                       <span class="ml-2">{{ application.capacity }} personas</span>
                     </div>
                     <div class="flex align-items-center">
                       <i class="pi pi-ticket mr-2"></i>
-                      <span class="font-medium">{{ $t('applicationDetail.availableTickets') }}:</span>
+                      <span class="font-medium">{{ t('applicationDetail.availableTickets') }}:</span>
                       <span class="ml-2">{{ application.availableTickets }}</span>
-                    </div>
-                  </div>
-                </pv-panel>
-              </div>
-
-              <div class="col-12">
-                <pv-panel header="Información de Contacto">
-                  <div class="flex flex-column gap-3">
-                    <div class="flex align-items-center">
-                      <i class="pi pi-user mr-2"></i>
-                      <span class="font-medium">Administrador:</span>
-                      <span class="ml-2">{{ application.adminName }}</span>
-                    </div>
-                    <div class="flex align-items-center">
-                      <i class="pi pi-phone mr-2"></i>
-                      <span class="font-medium">Contacto:</span>
-                      <span class="ml-2">{{ application.adminContact }}</span>
                     </div>
                   </div>
                 </pv-panel>
@@ -332,15 +341,15 @@ Cualquier modificación a este contrato deberá ser acordada por escrito entre a
                 v-if="!hasSignedContract"
                 @click="showContractDialog = true"
                 icon="pi pi-file-pdf"
-                label="Ver Contrato"
+                :label="t('applicationDetail.contract.view')"
                 severity="info"
               />
               <pv-button
-                v-if="hasSignedContract && !hasUploadedRider"
+                v-if="application?.status?.toLowerCase() === 'accepted' && !hasUploadedRider"
                 @click="showRiderDialog = true"
                 icon="pi pi-upload"
-                label="Subir Rider Técnico"
-                severity="success"
+                :label="t('applicationDetail.rider.upload')"
+                class="p-button-success"
               />
             </div>
           </div>
@@ -352,7 +361,7 @@ Cualquier modificación a este contrato deberá ser acordada por escrito entre a
     <pv-dialog
       v-model:visible="showContractDialog"
       modal
-      header="Contrato del Evento"
+      :header="t('applicationDetail.contract.title')"
       :style="{ width: '80vw' }"
       :closable="false"
     >
@@ -360,13 +369,13 @@ Cualquier modificación a este contrato deberá ser acordada por escrito entre a
       <template #footer>
         <div class="flex justify-content-end gap-2">
           <pv-button
-            label="Rechazar"
+            :label="t('applicationDetail.contract.reject')"
             icon="pi pi-times"
             @click="showContractDialog = false"
             text
           />
           <pv-button
-            label="Firmar y Aceptar"
+            :label="t('applicationDetail.contract.signAndAccept')"
             icon="pi pi-check"
             @click="signContract"
             severity="success"
@@ -379,7 +388,7 @@ Cualquier modificación a este contrato deberá ser acordada por escrito entre a
     <pv-dialog
       v-model:visible="showRiderDialog"
       modal
-      header="Subir Rider Técnico"
+      :header="t('applicationDetail.rider.title')"
       :style="{ width: '50vw' }"
       :closable="false"
     >
@@ -387,28 +396,28 @@ Cualquier modificación a este contrato deberá ser acordada por escrito entre a
         <pv-file-upload
           mode="advanced"
           :multiple="false"
-          accept="application/pdf"
+          accept=".pdf,.doc,.docx"
           :maxFileSize="5000000"
           @upload="onRiderUpload"
           :auto="true"
-          :chooseLabel="$t('applicationDetail.rider.chooseLabel')"
-          :uploadLabel="$t('applicationDetail.rider.uploadLabel')"
-          :cancelLabel="$t('applicationDetail.rider.cancelLabel')"
+          :chooseLabel="t('applicationDetail.rider.chooseLabel')"
+          :uploadLabel="t('applicationDetail.rider.uploadLabel')"
+          :cancelLabel="t('applicationDetail.rider.cancelLabel')"
           :customUpload="true"
         >
           <template #empty>
-            <p>{{ $t('applicationDetail.rider.dragDropText') }}</p>
+            <p>{{ t('applicationDetail.rider.dragDropText') }}</p>
           </template>
         </pv-file-upload>
         
         <small class="block mt-2 text-600">
-          {{ $t('applicationDetail.rider.sizeNote') }}
+          {{ t('applicationDetail.rider.sizeNote') }}
         </small>
       </div>
 
       <template #footer>
         <pv-button
-          label="Cerrar"
+          :label="t('common.close')"
           icon="pi pi-times"
           @click="showRiderDialog = false"
           text
