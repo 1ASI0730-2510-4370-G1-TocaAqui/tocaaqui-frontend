@@ -98,17 +98,25 @@ const fetchApplicationDetail = async () => {
     application.value = response;
     contractText.value = generateContract(response);
     
-    console.log('Estado de la aplicación:', {
-      status: response.status,
-      statusLowerCase: response.status?.toLowerCase(),
-      hasContract: !!response.contract,
-      hasRider: !!response.rider
-    });
+    // Obtener el estado actual de la postulación
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      const applicantResponse = await eventApplicationService.getEventApplicant(route.params.id, user.id);
+      if (applicantResponse) {
+        application.value = {
+          ...application.value,
+          status: applicantResponse.status,
+          contractSigned: applicantResponse.contractSigned,
+          riderUploaded: applicantResponse.riderUploaded
+        };
+      }
+    }
     
     // Verificar si ya tiene contrato firmado
-    hasSignedContract.value = response.contract?.status === 'signed';
+    hasSignedContract.value = application.value.contractSigned === true;
     // Verificar si ya subió el rider
-    hasUploadedRider.value = !!response.rider;
+    hasUploadedRider.value = application.value.riderUploaded === true;
   } catch (err) {
     error.value = t('applicationDetail.errorLoading');
     console.error('Error fetching application details:', err);
@@ -338,7 +346,7 @@ onMounted(() => {
 
             <div class="flex gap-3 justify-content-center mt-4">
               <pv-button
-                v-if="!hasSignedContract"
+                v-if="!hasSignedContract && application?.status?.toLowerCase() !== 'rejected'"
                 @click="showContractDialog = true"
                 icon="pi pi-file-pdf"
                 :label="t('applicationDetail.contract.view')"

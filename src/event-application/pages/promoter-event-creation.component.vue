@@ -4,10 +4,12 @@ import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
 import { EventApplicationService } from '../services/event-application.service';
 import { EventApplication } from '../model/event-application.model';
+import { useRouter } from 'vue-router';
 
 const { t } = useI18n();
 const toast = useToast();
 const eventApplicationService = new EventApplicationService();
+const router = useRouter();
 
 // User data
 const user = ref(null);
@@ -104,6 +106,12 @@ onMounted(async () => {
     }
   } catch (error) {
     console.error('Error parsing user from localStorage:', error);
+    toast.add({
+      severity: 'error',
+      summary: t('common.error'),
+      detail: t('promoter.dashboard.events.fetchError'),
+      life: 3000
+    });
   }
 });
 
@@ -212,15 +220,39 @@ const updateAvailableTickets = () => {
 };
 
 // Handle image upload
-const handleImageUpload = (e) => {
+const handleImageUpload = async (e) => {
   const file = e.target.files[0];
   if (file) {
+    // Validar el tipo de archivo
+    if (!file.type.startsWith('image/')) {
+      toast.add({
+        severity: 'error',
+        summary: t('common.error'),
+        detail: t('applicationDetail.imageUpload.invalidType'),
+        life: 3000
+      });
+      return;
+    }
+
+    // Validar el tamaño del archivo (máximo 5MB)
+    const MAX_SIZE = 5 * 1024 * 1024; // 5MB
+    if (file.size > MAX_SIZE) {
+      toast.add({
+        severity: 'error',
+        summary: t('common.error'),
+        detail: t('applicationDetail.imageUpload.tooLarge'),
+        life: 3000
+      });
+      return;
+    }
+
     imageFile.value = file;
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      uploadedImage.value = e.target.result;
-    };
-    reader.readAsDataURL(file);
+    
+    // Crear URL temporal para previsualización
+    if (uploadedImage.value) {
+      URL.revokeObjectURL(uploadedImage.value);
+    }
+    uploadedImage.value = URL.createObjectURL(file);
   }
 };
 
@@ -251,16 +283,13 @@ const submitForm = async () => {
   loading.value = true;
   
   try {
-    // Set image URL if uploaded
-    if (uploadedImage.value) {
-      event.imageUrl = uploadedImage.value;
-    } else if (!event.imageUrl) {
-      // Set default image if none provided
-      event.imageUrl = 'https://images.unsplash.com/photo-1540039155733-5bb30b53aa14';
-    }
+    // Preparar los datos del evento
+    const eventData = new EventApplication({
+      ...event,
+      imageFile: imageFile.value // Agregar el archivo de imagen para que el servicio lo procese
+    });
     
-    // Create event using service
-    const eventData = new EventApplication(event);
+    // Crear evento usando el servicio
     await eventApplicationService.create(eventData);
     
     toast.add({
@@ -275,6 +304,13 @@ const submitForm = async () => {
     showForm.value = false;
     showPreview.value = false;
     
+    // Limpiar la imagen temporal
+    if (uploadedImage.value) {
+      URL.revokeObjectURL(uploadedImage.value);
+      uploadedImage.value = null;
+    }
+    imageFile.value = null;
+    
     // Refresh event list
     await fetchPromoterEvents();
   } catch (error) {
@@ -282,7 +318,7 @@ const submitForm = async () => {
     toast.add({
       severity: 'error',
       summary: t('common.error'),
-      detail: t('promoter.dashboard.createEvent.error') || 'Error al crear el evento',
+      detail: error.message || t('promoter.dashboard.createEvent.error') || 'Error al crear el evento',
       life: 3000
     });
   } finally {
@@ -297,8 +333,7 @@ const cancelPreview = () => {
 
 // View event details
 const viewEventDetails = (eventId) => {
-  // Implement navigation to event details page
-  console.log('View event details:', eventId);
+  router.push(`/events/${eventId}`);
 };
 
 // Get status severity
@@ -319,13 +354,11 @@ const getStatusSeverity = (status) => {
   <div class="dashboard-container">
     <!-- Event List View -->
     <div v-if="!showForm" class="dashboard-content p-4">
-    
-      
       <div class="flex justify-content-between align-items-center mb-4">
-        <h2 class="text-2xl font-semibold">{{ $t('promoter.dashboard.myEvents') }}</h2>
+        <h2 class="text-2xl font-semibold">{{ t('promoter.dashboard.myEvents') }}</h2>
         <pv-button 
           @click="showCreateForm" 
-          :label="$t('promoter.dashboard.createEvent.title')"
+          :label="t('promoter.dashboard.createEvent.title')"
           icon="pi pi-plus"
           class="p-button-primary"
         />
@@ -336,10 +369,10 @@ const getStatusSeverity = (status) => {
       </div>
       
       <div v-else-if="promoterEvents.length === 0" class="text-center p-6">
-        <p class="text-xl mb-4">{{ $t('promoter.dashboard.noEvents') }}</p>
+        <p class="text-xl mb-4">{{ t('promoter.dashboard.noEvents') }}</p>
         <pv-button 
           @click="showCreateForm" 
-          :label="$t('promoter.dashboard.createEvent')"
+          :label="t('promoter.dashboard.createEvent.title')"
           icon="pi pi-plus"
           size="large"
         />
@@ -387,7 +420,7 @@ const getStatusSeverity = (status) => {
               <div class="flex justify-content-end">
                 <pv-button 
                   @click="viewEventDetails(event.id)" 
-                  :label="$t('eventApplications.viewApplication')"
+                  :label="$t('eventApplications.viewEvent')"
                   icon="pi pi-eye"
                   outlined
                 />
@@ -401,7 +434,7 @@ const getStatusSeverity = (status) => {
     <!-- Event Creation Form -->
     <div v-if="showForm && !showPreview" class="dashboard-content p-4">
       <div class="flex justify-content-between align-items-center mb-4">
-        <h2 class="text-2xl font-semibold">{{ $t('promoter.dashboard.createEvent') }}</h2>
+        <h2 class="text-2xl font-semibold">{{ t('promoter.dashboard.createEvent.title') }}</h2>
         <pv-button 
           @click="hideForm" 
           icon="pi pi-times" 
@@ -688,7 +721,7 @@ const getStatusSeverity = (status) => {
     <!-- Event Preview -->
     <div v-if="showForm && showPreview" class="dashboard-content p-4">
       <div class="flex justify-content-between align-items-center mb-4">
-        <h2 class="text-2xl font-semibold">{{ $t('promoter.dashboard.createEvent.preview') || 'Vista previa del evento' }}</h2>
+        <h2 class="text-2xl font-semibold">{{ t('promoter.dashboard.createEvent.preview') }}</h2>
         <pv-button 
           @click="hideForm" 
           icon="pi pi-times" 

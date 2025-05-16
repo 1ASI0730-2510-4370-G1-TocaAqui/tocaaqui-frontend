@@ -1,548 +1,132 @@
 {
-  "evaluations": [
-    {
-      "eventId": 2,
-      "eventName": "Jazz Under Stars",
-      "eventDate": "2024-12-17",
-      "eventLocation": "Central Park, NY",
-      "eventImageUrl": "https://images.unsplash.com/photo-1415201364774-f6f0bb35f28f",
-      "rating": 5,
-      "comment": "asdsadasd",
-      "suggestions": "dsdasd",
-      "name": "Jazz Under Stars",
-      "date": "2024-12-17",
-      "location": "Central Park, NY",
-      "imageUrl": "https://images.unsplash.com/photo-1415201364774-f6f0bb35f28f",
-      "status": "evaluated",
-      "id": 1
-    },
-    {
-      "eventId": 3,
-      "eventName": "Electro Beats Fest",
-      "eventDate": "2024-12-10",
-      "eventLocation": "Pier 17, NY",
-      "eventImageUrl": "https://images.unsplash.com/photo-1470225620780-dba8ba36b745",
-      "rating": 4,
-      "comment": "dsadasdasdasdsa",
-      "suggestions": "dsadasdasdas",
-      "name": "Electro Beats Fest",
-      "date": "2024-12-10",
-      "location": "Pier 17, NY",
-      "imageUrl": "https://images.unsplash.com/photo-1470225620780-dba8ba36b745",
-      "status": "evaluated",
-      "id": 2
-    }
-  ],
-  "evaluation_checklist": [
-    {
-      "id": 1,
-      "evaluationId": 1,
-      "label": "Pago puntual",
-      "value": true
-    },
-    {
-      "id": 2,
-      "evaluationId": 1,
-      "label": "Buena comunicación",
-      "value": true
-    },
-    {
-      "id": 3,
-      "evaluationId": 1,
-      "label": "Rider técnico respetado",
-      "value": true
-    }
-  ],
+  "evaluations": [],
+  "evaluation_checklist": [],
   "users": [
     {
-      "name": "Skyblue",
-      "email": "di@gmail.com",
-      "password": "12333",
+      "name": "musico1",
+      "email": "musico@gmail.com",
+      "password": "1234",
       "role": "musico",
+      "genre": "Rock",
+      "type": "banda",
+      "description": "hola",
+      "imageUrl": "https://i.ibb.co/Nd9W9GQX/14e17ddef5b3.webp",
       "id": 1
     },
     {
-      "name": "Oscar Antayhua",
-      "email": "123@gmail.com",
+      "name": "promotor1",
+      "email": "promotor1@gmail.com",
       "password": "1234",
-      "role": "musico",
+      "role": "promotor",
       "id": 2
-    },
-    {
-      "name": "Azul",
-      "email": "di36o14oficial@gmail.com",
-      "password": "1234",
-      "role": "musico",
-      "id": 3
-    },
-    {
-      "name": "Rojo",
-      "email": "fabrizioleiva@gmail.com",
-      "password": "1234",
-      "role": "promotor",
-      "id": 4
-    },
-    {
-      "name": "oscar2",
-      "email": "oscar2@gmail.com",
-      "password": "1234",
-      "role": "promotor",
-      "id": 5
-    },
-    {
-      "name": "juan",
-      "email": "sadsd@gmil.vom",
-      "password": "1232dsadas",
-      "role": "promotor",
-      "id": 7
-    },
-    {
-      "name": "sdf",
-      "email": "dsffds@sdfsd.com",
-      "password": "ewdfiuwehduewhue",
-      "role": "musico",
-      "id": 8
     }
   ],
   "events": [
     {
       "id": 1,
-      "promoterId": 4,
-      "name": "Rock Night Fest",
-      "date": "2024-12-01",
-      "time": "20:00",
-      "location": "Salón de Eventos Royal",
-      "imageUrl": "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14",
-      "status": "confirmed",
-      "publishDate": "2024-11-02",
-      "soundcheckDate": "2024-12-01",
-      "soundcheckTime": "14:00",
-      "capacity": 5000,
-      "availableTickets": 3000,
-      "adminName": "Rojo",
-      "adminId": 4,
-      "adminContact": "+1 234-567-8900",
-      "requirements": "Banda de rock con experiencia",
-      "description": "Festival de rock con bandas locales e internacionales",
-      "payment": "$1000",
+      "promoterId": 2,
+      "name": "Celeste",
+      "date": "2025-05-29",
+      "time": "11:53",
+      "publishDate": "2025-05-16",
+      "location": "Break de monterrico",
+      "imageUrl": "",
+      "status": "accepted",
+      "soundcheckDate": "2025-05-20",
+      "soundcheckTime": "16:54",
+      "capacity": 23,
+      "availableTickets": 23,
+      "adminName": "promotor1",
+      "adminId": 2,
+      "adminContact": "965887441",
+      "requirements": "asd",
+      "description": "asd",
+      "payment": "2500",
       "duration": 2,
       "genre": "Rock",
-      "equipment": "Batería, amplificadores, micrófonos"
-    },
-    {
-      "id": 2,
-      "promoterId": 4,
-      "name": "Jazz Under Stars",
-      "date": "2024-12-17",
-      "time": "19:30",
-      "location": "Central Park, NY",
-      "imageUrl": "https://images.unsplash.com/photo-1415201364774-f6f0bb35f28f",
-      "status": "pending",
-      "publishDate": "2024-11-17",
-      "soundcheckDate": "2024-12-17",
-      "soundcheckTime": "15:00",
-      "capacity": 3000,
-      "availableTickets": 2000,
-      "adminName": "oscar2",
-      "adminId": 5,
-      "adminContact": "+1 234-567-8901",
-      "requirements": "Músicos de jazz con experiencia",
-      "description": "Noche de jazz bajo las estrellas en Central Park",
-      "payment": "$800",
-      "duration": 3,
-      "genre": "Jazz",
-      "equipment": "Piano, contrabajo, batería"
-    },
-    {
-      "id": 3,
-      "promoterId": 4,
-      "name": "Electro Beats Fest",
-      "date": "2024-12-10",
-      "time": "22:00",
-      "location": "Pier 17, NY",
-      "imageUrl": "https://images.unsplash.com/photo-1470225620780-dba8ba36b745",
-      "status": "accepted",
-      "publishDate": "2024-11-10",
-      "soundcheckDate": "2024-12-10",
-      "soundcheckTime": "16:00",
-      "capacity": 4000,
-      "availableTickets": 2500,
-      "adminName": "Rojo",
-      "adminId": 4,
-      "adminContact": "+1 234-567-8902",
-      "requirements": "DJs con experiencia en música electrónica",
-      "description": "Festival de música electrónica en el muelle",
-      "payment": "$1200",
-      "duration": 4,
-      "genre": "Electrónica",
-      "equipment": "Equipo de DJ, luces, efectos",
+      "equipment": "asd",
       "contract": {
         "userId": 1,
         "signature": "firma-digital",
-        "signedDate": "2025-05-15T18:28:52.749Z",
+        "signedDate": "2025-05-16T16:54:28.383Z",
         "status": "signed"
       }
     },
     {
-      "id": 4,
-      "name": "sad",
-      "date": "2025-05-21",
-      "time": "23:04",
-      "publishDate": "2025-05-15",
-      "location": "asd",
-      "status": "pending",
-      "soundcheckDate": "2025-05-19",
-      "soundcheckTime": "03:42",
-      "capacity": 32,
-      "availableTickets": 32,
-      "adminName": "juan",
-      "adminContact": "432342",
-      "imageUrl": "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14",
-      "documents": [],
-      "applicants": []
-    },
-    {
-      "id": 5,
-      "promoterId": 4,
-      "name": "ads",
-      "date": "2025-05-16",
-      "time": "03:24",
-      "publishDate": "2025-05-15",
-      "location": "asd",
-      "imageUrl": "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14",
-      "status": "pending",
-      "soundcheckDate": "2025-05-15",
-      "soundcheckTime": "03:42",
-      "capacity": 432,
-      "availableTickets": 432,
-      "adminName": "Rojo",
-      "adminId": 4,
-      "adminContact": "324",
-      "requirements": "342",
-      "description": "324",
-      "payment": "asd",
-      "duration": 234,
-      "genre": "Rock",
-      "equipment": "432"
-    },
-    {
-      "id": 6,
-      "promoterId": 4,
-      "name": "asd",
-      "date": "2222-12-12",
-      "time": "21:21",
-      "publishDate": "2025-05-15",
-      "location": "das",
-      "imageUrl": "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14",
-      "status": "pending",
-      "soundcheckDate": "2025-05-23",
-      "soundcheckTime": "21:12",
-      "capacity": 324,
-      "availableTickets": 324,
-      "adminName": "Rojo",
-      "adminId": 4,
-      "adminContact": "12122121",
-      "requirements": "das",
-      "description": "ads",
-      "payment": "dsa",
-      "duration": 324,
-      "genre": "Rock",
-      "equipment": "dsa"
-    }
-  ],
-  "riders": [
-    {
-      "id": 1,
-      "firstName": "Juan",
-      "lastName": "Pérez",
-      "documentType": "DNI",
-      "documentNumber": "45678912",
-      "email": "juan.perez@email.com",
-      "phone": "+51987654321",
-      "location": "lima",
-      "genre": "M",
-      "paymentMethod": "cash",
-      "status": "pending",
-      "documents": [
-        {
-          "id": 1,
-          "type": "dni",
-          "url": "https://example.com/docs/dni.pdf",
-          "uploadedAt": "2024-03-15T10:30:00Z"
-        }
-      ],
-      "createdAt": "2024-03-15T10:00:00Z",
-      "updatedAt": "2024-03-15T10:30:00Z"
-    },
-    {
       "id": 2,
-      "firstName": "María",
-      "lastName": "García",
-      "documentType": "DNI",
-      "documentNumber": "78912345",
-      "email": "maria.garcia@email.com",
-      "phone": "+51987123456",
-      "location": "callao",
-      "genre": "F",
-      "paymentMethod": "transfer",
-      "status": "approved",
-      "documents": [
-        {
-          "id": 2,
-          "type": "dni",
-          "url": "https://example.com/docs/dni2.pdf",
-          "uploadedAt": "2024-03-14T15:30:00Z"
-        },
-        {
-          "id": 3,
-          "type": "license",
-          "url": "https://example.com/docs/license2.pdf",
-          "uploadedAt": "2024-03-14T15:35:00Z"
-        }
-      ],
-      "createdAt": "2024-03-14T15:00:00Z",
-      "updatedAt": "2024-03-14T16:00:00Z"
+      "promoterId": 2,
+      "name": "123",
+      "date": "2025-05-30",
+      "time": "15:59",
+      "publishDate": "2025-05-16",
+      "location": "123",
+      "imageUrl": "",
+      "status": "pending",
+      "soundcheckDate": "2025-05-28",
+      "soundcheckTime": "11:59",
+      "capacity": 23,
+      "availableTickets": 23,
+      "adminName": "promotor1",
+      "adminId": 2,
+      "adminContact": "965887441",
+      "requirements": "123",
+      "description": "123",
+      "payment": "23",
+      "duration": 2,
+      "genre": "Pop",
+      "equipment": "123"
     }
   ],
-  "applications": [
-    {
-      "id": 1,
-      "riderId": 1,
-      "status": "accepted",
-      "comments": [
-        {
-          "id": 1,
-          "text": "Documentos recibidos, en revisión",
-          "createdAt": "2024-03-15T10:31:00Z",
-          "author": "admin"
-        }
-      ],
-      "stages": [
-        {
-          "name": "document_verification",
-          "status": "in_progress",
-          "completedAt": null
-        },
-        {
-          "name": "background_check",
-          "status": "pending",
-          "completedAt": null
-        },
-        {
-          "name": "training",
-          "status": "pending",
-          "completedAt": null
-        }
-      ],
-      "createdAt": "2024-03-15T10:00:00Z",
-      "updatedAt": "2024-03-15T10:31:00Z"
-    },
-    {
-      "id": 2,
-      "riderId": 2,
-      "status": "accepted",
-      "comments": [
-        {
-          "id": 2,
-          "text": "Documentos verificados correctamente",
-          "createdAt": "2024-03-14T15:40:00Z",
-          "author": "admin"
-        },
-        {
-          "id": 3,
-          "text": "Verificación de antecedentes completada",
-          "createdAt": "2024-03-14T16:00:00Z",
-          "author": "admin"
-        }
-      ],
-      "stages": [
-        {
-          "name": "document_verification",
-          "status": "completed",
-          "completedAt": "2024-03-14T15:40:00Z"
-        },
-        {
-          "name": "background_check",
-          "status": "completed",
-          "completedAt": "2024-03-14T16:00:00Z"
-        },
-        {
-          "name": "training",
-          "status": "completed",
-          "completedAt": "2024-03-14T16:30:00Z"
-        }
-      ],
-      "createdAt": "2024-03-14T15:00:00Z",
-      "updatedAt": "2024-03-14T16:30:00Z"
-    }
-  ],
-  "locations": [
-    {
-      "id": "lima",
-      "name": "Lima",
-      "isActive": true
-    },
-    {
-      "id": "callao",
-      "name": "Callao",
-      "isActive": true
-    }
-  ],
-  "document_types": [
-    {
-      "id": "dni",
-      "name": "DNI",
-      "required": true,
-      "maxSize": 5000000,
-      "allowedFormats": [
-        "pdf",
-        "jpg",
-        "png"
-      ]
-    },
-    {
-      "id": "license",
-      "name": "Licencia de conducir",
-      "required": true,
-      "maxSize": 5000000,
-      "allowedFormats": [
-        "pdf",
-        "jpg",
-        "png"
-      ]
-    },
-    {
-      "id": "criminal_record",
-      "name": "Antecedentes penales",
-      "required": true,
-      "maxSize": 5000000,
-      "allowedFormats": [
-        "pdf"
-      ]
-    }
-  ],
+  "riders": [],
+  "applications": [],
+  "locations": [],
+  "document_types": [],
   "event_applicants": [
     {
       "id": 1,
       "userId": 1,
       "eventId": 1,
       "status": "accepted",
-      "applicationDate": "2024-03-20T10:00:00Z",
+      "applicationDate": "2025-05-16T16:54:20.184Z",
       "contractSigned": true,
-      "riderUploaded": true
+      "riderUploaded": false
     },
     {
       "id": 2,
-      "userId": 2,
+      "userId": 1,
       "eventId": 2,
       "status": "accepted",
-      "applicationDate": "2024-03-19T15:00:00Z",
-      "contractSigned": true,
-      "riderUploaded": true
-    },
-    {
-      "id": 3,
-      "userId": 1,
-      "eventId": 3,
-      "status": "accepted",
-      "applicationDate": "2024-03-21T09:00:00Z",
-      "contractSigned": true,
+      "applicationDate": "2025-05-16T16:55:38.525Z",
+      "contractSigned": false,
       "riderUploaded": false
     }
   ],
-  "tickets": [
-    {
-      "id": 1,
-      "eventId": 1,
-      "eventName": "Rock Night Fest",
-      "type": "Tipado",
-      "price": 1.1,
-      "code": "RNF-GEN-928374",
-      "validUntil": "2024-11-24",
-      "createdAt": "2024-03-15T10:00:00Z",
-      "updatedAt": "2025-05-14T20:46:45.135Z",
-      "qrGenerated": true,
-      "status": "used",
-      "promoterId": 4,
-      "shareStats": {
-        "clicks": 0,
-        "uniqueVisits": 0,
-        "attendanceConfirmations": 0,
-        "ticketsIssued": 0,
-        "ticketsScanned": 0
-      },
-      "platforms": []
-    }
-  ],
-  "ticket_stats": [
-    {
-      "id": 1,
-      "ticketId": 1,
-      "clicks": 567,
-      "uniqueVisits": 432,
-      "attendanceConfirmations": 213,
-      "ticketsIssued": 200,
-      "ticketsScanned": 104
-    }
-  ],
+  "tickets": [],
+  "ticket_stats": [],
   "payments": [
     {
-      "id": 1,
-      "amount": 1500,
-      "eventId": 1,
+      "amount": 23,
+      "eventId": 2,
       "musicoId": 1,
-      "promotorId": 4,
-      "status": "HELD",
+      "promotorId": 2,
+      "status": "COMPLETED",
       "paymentMethod": "bank_transfer",
       "bankInfo": {
         "accountNumber": "****1234",
         "bankName": "Banco de Crédito",
         "accountType": "savings"
       },
-      "description": "Pago por presentación de Celeste en Rock Night Fest",
-      "createdAt": "2024-03-20T10:00:00Z",
-      "updatedAt": "2024-03-20T10:30:00Z",
+      "description": "Pago por presentación de musico1 en 123",
+      "createdAt": "2025-05-16T16:55:50.321Z",
+      "updatedAt": "2025-05-16T16:57:46.147Z",
       "statusHistory": [
-        {
-          "status": "PENDING",
-          "timestamp": "2024-03-20T10:00:00Z",
-          "comment": "Pago creado"
-        },
-        {
-          "status": "HELD",
-          "timestamp": "2024-03-20T10:30:00Z",
-          "comment": "Pago en espera de confirmación del evento"
-        }
-      ]
-    },
-    {
-      "id": 2,
-      "amount": 2000,
-      "eventId": 2,
-      "musicoId": 2,
-      "promotorId": 5,
-      "status": "COMPLETED",
-      "paymentMethod": "bank_transfer",
-      "bankInfo": {
-        "accountNumber": "****5678",
-        "bankName": "BBVA",
-        "accountType": "checking"
-      },
-      "description": "Pago por presentación de Oscar Antayhua en Jazz Under Stars",
-      "createdAt": "2024-03-19T15:00:00Z",
-      "updatedAt": "2024-03-19T16:00:00Z",
-      "statusHistory": [
-        {
-          "status": "PENDING",
-          "timestamp": "2024-03-19T15:00:00Z",
-          "comment": "Pago creado"
-        },
         {
           "status": "COMPLETED",
-          "timestamp": "2024-03-19T16:00:00Z",
-          "comment": "Transferencia completada exitosamente"
+          "timestamp": "2025-05-16T16:57:46.147Z",
+          "comment": "Pago liberado después de confirmar el evento"
         }
-      ]
+      ],
+      "id": 1
     }
   ]
 }

@@ -5,16 +5,45 @@ export class PaymentService {
     async createPayment(eventId, amount, userId, promotorId) {
         try {
             console.log('Creating payment:', { eventId, amount, userId, promotorId });
-            const response = await httpInstance.post('/payments', {
+            
+            // Obtener información del evento
+            const eventResponse = await httpInstance.get(`/events/${eventId}`);
+            const event = eventResponse.data;
+            
+            // Obtener información del músico
+            const musicoResponse = await httpInstance.get(`/users/${userId}`);
+            const musico = musicoResponse.data;
+
+            const now = new Date().toISOString();
+            
+            const paymentData = {
                 eventId: Number(eventId),
                 amount: Number(amount),
                 musicoId: Number(userId),
                 promotorId: Number(promotorId),
                 status: PaymentStatus.PENDING,
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString()
-            });
-            return this.enrichPaymentData(response.data);
+                paymentMethod: "bank_transfer",
+                bankInfo: {
+                    accountNumber: "****" + Math.floor(1000 + Math.random() * 9000),
+                    bankName: "Banco de Crédito",
+                    accountType: "savings"
+                },
+                description: `Pago por presentación de ${musico.name} en ${event.name}`,
+                createdAt: now,
+                updatedAt: now,
+                statusHistory: [
+                    {
+                        status: PaymentStatus.PENDING,
+                        timestamp: now,
+                        comment: "Pago creado"
+                    }
+                ]
+            };
+
+            console.log('Creating payment with data:', paymentData);
+            const response = await httpInstance.post('/payments', paymentData);
+            console.log('Payment created:', response.data);
+            return new Payment(response.data);
         } catch (error) {
             console.error('Error creating payment:', error);
             throw error;
@@ -29,40 +58,51 @@ export class PaymentService {
 
             // 2. Obtener todos los pagos
             const paymentsResponse = await httpInstance.get('/payments');
-            // Asegurarse de que payments sea un array
             const payments = Array.isArray(paymentsResponse.data) ? paymentsResponse.data : [];
+            console.log('Payments from server:', payments);
 
             // 3. Filtrar pagos según el rol del usuario
             const userPayments = payments.filter(payment => {
                 if (user.role === 'musico') {
-                    return payment.musicoId === userId;
+                    return payment.musicoId === Number(userId);
                 }
                 if (user.role === 'promotor') {
-                    return payment.promotorId === userId;
+                    return payment.promotorId === Number(userId);
                 }
                 return false;
             });
 
-            // 4. Obtener información adicional para cada pago
-            const enrichedPayments = await Promise.all(
-                userPayments.map(async (payment) => {
-                    try {
-                        const eventResponse = await httpInstance.get(`/events/${payment.eventId}`);
-                        return new Payment({
-                            ...payment,
-                            eventName: eventResponse.data.name
-                        });
-                    } catch (error) {
-                        console.error(`Error al obtener información del evento ${payment.eventId}:`, error);
-                        return new Payment({
-                            ...payment,
-                            eventName: 'Evento no encontrado'
-                        });
-                    }
-                })
-            );
+            // 4. Enriquecer los pagos con información adicional
+            const enrichedPayments = await Promise.all(userPayments.map(async payment => {
+                try {
+                    // Obtener información del evento
+                    const eventResponse = await httpInstance.get(`/events/${payment.eventId}`);
+                    const event = eventResponse.data;
 
-            return enrichedPayments;
+                    // Obtener información del músico
+                    const musicoResponse = await httpInstance.get(`/users/${payment.musicoId}`);
+                    const musico = musicoResponse.data;
+
+                    // Obtener información del promotor
+                    const promotorResponse = await httpInstance.get(`/users/${payment.promotorId}`);
+                    const promotor = promotorResponse.data;
+
+                    return {
+                        ...payment,
+                        eventName: event.name,
+                        musicoName: musico.name,
+                        promotorName: promotor.name
+                    };
+                } catch (error) {
+                    console.error('Error enriching payment:', error);
+                    return payment;
+                }
+            }));
+
+            console.log('Enriched payments:', enrichedPayments);
+
+            // 5. Convertir a instancias de Payment
+            return enrichedPayments.map(payment => new Payment(payment));
         } catch (error) {
             console.error('Error al obtener pagos:', error);
             throw new Error('No se pudieron cargar los pagos');
@@ -71,11 +111,41 @@ export class PaymentService {
 
     async updatePaymentStatus(paymentId, newStatus) {
         try {
-            const { data } = await httpInstance.patch(`/payments/${paymentId}`, {
+            // Primero obtener el pago actual para mantener el historial
+            const currentPayment = await httpInstance.get(`/payments/${paymentId}`);
+            const payment = currentPayment.data;
+
+            const now = new Date().toISOString();
+            let comment = '';
+
+            switch (newStatus) {
+                case PaymentStatus.HELD:
+                    comment = 'Pago en espera de confirmación del evento';
+                    break;
+                case PaymentStatus.COMPLETED:
+                    comment = 'Pago liberado después de confirmar el evento';
+                    break;
+                case PaymentStatus.CANCELLED:
+                    comment = 'Pago cancelado';
+                    break;
+                default:
+                    comment = 'Estado actualizado';
+            }
+
+            const statusHistoryEntry = {
                 status: newStatus,
-                updatedAt: new Date().toISOString()
-            });
-            return Payment.fromJSON(data);
+                timestamp: now,
+                comment
+            };
+
+            const updatedData = {
+                status: newStatus,
+                updatedAt: now,
+                statusHistory: [...(payment.statusHistory || []), statusHistoryEntry]
+            };
+
+            const { data } = await httpInstance.patch(`/payments/${paymentId}`, updatedData);
+            return new Payment(data);
         } catch (error) {
             console.error('Error updating payment status:', error);
             throw new Error(`Error al actualizar el estado del pago: ${error.message}`);

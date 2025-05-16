@@ -11,6 +11,7 @@ export class EventApplication {
         publishDate = '',
         location = '',
         imageUrl = '',
+        imageFile = null,
         status = 'pending',
         soundcheckDate = '',
         soundcheckTime = '',
@@ -34,6 +35,7 @@ export class EventApplication {
         this.publishDate = publishDate
         this.location = location
         this.imageUrl = imageUrl
+        this.imageFile = imageFile
         this.status = status
         this.soundcheckDate = soundcheckDate
         this.soundcheckTime = soundcheckTime

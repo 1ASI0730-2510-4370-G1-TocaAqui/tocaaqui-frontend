@@ -45,7 +45,8 @@ const fetchUserApplications = async () => {
           status: applicant.status,
           applicationDate: applicant.applicationDate,
           contractSigned: applicant.contractSigned,
-          riderUploaded: applicant.riderUploaded
+          riderUploaded: applicant.riderUploaded,
+          id: event.id // Mantener el ID del evento
         }))
     );
     

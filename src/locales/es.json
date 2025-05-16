@@ -26,7 +26,25 @@
     },
     "submit": "Guardar evaluación",
     "successMessage": "Evaluación guardada correctamente",
-    "errorMessage": "Hubo un error al guardar la evaluación"
+    "errorMessage": "Hubo un error al guardar la evaluación",
+    "artistEvaluations": "Evaluar Artistas",
+    "evaluatedArtists": "Artistas Evaluados",
+    "viewEvaluatedArtists": "Ver artistas evaluados",
+    "evaluate": "Evaluar",
+    "viewEvaluated": "Ver Evaluados",
+    "artists": "Artistas",
+    "errorLoadingArtists": "Error al cargar las evaluaciones de artistas",
+    "venueEvaluation": {
+      "title": "Evaluar Locales",
+      "description": "Evalúa los locales donde has tocado. Tu opinión ayuda a otros músicos a tomar mejores decisiones."
+    },
+    "artistEvaluation": {
+      "title": "Evaluar Artistas",
+      "description": "Evalúa a los artistas que han tocado en tus eventos. Ayuda a otros promotores a conocer el profesionalismo de los artistas.",
+      "placeholder": "Evalúa la presentación del artista en {event}",
+      "success": "Evaluación del artista guardada correctamente",
+      "error": "Error al guardar la evaluación del artista"
+    }
   },
   "common": {
     "add": "Agregar",
@@ -50,7 +68,10 @@
     "userProfile": "Perfil de usuario",
     "logout": "Cerrar Sesión",
     "status": "Estado",
-    "required": "Este campo es requerido"
+    "required": "Este campo es requerido",
+    "clear": "Limpiar",
+    "apply": "Aplicar",
+    "back": "Regresar"
   },
   "schedule": {
     "confirmed": "Eventos Confirmados",
@@ -58,15 +79,25 @@
     "year": "2025"
   },
   "profile": {
-        "title": "Perfil del Usuario",
-        "name": "Nombre",
-        "email": "Correo",
-        "role": "Rol",
-        "password": "Contraseña",
-        "editProfile": "Editar Perfil",
-        "successUpdate": "Perfil actualizado correctamente",
-        "errorUpdate": "No se pudo actualizar el perfil"
-    },
+    "title": "Perfil del Usuario",
+    "name": "Nombre",
+    "email": "Correo",
+    "role": "Rol",
+    "password": "Contraseña",
+    "editProfile": "Editar Perfil",
+    "successUpdate": "Perfil actualizado correctamente",
+    "errorUpdate": "No se pudo actualizar el perfil",
+    "genre": "Género musical",
+    "type": "Tipo",
+    "description": "Descripción",
+    "soloist": "Solista",
+    "band": "Banda",
+    "notSpecified": "No especificado",
+    "changePhoto": "Cambiar foto",
+    "uploadPhoto": "Subir foto",
+    "invalidImageType": "El archivo seleccionado no es una imagen válida",
+    "imageTooLarge": "La imagen es demasiado grande. El tamaño máximo permitido es 5MB"
+  },
   "menu": {
     "dashboard": "Dashboard",
     "profile": "Mi Perfil",
@@ -165,6 +196,7 @@
   "dashboard": {
     "welcome": "Bienvenido {name}",
     "viewAll": "Ver todos",
+    "applicants": "postulantes",
     "stats": {
       "nextEvents": {
         "title": "Próximos Eventos",
@@ -197,23 +229,42 @@
   },
   "eventApplications": {
     "title": "Solicitudes de Eventos",
+    "searchEvents": "Buscar Eventos",
     "searchPlaceholder": "Buscar por nombre o lugar",
     "locationPlaceholder": "Buscar por lugar",
     "statePlaceholder": "Buscar por estado",
+    "genrePlaceholder": "Seleccionar género musical",
+    "dateFrom": "Fecha desde",
+    "dateTo": "Fecha hasta",
     "allStatuses": "Todos los estados",
     "pending": "Pendiente",
     "accepted": "Aceptado",
     "rejected": "Rechazado",
     "noApplications": "No hay solicitudes disponibles",
+    "noEvents": "No hay eventos disponibles",
+    "viewInfo": "Ver información",
+    "apply": "Postular",
+    "viewEvent": "Ver evento",
+    "viewApplication": "Ver postulación",
+    "applicants": "Postulantes",
+    "noApplicants": "No hay postulantes para este evento",
+    "eventNotFound": "Evento no encontrado",
+    "viewProfile": "Ver perfil",
+    "accept": "Aceptar",
+    "alreadyApplied": "Ya has postulado a este evento",
     "status": {
       "pending": "Pendiente",
       "accepted": "Aceptado",
-      "rejected": "Rechazado"
+      "rejected": "Rechazado",
+      "active": "Activo"
     },
-    "venue": "Lugar",
-    "payment": "Pago",
-    "apply": "Postular",
-    "viewApplication": "Ver postulación"
+    "basicInfo": "Información Básica",
+    "additionalInfo": "Información Adicional",
+    "paymentInfo": "Información de Pago",
+    "paymentMethod": "Método de pago",
+    "paymentTiming": "Tiempo de pago",
+    "advancePayment": "Pago por adelantado",
+    "noAdditionalInfo": "Sin información adicional"
   },
   "applicationDetail": {
     "title": "Detalle de la Postulación",
@@ -248,6 +299,12 @@
     "venueCapacity": "Capacidad del Local",
     "availableTickets": "Entradas Disponibles",
     "adminContact": "Contacto del Administrador",
+    "imageUpload": {
+      "invalidType": "El archivo seleccionado no es una imagen válida",
+      "tooLarge": "La imagen es demasiado grande. El tamaño máximo permitido es 5MB",
+      "uploadError": "Error al subir la imagen. Por favor, intenta con otra imagen o más tarde.",
+      "uploadSuccess": "Imagen subida correctamente"
+    },
     "contract": {
       "title": "Contrato del Evento",
       "reject": "Rechazar",
@@ -256,7 +313,8 @@
       "error": "Error al firmar el contrato",
       "noUser": "No hay usuario autenticado",
       "notFound": "No se encontró la postulación",
-      "serverError": "Error en el servidor al procesar el contrato"
+      "serverError": "Error en el servidor al procesar el contrato",
+      "view": "Ver Contrato"
     },
     "rider": {
       "title": "Subir Rider Técnico",
@@ -264,7 +322,12 @@
       "uploadLabel": "Subir",
       "cancelLabel": "Cancelar",
       "dragDropText": "Arrastra y suelta el archivo PDF aquí o haz clic para seleccionarlo",
-      "sizeNote": "* El archivo debe estar en formato PDF y no debe exceder los 5MB"
+      "sizeNote": "* El archivo debe estar en formato PDF y no debe exceder los 5MB",
+      "upload": "Subir Rider Técnico",
+      "uploadSuccess": "Rider técnico subido correctamente",
+      "uploadError": "Error al subir el rider técnico",
+      "invalidType": "El archivo debe estar en formato PDF",
+      "invalidSize": "El archivo no debe exceder los 5MB"
     }
   },
   "calendar": {

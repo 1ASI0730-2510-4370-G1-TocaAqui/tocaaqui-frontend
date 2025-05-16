@@ -132,6 +132,15 @@ const getMonthDay = (dateString) => {
   <div class="promoter-dashboard">
     
     <div class="dashboard-content">
+      <div class="flex justify-content-between align-items-center mb-4">
+        <h2 class="text-2xl font-semibold">{{ t('promoter.dashboard.myEvents') }}</h2>
+        <pv-button 
+          @click="showCreateForm" 
+          :label="t('promoter.dashboard.createEvent.title')"
+          icon="pi pi-plus"
+          class="p-button-primary"
+        />
+      </div>
       <!-- Filtros -->
       <pv-card class="filter-card mb-4">
         <template #title>

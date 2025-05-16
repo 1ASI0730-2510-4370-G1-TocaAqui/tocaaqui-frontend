@@ -9,6 +9,7 @@ import 'primevue/resources/primevue.min.css';
 
 // PrimeVue componentes
 import Button from 'primevue/button';
+import Calendar from 'primevue/calendar';
 import Card from 'primevue/card';
 import Checkbox from 'primevue/checkbox';
 import Column from 'primevue/column';
@@ -66,6 +67,7 @@ app.use(PrimeVue, {
 
 // Registrar componentes
 app.component('pv-button', Button);
+app.component('pv-calendar', Calendar);
 app.component('pv-card', Card);
 app.component('pv-checkbox', Checkbox);
 app.component('pv-column', Column);

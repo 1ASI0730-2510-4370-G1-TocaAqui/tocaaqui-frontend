@@ -15,6 +15,7 @@ const route = useRoute();
 const { t } = useI18n();
 const isAuthenticated = ref(false);
 const userName = ref('');
+const userImage = ref('');
 const isUserMenuVisible = ref(false);
 const isSidebarVisible = ref(false);
 const loginService = new LoginService();
@@ -52,6 +53,7 @@ const handleLogout = () => {
   loginService.logout();
   isAuthenticated.value = false;
   userName.value = '';
+  userImage.value = '';
   router.push('/login');
 };
 
@@ -68,12 +70,23 @@ const handleLoginSuccess = (event) => {
   const user = event.detail;
   isAuthenticated.value = true;
   userName.value = user.name;
+  userImage.value = user.imageUrl;
 };
 
 const handleLogoutEvent = () => {
   isAuthenticated.value = false;
   userName.value = '';
+  userImage.value = '';
   router.push('/login');
+};
+
+// Manejador de evento de actualización de perfil
+const handleProfileUpdate = (event) => {
+  const user = event.detail;
+  if (user) {
+    userName.value = user.name;
+    userImage.value = user.imageUrl;
+  }
 };
 
 onMounted(() => {
@@ -82,17 +95,20 @@ onMounted(() => {
     const user = JSON.parse(userStr);
     isAuthenticated.value = true;
     userName.value = user.name;
+    userImage.value = user.imageUrl;
   }
   
   document.addEventListener('click', handleClickOutside);
   window.addEventListener('login-success', handleLoginSuccess);
   window.addEventListener('logout', handleLogoutEvent);
+  window.addEventListener('profile-updated', handleProfileUpdate);
 });
 
 onUnmounted(() => {
   document.removeEventListener('click', handleClickOutside);
   window.removeEventListener('login-success', handleLoginSuccess);
   window.removeEventListener('logout', handleLogoutEvent);
+  window.removeEventListener('profile-updated', handleProfileUpdate);
 });
 </script>
 
@@ -146,6 +162,14 @@ onUnmounted(() => {
                 >
                   <span class="font-medium">{{ userName }}</span>
                   <pv-avatar
+                    v-if="userImage"
+                    :image="userImage"
+                    shape="circle"
+                    size="normal"
+                    :aria-label="t('common.userProfile')"
+                  />
+                  <pv-avatar
+                    v-else
                     icon="pi pi-user"
                     shape="circle"
                     size="normal"
@@ -155,6 +179,12 @@ onUnmounted(() => {
                 <!-- Menú desplegable -->
                 <div v-if="isUserMenuVisible" class="user-dropdown">
                   <ul class="list-none p-0 m-0">
+                    <li>
+                      <router-link to="/profile" class="dropdown-item">
+                        <i class="pi pi-user mr-2"></i>
+                        {{ t('menu.profile') }}
+                      </router-link>
+                    </li>
                     <li>
                       <a @click="handleLogout" class="dropdown-item">
                         <i class="pi pi-sign-out mr-2"></i>

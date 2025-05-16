@@ -50,7 +50,9 @@
     "userProfile": "User Profile",
     "logout": "Logout",
     "status": "State",
-    "required": "This field is required"
+    "required": "This field is required",
+    "clear": "Clear",
+    "apply": "Apply"
   },
   "schedule": {
     "confirmed": "Confirmed Events",
@@ -148,6 +150,7 @@
   "dashboard": {
     "welcome": "Welcome {name}",
     "viewAll": "View all",
+    "applicants": "applicants",
     "stats": {
       "nextEvents": {
         "title": "Next Events",
@@ -180,23 +183,41 @@
   },
   "eventApplications": {
     "title": "Event Applications",
+    "searchEvents": "Search Events",
     "searchPlaceholder": "Search by name or location",
     "locationPlaceholder": "Search by location",
     "statePlaceholder": "Search by state",
+    "genrePlaceholder": "Select musical genre",
+    "dateFrom": "Date from",
+    "dateTo": "Date to",
     "allStatuses": "All statuses",
     "pending": "Pending",
     "accepted": "Accepted",
     "rejected": "Rejected",
     "noApplications": "No applications available",
+    "noEvents": "No events available",
+    "viewInfo": "View info",
+    "apply": "Apply",
+    "viewEvent": "View event",
+    "viewApplication": "View application",
+    "applicants": "Applicants",
+    "noApplicants": "No applicants for this event",
+    "eventNotFound": "Event not found",
+    "viewProfile": "View profile",
+    "accept": "Accept",
     "status": {
       "pending": "Pending",
       "accepted": "Accepted",
-      "rejected": "Rejected"
+      "rejected": "Rejected",
+      "active": "Active"
     },
-    "venue": "Venue",
-    "payment": "Payment",
-    "apply": "Apply",
-    "viewApplication": "View application"
+    "basicInfo": "Basic Information",
+    "additionalInfo": "Additional Information",
+    "paymentInfo": "Payment Information",
+    "paymentMethod": "Payment method",
+    "paymentTiming": "Payment timing",
+    "advancePayment": "Advance payment",
+    "noAdditionalInfo": "No additional information"
   },
   "applicationDetail": {
     "title": "Application Detail",
@@ -239,7 +260,8 @@
       "error": "Error signing contract",
       "noUser": "No authenticated user",
       "notFound": "Application not found",
-      "serverError": "Server error processing contract"
+      "serverError": "Server error processing contract",
+      "view": "View Contract"
     },
     "rider": {
       "title": "Upload Technical Rider",

@@ -20,6 +20,14 @@ class EventCalendarService {
                 return [];
             }
 
+            // Si es promotor, obtener sus eventos directamente
+            if (user.role === 'promotor') {
+                const eventsResponse = await httpInstance.get(`${this.endpoint}?promoterId=${user.id}`);
+                console.log('Eventos del promotor:', eventsResponse.data);
+                return eventsResponse.data;
+            }
+
+            // Para músicos, mantener la lógica actual
             // 2. Obtener las postulaciones del usuario que tienen contrato firmado
             const applicantsResponse = await httpInstance.get('/event_applicants');
             console.log('Todas las postulaciones:', applicantsResponse.data);

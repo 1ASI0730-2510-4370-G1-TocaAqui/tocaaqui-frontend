@@ -38,7 +38,7 @@ export default {
                 color: 'text-orange-500'
             },
             rating: {
-                value: user.value?.role === 'promotor' ? averageRating.value.toFixed(1) : '-',
+                value: averageRating.value.toFixed(1),
                 title: t('dashboard.stats.rating.title'),
                 empty: t('dashboard.stats.rating.empty'),
                 icon: 'pi pi-star-fill',
@@ -64,7 +64,7 @@ export default {
             await Promise.all([
                 fetchUpcomingEvents(),
                 fetchPendingPayments(),
-                user.value?.role === 'promotor' ? fetchEvaluations() : Promise.resolve()
+                fetchEvaluations()
             ]);
         });
 
@@ -110,25 +110,47 @@ export default {
         const fetchUpcomingEvents = async () => {
             try {
                 isLoading.value = true;
-                // Obtener las postulaciones del usuario
-                const applicants = await eventApplicationService.getUserApplications(user.value.id);
                 
-                // Obtener los detalles de los eventos correspondientes
-                const eventPromises = applicants.map(applicant => 
-                    eventApplicationService.getById(applicant.eventId)
-                        .then(event => ({
-                            ...event,
-                            status: applicant.status,
-                            applicationDate: applicant.applicationDate,
-                            contractSigned: applicant.contractSigned,
-                            riderUploaded: applicant.riderUploaded
-                        }))
-                );
-                
-                const events = await Promise.all(eventPromises);
-                
-                // Ordenar eventos por fecha
-                upcomingEvents.value = events.sort((a, b) => new Date(a.date) - new Date(b.date));
+                if (user.value?.role === 'promotor') {
+                    // Para promotores, obtener sus eventos creados
+                    const promoterEvents = await eventApplicationService.getEventsByPromoter(user.value.id);
+                    
+                    // Obtener los postulantes para cada evento
+                    const eventsWithApplicants = await Promise.all(
+                        promoterEvents.map(async (event) => {
+                            const applicants = await eventApplicationService.getEventApplicants(event.id);
+                            return {
+                                ...event,
+                                applicantsCount: applicants.length
+                            };
+                        })
+                    );
+                    
+                    // Ordenar eventos por fecha
+                    upcomingEvents.value = eventsWithApplicants
+                        .filter(event => new Date(event.date) >= new Date()) // Solo eventos futuros
+                        .sort((a, b) => new Date(a.date) - new Date(b.date));
+                } else {
+                    // Para músicos, obtener solo las postulaciones activas
+                    const applicants = await eventApplicationService.getUserApplications(user.value.id);
+                    
+                    // Filtrar postulaciones rechazadas y obtener detalles del evento
+                    const activeApplicants = applicants.filter(app => app.status !== 'rejected');
+                    const eventPromises = activeApplicants.map(applicant => 
+                        eventApplicationService.getById(applicant.eventId)
+                            .then(event => ({
+                                ...event,
+                                status: applicant.status,
+                                applicationDate: applicant.applicationDate
+                            }))
+                    );
+                    
+                    // Ordenar eventos por fecha
+                    const events = await Promise.all(eventPromises);
+                    upcomingEvents.value = events
+                        .filter(event => new Date(event.date) >= new Date())
+                        .sort((a, b) => new Date(a.date) - new Date(b.date));
+                }
             } catch (error) {
                 console.error('Error fetching upcoming events:', error);
             } finally {
@@ -138,13 +160,10 @@ export default {
 
         const fetchEvaluations = async () => {
             try {
-                const evaluationsData = await evaluationService.getEvaluationsByPromoter(user.value.id);
-                evaluations.value = evaluationsData;
-                
-                // Calcular el promedio de calificaciones
-                if (evaluationsData.length > 0) {
-                    const sum = evaluationsData.reduce((acc, curr) => acc + curr.rating, 0);
-                    averageRating.value = sum / evaluationsData.length;
+                if (user.value?.role === 'musico') {
+                    averageRating.value = await evaluationService.getAverageRatingForMusician(user.value.id);
+                } else if (user.value?.role === 'promotor') {
+                    averageRating.value = await evaluationService.getAverageRatingForPromoter(user.value.id);
                 }
             } catch (error) {
                 console.error('Error al obtener evaluaciones:', error);
@@ -152,7 +171,11 @@ export default {
         };
 
         const viewEventDetail = (eventId) => {
-            router.push(`/applications/${eventId}`);
+            if (user.value?.role === 'promotor') {
+                router.push(`/events/${eventId}`);
+            } else {
+                router.push(`/applications/${eventId}`);
+            }
         };
 
         const navigateToPayments = () => {
@@ -200,8 +223,7 @@ export default {
                                 {{ stat.empty }}
                             </p>
                             <div v-else-if="key === 'rating'" class="flex align-items-center justify-content-center">
-                                <span class="text-2xl font-bold mr-2">{{ stat.value }}</span>
-                                <pv-rating :modelValue="Number(stat.value)" readonly :cancel="false" />
+                                <span class="text-2xl font-bold">{{ stat.value }}</span>
                             </div>
                             <p v-else class="text-2xl font-bold">{{ stat.value }}</p>
                         </template>
@@ -238,24 +260,39 @@ export default {
                                                 <div class="flex align-items-center text-600 mb-2">
                                                     <i class="pi pi-calendar mr-2"></i>
                                                     <span>{{ formatDate(event.date) }}</span>
-                                                    <i class="pi pi-clock ml-3 mr-2"></i>
+                                                </div>
+                                                <div class="flex align-items-center text-600 mb-2">
+                                                    <i class="pi pi-clock mr-2"></i>
                                                     <span>{{ event.time }}</span>
                                                 </div>
-                                                <div class="flex align-items-center text-600">
+                                                <div class="flex align-items-center text-600 mb-2">
                                                     <i class="pi pi-map-marker mr-2"></i>
                                                     <span>{{ event.location }}</span>
+                                                </div>
+                                                <div v-if="user?.role === 'promotor'" class="flex align-items-center text-600">
+                                                    <i class="pi pi-users mr-2"></i>
+                                                    <span>{{ event.applicantsCount }} {{ $t('dashboard.applicants') }}</span>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="flex flex-column align-items-end">
-                                            <pv-tag :value="$t(`eventApplications.status.${event.status}`)"
-                                                   :severity="getStatusSeverity(event.status)"
-                                                   class="mb-2" />
+                                            <template v-if="user?.role === 'promotor'">
+                                                <pv-tag :value="$t(`eventApplications.status.${event.status || 'active'}`)"
+                                                       severity="success"
+                                                       class="mb-2" />
+                                            </template>
+                                            <template v-else>
+                                                <pv-tag :value="$t(`eventApplications.status.${event.status}`)"
+                                                       :severity="getStatusSeverity(event.status)"
+                                                       class="mb-2" />
+                                            </template>
                                             <pv-button 
                                                 icon="pi pi-eye" 
                                                 @click="viewEventDetail(event.id)"
                                                 text
-                                                :label="$t('eventApplications.viewApplication')"
+                                                :label="user?.role === 'promotor' ? 
+                                                    $t('eventApplications.viewEvent') : 
+                                                    $t('eventApplications.viewApplication')"
                                             />
                                         </div>
                                     </div>

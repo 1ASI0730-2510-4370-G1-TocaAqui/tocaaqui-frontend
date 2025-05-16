@@ -3,6 +3,7 @@
 
 import httpInstance from "../../shared/services/http.instance.js";
 import { EventApplication, Contract, RiderTechnical, EventApplicant } from '../model/event-application.model';
+import { config } from '../../config/config.js';
 
 export class EventApplicationService {
     resourceEndpoint = '/events';
@@ -25,10 +26,26 @@ export class EventApplicationService {
             if (!response.data) {
                 throw new Error('No se encontró el evento');
             }
-            // Normalizar el estado si es 'confirmed' a 'accepted'
-            if (response.data.status?.toLowerCase() === 'confirmed') {
-                response.data.status = 'accepted';
+
+            // Obtener el usuario actual
+            const userStr = localStorage.getItem('user');
+            if (!userStr) {
+                return new EventApplication(response.data);
             }
+            const user = JSON.parse(userStr);
+
+            // Obtener la postulación del usuario para este evento
+            const applicantResponse = await httpInstance.get(`${this.applicantsEndpoint}?eventId=${id}&userId=${user.id}`);
+            const applicant = applicantResponse.data[0];
+
+            // Si existe una postulación, incluir su estado en el evento
+            if (applicant) {
+                return new EventApplication({
+                    ...response.data,
+                    status: applicant.status
+                });
+            }
+
             return new EventApplication(response.data);
         } catch (error) {
             console.error('Error fetching application:', error);
@@ -36,9 +53,76 @@ export class EventApplicationService {
         }
     }
 
+    async uploadImageToImgBB(file) {
+        try {
+            // Verificar que tenemos la API key
+            const apiKey = config.IMGBB_API_KEY?.replace(/['"]/g, ''); // Remover comillas si existen
+            if (!apiKey) {
+                throw new Error('API key de ImgBB no configurada');
+            }
+
+            // Convertir el archivo a base64
+            const base64Image = await this.fileToBase64(file);
+            const base64Data = base64Image.split(',')[1]; // Remover el prefijo "data:image/..."
+
+            // Crear el cuerpo de la solicitud con URLSearchParams
+            const body = new URLSearchParams();
+            body.append('key', apiKey);
+            body.append('image', base64Data);
+
+            // Realizar la solicitud a ImgBB
+            const response = await fetch('https://api.imgbb.com/1/upload', {
+                method: 'POST',
+                body: body
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('Respuesta de ImgBB:', errorText);
+                throw new Error(`Error al subir la imagen: ${response.status} ${response.statusText}`);
+            }
+
+            const data = await response.json();
+            console.log('Respuesta de ImgBB:', data); // Para debug
+
+            if (data.success) {
+                return data.data.display_url;
+            } else {
+                console.error('Error de ImgBB:', data);
+                throw new Error(data.error?.message || 'Error al subir la imagen');
+            }
+        } catch (error) {
+            console.error('Error detallado al subir la imagen:', error);
+            throw error;
+        }
+    }
+
+    async fileToBase64(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+    }
+
     async create(eventResource) {
         try {
-            const response = await httpInstance.post(this.resourceEndpoint, eventResource);
+            // Si hay un archivo de imagen, subirlo a ImgBB
+            if (eventResource.imageFile) {
+                try {
+                    const imageUrl = await this.uploadImageToImgBB(eventResource.imageFile);
+                    eventResource.imageUrl = imageUrl;
+                } catch (error) {
+                    console.error('Error al subir la imagen:', error);
+                    throw new Error('Error al subir la imagen. Por favor, intenta con otra imagen o más tarde.');
+                }
+            }
+
+            // Eliminar la propiedad imageFile antes de enviar al servidor
+            const { imageFile, ...eventData } = eventResource;
+            
+            const response = await httpInstance.post(this.resourceEndpoint, eventData);
             return new EventApplication(response.data);
         } catch (error) {
             throw this.handleError(error);
@@ -74,7 +158,34 @@ export class EventApplicationService {
     async getEventApplicants(eventId) {
         try {
             const response = await httpInstance.get(`${this.applicantsEndpoint}?eventId=${eventId}`);
-            return response.data.map(applicant => new EventApplicant(applicant));
+            const applicants = response.data;
+
+            // Obtener información detallada de cada postulante
+            const applicantsWithDetails = await Promise.all(
+                applicants.map(async (applicant) => {
+                    const userResponse = await httpInstance.get(`/users/${applicant.userId}`);
+                    return {
+                        ...applicant,
+                        name: userResponse.data.name,
+                        imageUrl: userResponse.data.imageUrl || 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y',
+                        genre: userResponse.data.genre,
+                        email: userResponse.data.email,
+                        phone: userResponse.data.phone,
+                        description: userResponse.data.description
+                    };
+                })
+            );
+
+            return applicantsWithDetails;
+        } catch (error) {
+            throw this.handleError(error);
+        }
+    }
+
+    async getUserById(userId) {
+        try {
+            const response = await httpInstance.get(`/users/${userId}`);
+            return response.data;
         } catch (error) {
             throw this.handleError(error);
         }
@@ -223,6 +334,15 @@ export class EventApplicationService {
                 application: applicationResponse,
                 contract: new Contract(contractResponse.data)
             };
+        } catch (error) {
+            throw this.handleError(error);
+        }
+    }
+
+    async getEventsByPromoter(promoterId) {
+        try {
+            const response = await httpInstance.get(`${this.resourceEndpoint}?promoterId=${promoterId}`);
+            return response.data.map(event => new EventApplication(event));
         } catch (error) {
             throw this.handleError(error);
         }

@@ -12,9 +12,10 @@ const evaluationService = new EvaluationService();
 const events = ref([]);
 const selectedEvent = ref(null);
 const loading = ref(true);
+const user = ref(JSON.parse(localStorage.getItem('user')));
 
 const goToEvaluatedEvents = () => {
-  router.push('/evaluations/evaluated');
+  router.push('/evaluations/venues/evaluated');
 };
 
 const fetchEvents = async () => {
@@ -40,6 +41,7 @@ const startEvaluation = (event) => {
 const saveEvaluation = async () => {
   try {
     const evaluationData = {
+      userId: user.value.id,
       eventId: selectedEvent.value.id,
       eventName: selectedEvent.value.name,
       eventDate: selectedEvent.value.date,
@@ -47,7 +49,8 @@ const saveEvaluation = async () => {
       eventImageUrl: selectedEvent.value.imageUrl,
       rating: selectedEvent.value.rating,
       comment: selectedEvent.value.comment,
-      suggestions: selectedEvent.value.suggestions || ''
+      suggestions: selectedEvent.value.suggestions || '',
+      type: 'venue'
     };
 
     await evaluationService.saveEvaluation(evaluationData);

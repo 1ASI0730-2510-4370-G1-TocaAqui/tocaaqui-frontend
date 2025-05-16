@@ -8,9 +8,13 @@ export class Evaluation {
                     comment = '',
                     venueRating = 0,
                     venueComment = '',
+                    artistRating = 0,
+                    artistComment = '',
                     checklist = [],
-                    createdAt = new Date().toISOString()
+                    artistChecklist = [],
+                    createdAt = new Date().toISOString(),
+                    type = 'venue' // 'venue' o 'artist'
                 } = {}) {
-        Object.assign(this, { id, eventId, musicianId, promoterId, rating, comment, venueRating, venueComment, checklist, createdAt });
+        Object.assign(this, { id, eventId, musicianId, promoterId, rating, comment, venueRating, venueComment, artistRating, artistComment, checklist, artistChecklist, createdAt, type });
     }
 }

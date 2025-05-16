@@ -8,7 +8,7 @@ const { t } = useI18n();
 const profileService = new ProfileService();
 const showEditDialog = ref(false);
 const formData = ref({
-  id: null, // Se inicializa con null
+  id: null,
   name: '',
   email: '',
   password: ''
@@ -19,7 +19,8 @@ const toast = useToast();
 const props = defineProps({
   user: {
     type: Object,
-    required: true
+    required: false,
+    default: null
   }
 });
 
@@ -28,10 +29,13 @@ watch(
     () => props.user,
     (newUser) => {
       if (newUser) {
-        formData.value.id = newUser.id;
-        formData.value.name = newUser.name;
-        formData.value.email = newUser.email;
-        formData.value.role = newUser.role;
+        formData.value = {
+          id: newUser.id,
+          name: newUser.name,
+          email: newUser.email,
+          role: newUser.role,
+          password: ''
+        };
       }
     },
     { immediate: true }
@@ -54,7 +58,7 @@ const updateProfile = async () => {
 </script>
 
 <template>
-  <div>
+  <div v-if="user">
     <pv-button
         :label="t('profile.editProfile')"
         icon="pi pi-user-edit"

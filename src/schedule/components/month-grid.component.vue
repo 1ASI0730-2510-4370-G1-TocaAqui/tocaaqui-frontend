@@ -7,7 +7,7 @@ import { useI18n } from 'vue-i18n'
 import EventService from '../services/event-calendar.service.js'
 
 const { locale } = useI18n()
-const pivot = ref(new Date('2024-12-01'))           // ancla del mes
+const pivot = ref(new Date())           // Inicializar con la fecha actual
 const events = ref([])                  // eventos del usuario
 
 /* ---------- helpers ---------- */
