@@ -1,7 +1,7 @@
 <script>
 import { PaymentService } from '../services/payment.service';
 import { PaymentStatus } from '../model/payment.model';
-import TrackingSteps from '../../components/tracking-steps.component.vue';
+import TrackingSteps from './tracking-steps.component.vue';
 
 export default {
     name: 'PaymentList',
@@ -20,12 +20,20 @@ export default {
             loading: false,
             paymentService: new PaymentService(),
             dialogVisible: false,
-            selectedPayment: null
+            selectedPayment: null,
+            userRole: null
         };
     },
     computed: {
         isCancelled() {
             return this.selectedPayment?.status === PaymentStatus.CANCELLED;
+        },
+        pageTitle() {
+            if (this.userRole === 'musico') {
+                return this.$t('payments.titles.received');
+            } else {
+                return this.$t('payments.titles.made');
+            }
         }
     },
     watch: {
@@ -33,12 +41,19 @@ export default {
             immediate: true,
             handler(newValue) {
                 if (newValue) {
+                    this.loadUserRole();
                     this.loadPayments();
                 }
             }
         }
     },
     methods: {
+        loadUserRole() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (user) {
+                this.userRole = user.role;
+            }
+        },
         async loadPayments() {
             if (!this.userId) return;
             
@@ -138,6 +153,10 @@ export default {
 
 <template>
     <div class="payment-list">
+        <div class="page-header mb-4">
+            <h2 class="page-title">{{ pageTitle }}</h2>
+        </div>
+        
         <pv-data-table :value="payments"
                       :loading="loading"
                       :paginator="true"
@@ -234,6 +253,18 @@ export default {
 .payment-list {
     width: 100%;
     padding: 1rem;
+}
+
+.page-header {
+    border-bottom: 1px solid var(--surface-200);
+    padding-bottom: 1rem;
+}
+
+.page-title {
+    color: var(--text-color);
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 600;
 }
 
 .payment-details {

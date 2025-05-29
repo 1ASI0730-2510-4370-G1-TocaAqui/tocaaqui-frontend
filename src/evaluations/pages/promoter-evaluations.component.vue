@@ -3,7 +3,7 @@ import { ref, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { EvaluationService } from '../services/evaluation.service';
-import { EventApplicationService } from '../../event-application/services/event-application.service';
+import { EventApplicationService } from '../../events/services/event-application.service';
 import ArtistRating from '../components/artist-rating.component.vue';
 
 const router = useRouter();
@@ -23,17 +23,8 @@ const goToEvaluatedArtists = () => {
 const fetchCompletedEvents = async () => {
   try {
     loading.value = true;
-    const completedEvents = await evaluationService.getCompletedEventsByPromoter(user.value.id);
-    
-    // Para cada evento, obtener los artistas que participaron
-    events.value = await Promise.all(completedEvents.map(async (event) => {
-      const applicants = await eventApplicationService.getEventApplicants(event.id);
-      const acceptedArtists = applicants.filter(app => app.status === 'accepted');
-      return {
-        ...event,
-        artists: acceptedArtists
-      };
-    }));
+    // Usar el nuevo método que verifica pagos completados
+    events.value = await evaluationService.getCompletedEventsByPromoter(user.value.id);
   } catch (error) {
     console.error('Error fetching events:', error);
   } finally {
@@ -90,49 +81,71 @@ onMounted(() => {
     />
     <h2 class="text-2xl font-bold mb-4">{{ t('evaluations.artistEvaluations') }}</h2>
 
+    <!-- Mensaje informativo -->
+    <pv-message 
+      severity="info" 
+      :closable="false" 
+      class="mb-4"
+    >
+      <span>{{ t('evaluations.paymentCompletedInfo') }}</span>
+    </pv-message>
+
     <div v-if="loading" class="flex justify-content-center">
       <pv-progress-spinner />
     </div>
 
     <div v-else>
-      <div v-if="!selectedEvent" class="grid">
-        <div v-for="event in events" :key="event.id" class="col-12 md:col-6 xl:col-4 mb-4">
-          <pv-card class="event-card h-full">
-            <template #header>
-              <div class="image-container">
-                <img :src="event.imageUrl || '/default-event.jpg'" :alt="event.name" class="event-image" />
-              </div>
-            </template>
-            <template #title>
-              <div class="event-title">{{ event.name }}</div>
-            </template>
-            <template #subtitle>
-              <div class="event-subtitle">
-                <i class="pi pi-calendar mr-2"></i>
-                {{ new Date(event.date).toLocaleDateString() }}
-                <i class="pi pi-map-marker ml-3 mr-2"></i>
-                {{ event.location }}
-              </div>
-            </template>
-            <template #content>
-              <h3 class="text-lg font-semibold mb-3">{{ t('evaluations.artists') }}</h3>
-              <div class="artists-container">
-                <div v-for="artist in event.artists" :key="artist.userId" class="artist-item">
-                  <div class="artist-info">
-                    <img :src="artist.imageUrl || '/default-artist.jpg'" :alt="artist.name" 
-                         class="artist-avatar" />
-                    <span class="artist-name">{{ artist.name }}</span>
-                  </div>
-                  <pv-button 
-                    :label="t('evaluations.evaluate')"
-                    icon="pi pi-star"
-                    @click="startEvaluation(event, artist)"
-                    class="p-button-sm p-button-rounded"
-                  />
+      <div v-if="!selectedEvent">
+        <div v-if="events.length === 0" class="text-center p-4">
+          <i class="pi pi-info-circle text-4xl text-500 mb-3"></i>
+          <h3 class="text-xl mb-2">{{ t('evaluations.noEventsToEvaluate') }}</h3>
+          <p class="text-500">{{ t('evaluations.noEventsDescription') }}</p>
+        </div>
+        <div v-else class="grid">
+          <div v-for="event in events" :key="event.id" class="col-12 md:col-6 xl:col-4 mb-4">
+            <pv-card class="event-card h-full">
+              <template #header>
+                <div class="image-container">
+                  <img :src="event.imageUrl || '/default-event.jpg'" :alt="event.name" class="event-image" />
                 </div>
-              </div>
-            </template>
-          </pv-card>
+              </template>
+              <template #title>
+                <div class="event-title">{{ event.name }}</div>
+              </template>
+              <template #subtitle>
+                <div class="event-subtitle">
+                  <i class="pi pi-calendar mr-2"></i>
+                  {{ new Date(event.date).toLocaleDateString() }}
+                  <i class="pi pi-map-marker ml-3 mr-2"></i>
+                  {{ event.location }}
+                </div>
+                <pv-tag 
+                  value="Pago Completado" 
+                  severity="success" 
+                  class="mt-2"
+                  icon="pi pi-check-circle" 
+                />
+              </template>
+              <template #content>
+                <h3 class="text-lg font-semibold mb-3">{{ t('evaluations.artists') }}</h3>
+                <div class="artists-container">
+                  <div v-for="artist in event.artists" :key="artist.userId" class="artist-item">
+                    <div class="artist-info">
+                      <img :src="artist.imageUrl || '/default-artist.jpg'" :alt="artist.name" 
+                           class="artist-avatar" />
+                      <span class="artist-name">{{ artist.name }}</span>
+                    </div>
+                    <pv-button 
+                      :label="t('evaluations.evaluate')"
+                      icon="pi pi-star"
+                      @click="startEvaluation(event, artist)"
+                      class="p-button-sm p-button-rounded"
+                    />
+                  </div>
+                </div>
+              </template>
+            </pv-card>
+          </div>
         </div>
       </div>
 

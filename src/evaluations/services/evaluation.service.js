@@ -3,21 +3,146 @@ import httpInstance from '../../shared/services/http.instance';
 export class EvaluationService {
     async getAllEvents() {
         try {
-            const response = await httpInstance.get('/events');
-            return response.data;
+            // Obtener el usuario actual
+            const userStr = localStorage.getItem('user');
+            if (!userStr) {
+                throw new Error('No hay usuario autenticado');
+            }
+            const user = JSON.parse(userStr);
+
+            if (user.role === 'musico') {
+                return await this.getCompletedEventsForMusician(user.id);
+            } else if (user.role === 'promotor') {
+                return await this.getCompletedEventsForPromoter(user.id);
+            }
+
+            return [];
         } catch (error) {
             console.error('Error fetching events:', error);
             throw error;
         }
     }
 
-    async getCompletedEventsByPromoter(promoterId) {
+    async getCompletedEventsForMusician(musicianId) {
         try {
-            // Obtener todos los eventos del promotor
+            // 1. Obtener todas las postulaciones del músico con contrato firmado
+            const applicantsResponse = await httpInstance.get('/event_applicants');
+            const musicianApplications = applicantsResponse.data.filter(app => 
+                app.userId === musicianId && app.status === 'signed'
+            );
+
+            if (musicianApplications.length === 0) {
+                return [];
+            }
+
+            // 2. Obtener todos los pagos completados
+            const paymentsResponse = await httpInstance.get('/payments');
+            const completedPayments = paymentsResponse.data.filter(payment => 
+                payment.status === 'COMPLETED' && payment.musicoId === musicianId
+            );
+
+            // 3. Obtener eventos donde el músico tocó Y el pago se completó
+            const completedEventIds = completedPayments.map(payment => payment.eventId);
             const eventsResponse = await httpInstance.get('/events');
-            return eventsResponse.data.filter(event => 
+            const completedEvents = eventsResponse.data.filter(event => 
+                completedEventIds.includes(event.id)
+            );
+
+            // 4. Filtrar eventos que ya han pasado (solo se pueden evaluar eventos pasados)
+            const now = new Date();
+            const pastEvents = completedEvents.filter(event => {
+                const eventDate = new Date(event.date);
+                return eventDate < now;
+            });
+
+            // 5. Verificar que no hayan sido evaluados ya
+            const evaluationsResponse = await httpInstance.get('/evaluations');
+            const existingEvaluations = evaluationsResponse.data.filter(evaluation => 
+                evaluation.userId === musicianId && evaluation.type === 'venue'
+            );
+            const evaluatedEventIds = existingEvaluations.map(evaluation => evaluation.eventId);
+
+            return pastEvents.filter(event => !evaluatedEventIds.includes(event.id));
+        } catch (error) {
+            console.error('Error fetching completed events for musician:', error);
+            throw error;
+        }
+    }
+
+    async getCompletedEventsForPromoter(promoterId) {
+        try {
+            // 1. Obtener todos los eventos del promotor
+            const eventsResponse = await httpInstance.get('/events');
+            const promoterEvents = eventsResponse.data.filter(event => 
                 event.adminId === promoterId
             );
+
+            if (promoterEvents.length === 0) {
+                return [];
+            }
+
+            // 2. Obtener todos los pagos completados para eventos del promotor
+            const paymentsResponse = await httpInstance.get('/payments');
+            const completedPayments = paymentsResponse.data.filter(payment => 
+                payment.status === 'COMPLETED' && payment.promotorId === promoterId
+            );
+
+            // 3. Filtrar eventos que tienen pagos completados
+            const completedEventIds = completedPayments.map(payment => payment.eventId);
+            const completedEvents = promoterEvents.filter(event => 
+                completedEventIds.includes(event.id)
+            );
+
+            // 4. Filtrar eventos que ya han pasado
+            const now = new Date();
+            const pastEvents = completedEvents.filter(event => {
+                const eventDate = new Date(event.date);
+                return eventDate < now;
+            });
+
+            // 5. Enriquecer con información de los artistas que tocaron
+            const eventsWithArtists = await Promise.all(pastEvents.map(async (event) => {
+                try {
+                    // Obtener postulaciones aceptadas para este evento
+                    const applicantsResponse = await httpInstance.get('/event_applicants');
+                    const acceptedApplicants = applicantsResponse.data.filter(app => 
+                        app.eventId === event.id && app.status === 'signed'
+                    );
+
+                    // Obtener información de los artistas
+                    const artists = await Promise.all(acceptedApplicants.map(async (applicant) => {
+                        const userResponse = await httpInstance.get(`/users/${applicant.userId}`);
+                        return {
+                            userId: applicant.userId,
+                            name: userResponse.data.name,
+                            imageUrl: userResponse.data.imageUrl
+                        };
+                    }));
+
+                    return {
+                        ...event,
+                        artists
+                    };
+                } catch (error) {
+                    console.error('Error enriching event with artists:', error);
+                    return {
+                        ...event,
+                        artists: []
+                    };
+                }
+            }));
+
+            return eventsWithArtists;
+        } catch (error) {
+            console.error('Error fetching completed events for promoter:', error);
+            throw error;
+        }
+    }
+
+    async getCompletedEventsByPromoter(promoterId) {
+        try {
+            // Usar el nuevo método que verifica pagos completados
+            return await this.getCompletedEventsForPromoter(promoterId);
         } catch (error) {
             console.error('Error fetching completed events:', error);
             throw error;

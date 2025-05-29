@@ -150,7 +150,7 @@
                                                 :label="$t('eventApplications.viewProfile')" 
                                             />
                                             <pv-button 
-                                                v-if="!hasAcceptedApplicant && applicant.status !== 'rejected'"
+                                                v-if="!hasAcceptedApplicant && applicant.status === 'pending'"
                                                 icon="pi pi-check" 
                                                 @click="acceptApplicant(applicant.id)"
                                                 severity="success"
@@ -219,6 +219,8 @@ export default {
         const getStatusSeverity = (status) => {
             const severities = {
                 pending: 'warning',
+                contract_pending: 'info',
+                signed: 'success',
                 accepted: 'success',
                 rejected: 'danger'
             };
@@ -246,19 +248,19 @@ export default {
                 // Cargar postulantes
                 const eventApplicants = await eventApplicationService.getEventApplicants(eventId);
                 
-                // Verificar si ya hay un postulante aceptado
-                const acceptedApplicant = eventApplicants.find(app => app.status === 'accepted');
-                hasAcceptedApplicant.value = !!acceptedApplicant;
+                // Verificar si ya hay un postulante con contrato firmado
+                const signedApplicant = eventApplicants.find(app => app.status === 'signed');
+                hasAcceptedApplicant.value = !!signedApplicant;
 
-                if (acceptedApplicant) {
-                    console.log('Artista aceptado encontrado:', acceptedApplicant);
-                    // Buscar el pago asociado al artista aceptado
+                if (signedApplicant) {
+                    console.log('Artista con contrato firmado encontrado:', signedApplicant);
+                    // Buscar el pago asociado al artista con contrato firmado
                     const payments = await paymentService.getPaymentsByUser(event.value.adminId);
                     console.log('Pagos encontrados:', payments);
                     if (payments && payments.length > 0) {
                         payment.value = payments.find(p => 
                             p.eventId === Number(eventId) && 
-                            p.musicoId === acceptedApplicant.userId
+                            p.musicoId === signedApplicant.userId
                         );
                         console.log('Pago para este evento:', payment.value);
                     }
@@ -279,55 +281,8 @@ export default {
 
         const acceptApplicant = async (applicantId) => {
             try {
-                // Aceptar el postulante seleccionado
-                await eventApplicationService.updateApplicationStatus(applicantId, 'accepted');
-                
-                // Rechazar automáticamente a los demás postulantes
-                const otherApplicants = applicants.value.filter(app => app.id !== applicantId);
-                await Promise.all(
-                    otherApplicants.map(app => 
-                        eventApplicationService.updateApplicationStatus(app.id, 'rejected')
-                    )
-                );
-
-                // Crear el pago para el artista aceptado
-                const acceptedApplicant = applicants.value.find(app => app.id === applicantId);
-                if (acceptedApplicant && event.value) {
-                    const now = new Date().toISOString();
-                    
-                    // Obtener información del músico
-                    const musicoResponse = await httpInstance.get(`/users/${acceptedApplicant.userId}`);
-                    const musico = musicoResponse.data;
-
-                    const paymentData = {
-                        amount: Number(event.value.payment),
-                        eventId: event.value.id,
-                        musicoId: acceptedApplicant.userId,
-                        promotorId: event.value.adminId,
-                        status: "PENDING",
-                        paymentMethod: "bank_transfer",
-                        bankInfo: {
-                            accountNumber: "****1234",
-                            bankName: "Banco de Crédito",
-                            accountType: "savings"
-                        },
-                        description: `Pago por presentación de ${musico.name} en ${event.value.name}`,
-                        createdAt: now,
-                        updatedAt: now,
-                        statusHistory: [
-                            {
-                                status: "PENDING",
-                                timestamp: now,
-                                comment: "Pago creado"
-                            }
-                        ]
-                    };
-
-                    console.log('Creando pago:', paymentData);
-                    const response = await httpInstance.post('/payments', paymentData);
-                    payment.value = response.data;
-                    console.log('Pago creado:', payment.value);
-                }
+                // Solo cambiar el estado a 'contract_pending' (no crear pago aún)
+                await eventApplicationService.updateApplicationStatus(applicantId, 'contract_pending');
                 
                 // Recargar los datos
                 await loadEventData();

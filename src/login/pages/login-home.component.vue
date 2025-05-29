@@ -1,20 +1,23 @@
 <script setup>
 import { ref } from 'vue';
 import { useToast } from 'primevue/usetoast';
-import { LoginEntity, RegisterEntity } from "../model/login.entity.js";
+import { LoginEntity } from "../model/login.entity.js";
 import { LoginService } from "../services/login.service.js";
 import { useRouter } from 'vue-router';
 
-const name = ref('');
 const email = ref('');
 const password = ref('');
-const selectedRole = ref(null);
 const toast = useToast();
 const router = useRouter();
 const loginService = new LoginService();
 
 const handleLogin = async () => {
-  const loginEntity = new LoginEntity(name.value, email.value, password.value, selectedRole.value);
+  if (!email.value || !password.value) {
+    toast.add({ severity: 'error', summary: 'Error', detail: 'Email y contraseña son obligatorios', life: 3000 });
+    return;
+  }
+
+  const loginEntity = new LoginEntity('', email.value, password.value, '');
   try {
     const user = await loginService.login(loginEntity);
     toast.add({ severity: 'success', summary: 'Éxito', detail: `Bienvenid@, ${user.name}`, life: 3000 });
@@ -26,20 +29,8 @@ const handleLogin = async () => {
   }
 };
 
-const handleRegister = async () => {
-  if (!name.value || !email.value || !password.value || !selectedRole.value) {
-    toast.add({ severity: 'error', summary: 'Error', detail: 'Todos los campos son obligatorios', life: 3000 });
-    return;
-  }
-
-  const registerEntity = new RegisterEntity(name.value, email.value, password.value, selectedRole.value);
-  try {
-    const response = await loginService.register(registerEntity);
-    toast.add({ severity: 'success', summary: 'Éxito', detail: 'Registro exitoso', life: 3000 });
-    await handleLogin();
-  } catch (error) {
-    toast.add({ severity: 'error', summary: 'Error', detail: error, life: 3000 });
-  }
+const goToRegister = () => {
+  router.push('/register');
 };
 </script>
 
@@ -49,40 +40,9 @@ const handleRegister = async () => {
       <div class="logo">
         <img src="../../assets/logo-oscuro.png" alt="Toca Aquí" />
       </div>
-      <h2 class="text-center">Bienvenido</h2>
-
-      <div class="p-field text-center mb-4">
-        <label class="block mb-2 text-left">Selecciona tu rol</label>
-        <div class="role-buttons">
-          <pv-button
-              :outlined="selectedRole !== 'musico'"
-              :severity="selectedRole === 'musico' ? 'primary' : null"
-              label="Músico / Banda"
-              icon="pi pi-heart"
-              icon-pos="top"
-              @click="selectedRole = 'musico'"
-          />
-          <pv-button
-              :outlined="selectedRole !== 'promotor'"
-              :severity="selectedRole === 'promotor' ? 'primary' : null"
-              label="Promotor / Espacio"
-              icon="pi pi-user"
-              icon-pos="top"
-              @click="selectedRole = 'promotor'"
-          />
-        </div>
-      </div>
+      <h2 class="text-center">Iniciar Sesión</h2>
 
       <div class="p-fluid">
-        <div class="p-field mb-3">
-          <label for="name">Nombre</label>
-          <pv-input-text
-              id="name"
-              v-model="name"
-              placeholder="Ingrese su nombre"
-              class="w-full"/>
-        </div>
-
         <div class="p-field mb-3">
           <label for="email">Correo electrónico</label>
           <pv-input-text
@@ -90,6 +50,7 @@ const handleRegister = async () => {
               v-model="email"
               placeholder="Ingrese su correo electrónico"
               class="w-full"
+              type="email"
           />
         </div>
 
@@ -101,11 +62,26 @@ const handleRegister = async () => {
               toggleMask
               placeholder="Ingrese su contraseña"
               input-class="w-full"
+              :feedback="false"
           />
         </div>
 
-        <pv-button label="Registrarse" class="w-full" @click="handleRegister" />
-        <pv-button label="Iniciar sesión" class="w-full mt-2" @click="handleLogin" />
+        <pv-button 
+          label="Iniciar sesión" 
+          class="w-full mb-3" 
+          @click="handleLogin" 
+          :loading="false"
+        />
+        
+        <div class="text-center">
+          <p class="text-600 mb-2">¿No tienes una cuenta?</p>
+          <pv-button 
+            label="Registrarse" 
+            class="w-full" 
+            @click="goToRegister"
+            outlined
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -123,9 +99,10 @@ const handleRegister = async () => {
 .form-container {
   display: flex;
   height: 100vh;
-  max-width: 600px;
+  max-width: 500px;
   margin: auto;
   padding: 2rem;
+  align-items: center;
 }
 
 .login-box {
@@ -135,19 +112,6 @@ const handleRegister = async () => {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   width: 100%;
   margin: auto;
-  max-height: 800px;
-}
-
-.role-buttons {
-  display: flex;
-  gap: 1rem;
-  width: 100%;
-}
-
-.role-buttons > * {
-  flex: 1;
-  padding: 2rem 0.5rem;
-  font-size: 1rem;
 }
 
 .p-field {
@@ -157,12 +121,13 @@ const handleRegister = async () => {
 .p-field label {
   display: block;
   margin-bottom: 0.5rem;
+  font-weight: 500;
 }
 
 .logo {
   display: flex;
   justify-content: center;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .text-center {
@@ -170,9 +135,14 @@ const handleRegister = async () => {
 }
 
 .logo img {
-  max-width: 100px;
-  max-height: 100px;
+  max-width: 120px;
+  max-height: 120px;
   width: auto;
   height: auto;
+}
+
+h2 {
+  margin-bottom: 2rem;
+  color: var(--text-color);
 }
 </style>

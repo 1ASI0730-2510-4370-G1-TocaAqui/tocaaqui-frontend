@@ -1,11 +1,13 @@
 import httpInstance from '../../shared/services/http.instance.js';
-import { config } from '../../config/config.js';
 
 export class ProfileService {
     async getProfile() {
         try {
             const response = await httpInstance.get('/users');
-            return response.data;
+            return {
+                ...response.data,
+                password: response.data.password || ''
+            };
         } catch (error) {
             throw new Error('Error al obtener el perfil');
         }
@@ -28,17 +30,23 @@ export class ProfileService {
                 }
             }
 
-            const response = await httpInstance.put(`/users/${profileData.id}`, {
+            // Crear el objeto de actualización
+            const updateData = {
                 name: profileData.name,
                 email: profileData.email,
-                password: profileData.password,
                 role: profileData.role,
                 genre: profileData.genre,
                 type: profileData.type,
                 description: profileData.description,
                 imageUrl: imageUrl
-            });
+            };
 
+            // Solo incluir la contraseña si se proporciona un valor
+            if (profileData.password && profileData.password.trim() !== '') {
+                updateData.password = profileData.password;
+            }
+
+            const response = await httpInstance.put(`/users/${profileData.id}`, updateData);
             return response.data;
         } catch (error) {
             console.error('Error en updateProfile:', error);
@@ -49,7 +57,7 @@ export class ProfileService {
     async uploadImageToImgBB(file) {
         try {
             // Verificar que tenemos la API key
-            const apiKey = config.IMGBB_API_KEY?.replace(/['"]/g, ''); // Remover comillas si existen
+            const apiKey = import.meta.env.VITE_IMGBB_API_KEY?.replace(/['"]/g, ''); // Remover comillas si existen
             if (!apiKey) {
                 throw new Error('API key de ImgBB no configurada');
             }

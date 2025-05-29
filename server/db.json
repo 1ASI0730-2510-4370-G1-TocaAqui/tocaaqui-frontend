@@ -3,130 +3,122 @@
   "evaluation_checklist": [],
   "users": [
     {
-      "name": "musico1",
-      "email": "musico@gmail.com",
+      "name": "Oscar Antayhua",
+      "email": "o@gmail.com",
       "password": "1234",
-      "role": "musico",
-      "genre": "Rock",
-      "type": "banda",
-      "description": "hola",
-      "imageUrl": "https://i.ibb.co/Nd9W9GQX/14e17ddef5b3.webp",
+      "role": "promotor",
       "id": 1
     },
     {
-      "name": "promotor1",
-      "email": "promotor1@gmail.com",
+      "name": "Josue Castillo",
+      "email": "jo@gmail.com",
       "password": "1234",
       "role": "promotor",
       "id": 2
+    },
+    {
+      "name": "Oscar Castillo",
+      "email": "os",
+      "role": "musico",
+      "genre": "Rock",
+      "type": "solista",
+      "description": "xd",
+      "imageUrl": "https://i.ibb.co/qF75kdWk/20709d0a3bc2.jpg",
+      "password": "1234",
+      "id": 3
+    },
+    {
+      "name": "musico1",
+      "email": "di@gmail.com",
+      "password": "12333",
+      "role": "musico",
+      "imageUrl": "https://i.ibb.co/r24spy59/4312d4d46cbf.webp",
+      "genre": "Rock",
+      "type": "solista",
+      "description": "asd",
+      "id": 4
     }
   ],
   "events": [
     {
       "id": 1,
       "promoterId": 2,
-      "name": "Celeste",
-      "date": "2025-05-29",
-      "time": "11:53",
-      "publishDate": "2025-05-16",
+      "name": "Skyblue",
+      "date": "2025-05-30",
+      "time": "18:37",
+      "publishDate": "2025-05-28",
       "location": "Break de monterrico",
-      "imageUrl": "",
-      "status": "accepted",
-      "soundcheckDate": "2025-05-20",
-      "soundcheckTime": "16:54",
-      "capacity": 23,
-      "availableTickets": 23,
-      "adminName": "promotor1",
+      "imageUrl": "https://i.ibb.co/MDf1hfX4/2c40761cefc1.webp",
+      "status": "signed",
+      "soundcheckDate": "2025-05-29",
+      "soundcheckTime": "18:40",
+      "capacity": 1500,
+      "availableTickets": 1500,
+      "adminName": "Josue Castillo",
       "adminId": 2,
       "adminContact": "965887441",
-      "requirements": "asd",
-      "description": "asd",
+      "requirements": "Banda",
+      "description": "Concierto",
       "payment": "2500",
       "duration": 2,
       "genre": "Rock",
-      "equipment": "asd",
+      "equipment": "Sus instrumentos",
       "contract": {
-        "userId": 1,
-        "signature": "firma-digital",
-        "signedDate": "2025-05-16T16:54:28.383Z",
+        "userId": 3,
+        "signature": "Oscar Castillo-2025-05-28T23:56:08.685Z",
+        "signedDate": "2025-05-28T23:56:08.746Z",
         "status": "signed"
       }
-    },
-    {
-      "id": 2,
-      "promoterId": 2,
-      "name": "123",
-      "date": "2025-05-30",
-      "time": "15:59",
-      "publishDate": "2025-05-16",
-      "location": "123",
-      "imageUrl": "",
-      "status": "pending",
-      "soundcheckDate": "2025-05-28",
-      "soundcheckTime": "11:59",
-      "capacity": 23,
-      "availableTickets": 23,
-      "adminName": "promotor1",
-      "adminId": 2,
-      "adminContact": "965887441",
-      "requirements": "123",
-      "description": "123",
-      "payment": "23",
-      "duration": 2,
-      "genre": "Pop",
-      "equipment": "123"
     }
   ],
   "riders": [],
   "applications": [],
   "locations": [],
   "document_types": [],
-  "event_applicants": [
-    {
-      "id": 1,
-      "userId": 1,
-      "eventId": 1,
-      "status": "accepted",
-      "applicationDate": "2025-05-16T16:54:20.184Z",
-      "contractSigned": true,
-      "riderUploaded": false
-    },
-    {
-      "id": 2,
-      "userId": 1,
-      "eventId": 2,
-      "status": "accepted",
-      "applicationDate": "2025-05-16T16:55:38.525Z",
-      "contractSigned": false,
-      "riderUploaded": false
-    }
-  ],
-  "tickets": [],
-  "ticket_stats": [],
   "payments": [
     {
-      "amount": 23,
-      "eventId": 2,
-      "musicoId": 1,
+      "amount": 2500,
+      "eventId": 1,
+      "musicoId": 3,
       "promotorId": 2,
-      "status": "COMPLETED",
+      "status": "PENDING",
       "paymentMethod": "bank_transfer",
       "bankInfo": {
         "accountNumber": "****1234",
         "bankName": "Banco de Crédito",
         "accountType": "savings"
       },
-      "description": "Pago por presentación de musico1 en 123",
-      "createdAt": "2025-05-16T16:55:50.321Z",
-      "updatedAt": "2025-05-16T16:57:46.147Z",
+      "description": "Pago por presentación de Oscar Castillo en Skyblue",
+      "createdAt": "2025-05-28T23:55:46.076Z",
+      "updatedAt": "2025-05-28T23:55:46.076Z",
       "statusHistory": [
         {
-          "status": "COMPLETED",
-          "timestamp": "2025-05-16T16:57:46.147Z",
-          "comment": "Pago liberado después de confirmar el evento"
+          "status": "PENDING",
+          "timestamp": "2025-05-28T23:55:46.076Z",
+          "comment": "Pago creado - Esperando firma de contrato"
         }
       ],
       "id": 1
+    }
+  ],
+  "event_applicants": [
+    {
+      "id": 1,
+      "userId": 1,
+      "eventId": 1,
+      "status": "rejected",
+      "applicationDate": "2025-05-28T23:40:48.495Z",
+      "contractSigned": false,
+      "riderUploaded": false
+    },
+    {
+      "id": 2,
+      "userId": 3,
+      "eventId": 1,
+      "status": "signed",
+      "applicationDate": "2025-05-28T23:43:34.053Z",
+      "contractSigned": true,
+      "riderUploaded": false
     }
   ]
 }

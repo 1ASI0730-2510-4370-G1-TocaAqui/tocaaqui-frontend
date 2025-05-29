@@ -77,15 +77,33 @@ const imageFile = ref(null);
 const uploadedImage = ref(null);
 
 // Format date for display
-const formatDate = (dateString) => {
-  if (!dateString) return '';
-  const date = new Date(dateString);
-  return date.toLocaleDateString();
+const formatDate = (dateValue) => {
+  if (!dateValue) return '';
+  const date = dateValue instanceof Date ? dateValue : new Date(dateValue);
+  return date.toLocaleDateString('es-ES', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+};
+
+// Format time for display
+const formatTime = (timeValue) => {
+  if (!timeValue) return '';
+  const time = timeValue instanceof Date ? timeValue : new Date(timeValue);
+  return time.toLocaleTimeString('es-ES', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false
+  });
 };
 
 // Computed properties for preview
 const formattedDate = computed(() => formatDate(event.date));
 const formattedSoundcheckDate = computed(() => formatDate(event.soundcheckDate));
+const formattedTime = computed(() => formatTime(event.time));
+const formattedSoundcheckTime = computed(() => formatTime(event.soundcheckTime));
 const displayImageUrl = computed(() => uploadedImage.value || event.imageUrl || 'https://images.unsplash.com/photo-1540039155733-5bb30b53aa14');
 
 // Load user data and promoter events
@@ -151,7 +169,13 @@ const hideForm = () => {
 const resetForm = () => {
   Object.keys(event).forEach(key => {
     if (key !== 'promoterId' && key !== 'adminId' && key !== 'adminName' && key !== 'status') {
-      event[key] = key === 'publishDate' ? new Date().toISOString().split('T')[0] : '';
+      if (key === 'publishDate') {
+        event[key] = new Date().toISOString().split('T')[0];
+      } else if (key === 'date' || key === 'soundcheckDate' || key === 'time' || key === 'soundcheckTime') {
+        event[key] = null; // Para pv-calendar
+      } else {
+        event[key] = '';
+      }
     }
   });
   submitted.value = false;
@@ -196,17 +220,22 @@ const validateForm = () => {
   // Date validation
   const currentDate = new Date();
   currentDate.setHours(0, 0, 0, 0);
-  const eventDate = new Date(event.date);
-  const soundcheckDate = new Date(event.soundcheckDate);
   
-  if (eventDate < currentDate) {
-    validationErrors.date = true;
-    isValid = false;
+  if (event.date) {
+    const eventDate = new Date(event.date);
+    if (eventDate < currentDate) {
+      validationErrors.date = true;
+      isValid = false;
+    }
   }
   
-  if (soundcheckDate > eventDate) {
-    validationErrors.soundcheckDate = true;
-    isValid = false;
+  if (event.soundcheckDate && event.date) {
+    const soundcheckDate = new Date(event.soundcheckDate);
+    const eventDate = new Date(event.date);
+    if (soundcheckDate > eventDate) {
+      validationErrors.soundcheckDate = true;
+      isValid = false;
+    }
   }
   
   return isValid;
@@ -283,10 +312,14 @@ const submitForm = async () => {
   loading.value = true;
   
   try {
-    // Preparar los datos del evento
+    // Convertir fechas y horas a formato string para el backend
     const eventData = new EventApplication({
       ...event,
-      imageFile: imageFile.value // Agregar el archivo de imagen para que el servicio lo procese
+      date: event.date ? new Date(event.date).toISOString().split('T')[0] : '',
+      soundcheckDate: event.soundcheckDate ? new Date(event.soundcheckDate).toISOString().split('T')[0] : '',
+      time: event.time ? formatTime(event.time) : '',
+      soundcheckTime: event.soundcheckTime ? formatTime(event.soundcheckTime) : '',
+      imageFile: imageFile.value
     });
     
     // Crear evento usando el servicio
@@ -621,12 +654,13 @@ const getStatusSeverity = (status) => {
               
               <div class="col-12 md:col-6 mb-3">
                 <pv-float-label>
-                  <pv-input-text 
+                  <pv-calendar 
                     id="date" 
-                    type="date" 
                     v-model="event.date" 
-                    :min="new Date().toISOString().split('T')[0]"
+                    :min-date="new Date()"
                     :class="{'p-invalid': submitted && validationErrors.date}"
+                    date-format="yy-mm-dd"
+                    :show-icon="true"
                   />
                   <label for="date">{{ $t('applicationDetail.eventDate') }} *</label>
                 </pv-float-label>
@@ -637,10 +671,12 @@ const getStatusSeverity = (status) => {
               
               <div class="col-12 md:col-6 mb-3">
                 <pv-float-label>
-                  <pv-input-text 
+                  <pv-calendar 
                     id="time" 
-                    type="time" 
                     v-model="event.time" 
+                    time-only
+                    :show-icon="true"
+                    icon-display="input"
                     :class="{'p-invalid': submitted && validationErrors.time}"
                   />
                   <label for="time">{{ $t('applicationDetail.eventTime') }} *</label>
@@ -652,13 +688,14 @@ const getStatusSeverity = (status) => {
               
               <div class="col-12 md:col-6 mb-3">
                 <pv-float-label>
-                  <pv-input-text 
+                  <pv-calendar 
                     id="soundcheckDate" 
-                    type="date" 
                     v-model="event.soundcheckDate" 
-                    :min="new Date().toISOString().split('T')[0]"
-                    :max="event.date"
+                    :min-date="new Date()"
+                    :max-date="event.date ? new Date(event.date) : null"
                     :class="{'p-invalid': submitted && validationErrors.soundcheckDate}"
+                    date-format="yy-mm-dd"
+                    :show-icon="true"
                   />
                   <label for="soundcheckDate">{{ $t('applicationDetail.soundcheckDate') }} *</label>
                 </pv-float-label>
@@ -669,10 +706,12 @@ const getStatusSeverity = (status) => {
               
               <div class="col-12 md:col-6 mb-3">
                 <pv-float-label>
-                  <pv-input-text 
+                  <pv-calendar 
                     id="soundcheckTime" 
-                    type="time" 
                     v-model="event.soundcheckTime" 
+                    time-only
+                    :show-icon="true"
+                    icon-display="input"
                     :class="{'p-invalid': submitted && validationErrors.soundcheckTime}"
                   />
                   <label for="soundcheckTime">{{ $t('applicationDetail.soundcheckTime') }} *</label>
@@ -800,7 +839,7 @@ const getStatusSeverity = (status) => {
                     <div class="flex align-items-center">
                       <i class="pi pi-clock mr-2"></i>
                       <span class="font-medium">{{ $t('applicationDetail.eventTime') }}:</span>
-                      <span class="ml-2">{{ event.time }}</span>
+                      <span class="ml-2">{{ formattedTime }}</span>
                     </div>
                     <div class="flex align-items-center">
                       <i class="pi pi-volume-up mr-2"></i>
@@ -810,7 +849,7 @@ const getStatusSeverity = (status) => {
                     <div class="flex align-items-center">
                       <i class="pi pi-clock mr-2"></i>
                       <span class="font-medium">{{ $t('applicationDetail.soundcheckTime') }}:</span>
-                      <span class="ml-2">{{ event.soundcheckTime }}</span>
+                      <span class="ml-2">{{ formattedSoundcheckTime }}</span>
                     </div>
                   </div>
                 </pv-panel>
@@ -886,8 +925,60 @@ const getStatusSeverity = (status) => {
 
 :deep(.p-inputtext),
 :deep(.p-dropdown),
-:deep(.p-inputnumber) {
+:deep(.p-inputnumber),
+:deep(.p-calendar),
+:deep(.p-inputmask) {
   width: 100%;
+}
+
+:deep(.p-calendar .p-inputtext) {
+  width: 100%;
+}
+
+:deep(.p-calendar .p-datepicker) {
+  min-width: auto;
+  width: 280px;
+  max-width: 320px;
+}
+
+:deep(.p-calendar .p-datepicker table) {
+  width: 100%;
+  font-size: 0.875rem;
+}
+
+:deep(.p-calendar .p-datepicker .p-datepicker-header) {
+  padding: 0.5rem;
+}
+
+:deep(.p-calendar .p-datepicker .p-datepicker-calendar td) {
+  padding: 0.25rem;
+}
+
+:deep(.p-calendar .p-datepicker .p-datepicker-calendar td > span) {
+  width: 2rem;
+  height: 2rem;
+  line-height: 2rem;
+  font-size: 0.875rem;
+}
+
+:deep(.p-calendar .p-timepicker) {
+  padding: 1rem;
+  border-top: 1px solid var(--surface-200);
+}
+
+:deep(.p-calendar .p-timepicker .p-separator) {
+  margin: 0 0.5rem;
+  font-weight: bold;
+}
+
+:deep(.p-calendar .p-timepicker .p-minute-picker,
+.p-calendar .p-timepicker .p-hour-picker) {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+:deep(.p-inputmask) {
+  font-family: monospace;
 }
 
 :deep(.p-button) {

@@ -20,7 +20,6 @@ export default {
 
     const menuItems = computed(() => [
       { label: t('menu.dashboard'), icon: 'pi pi-home', route: '/dashboard' },
-      { label: t('menu.profile'), icon: 'pi pi-user', route: '/profile' },
       { label: t('menu.applications'), icon: 'pi pi-file', route: '/applications' },
       { label: t('menu.search'), icon: 'pi pi-search', route: '/search' },
       { label: t('menu.agenda'), icon: 'pi pi-calendar', route: '/agenda' },

@@ -1,6 +1,9 @@
 {
   "evaluations": {
     "title": "Evaluations",
+    "paymentCompletedInfo": "You can only evaluate events where payment has been completed and the event has already finished.",
+    "noEventsToEvaluate": "No events available to evaluate",
+    "noEventsDescription": "Events will appear here once they have finished and payment has been completed.",
     "filters": {
       "all": "All",
       "done": "Completed",
@@ -48,6 +51,7 @@
     "close": "Close",
     "toggleMenu": "Toggle Menu",
     "userProfile": "User Profile",
+    "profile": "My Profile",
     "logout": "Logout",
     "status": "State",
     "required": "This field is required",
@@ -63,12 +67,16 @@
     "dashboard": "Dashboard",
     "profile": "My Profile",
     "applications": "Applications",
-    "search": "Search Space",
+    "search": "Search Events",
     "agenda": "Schedule",
     "evaluations": "Evaluations",
-    "payments": "Received Payments"
+    "payments": "Payments"
   },
   "payments": {
+    "titles": {
+      "received": "Received Payments",
+      "made": "Made Payments"
+    },
     "noPayments": "No payments registered",
     "loading": "Loading payments...",
     "columns": {
@@ -207,6 +215,8 @@
     "accept": "Accept",
     "status": {
       "pending": "Pending",
+      "contract_pending": "Contract Pending",
+      "signed": "Signed",
       "accepted": "Accepted",
       "rejected": "Rejected",
       "active": "Active"
@@ -238,6 +248,8 @@
     "reject": "Reject application",
     "status": {
       "pending": "Pending",
+      "contract_pending": "Contract Pending",
+      "signed": "Signed",
       "accepted": "Accepted",
       "rejected": "Rejected",
       "confirmed": "Accepted"
@@ -284,9 +296,40 @@
     },
     "legend": {
       "events": "Events",
-      "soundchecks": "Sound Checks"
+      "soundchecks": "Sound checks",
+      "contractPending": "Contract Pending",
+      "contractSigned": "Contract signed"
     },
-    "today": "Today"
+    "eventTypes": {
+      "event": "Event",
+      "soundcheck": "Sound check"
+    },
+    "today": "Today",
+    "loading": "Loading events...",
+    "refresh": "Reload events",
+    "noEvents": {
+      "title": "You have no scheduled events",
+      "description": "For events to appear here you need to:",
+      "requirements": {
+        "apply": "Apply to available events",
+        "accepted": "Have your application accepted by the promoter"
+      },
+      "searchButton": "Search events"
+    },
+    "eventStatus": {
+      "accepted": "Accepted",
+      "contract_pending": "Contract Pending",
+      "signed": "Signed",
+      "pending": "Pending"
+    },
+    "tooltip": {
+      "time": "Time",
+      "location": "Location",
+      "status": "Status",
+      "contract": "Contract",
+      "soundcheck": "Sound check",
+      "type": "Type"
+    }
   },
   "promoter": {
     "dashboard": {
@@ -383,5 +426,57 @@
       "twitter": "Twitter/X",
       "whatsapp": "WhatsApp"
     }
+  },
+  "login": {
+    "title": "Login",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Login",
+    "error": "Invalid credentials",
+    "noAccount": "Don't have an account?",
+    "register": "Register"
+  },
+  "register": {
+    "title": "Create Account",
+    "selectRole": "Select your role",
+    "musician": "Musician / Band",
+    "promoter": "Promoter / Venue",
+    "name": "Full name",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm password",
+    "musicalInfo": "Musical Information",
+    "genre": "Musical genre",
+    "type": "Type",
+    "description": "Description",
+    "profilePhoto": "Profile photo",
+    "selectImage": "Select image",
+    "maxSize": "Maximum 5MB - JPG, PNG, GIF",
+    "promoterInfo": "Information for Promoters",
+    "promoterDescription": "As a promoter you will be able to create events, manage musician applications and administer your venues. After registration you can complete additional information about your venues.",
+    "createAccount": "Create account",
+    "hasAccount": "Already have an account?",
+    "goToLogin": "Login",
+    "typeOptions": {
+      "soloist": "Soloist",
+      "band": "Band"
+    },
+    "placeholders": {
+      "name": "Enter your full name",
+      "email": "Enter your email",
+      "password": "Enter your password",
+      "confirmPassword": "Confirm your password",
+      "genre": "Select your genre",
+      "type": "Select type",
+      "description": "Tell us about your music, experience, etc."
+    },
+    "validation": {
+      "required": "Please complete all required fields correctly",
+      "passwordMismatch": "Passwords do not match",
+      "emailExists": "Email is already registered",
+      "imageTooLarge": "Image is too large. Maximum allowed size is 5MB",
+      "invalidImageType": "Invalid file type. Only images are allowed"
+    },
+    "success": "Registration successful. Redirecting to login..."
   }
 }

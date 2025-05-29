@@ -26,7 +26,6 @@ const currentTitle = computed(() => {
     '/': t('menu.dashboard'),
     '/dashboard': t('menu.dashboard'),
     '/applications': t('menu.applications'),
-    '/profile': t('menu.profile'),
     '/search': t('menu.search'),
     '/agenda': t('menu.agenda'),
     '/evaluations': t('menu.evaluations'),
@@ -55,6 +54,11 @@ const handleLogout = () => {
   userName.value = '';
   userImage.value = '';
   router.push('/login');
+};
+
+const goToProfile = () => {
+  isUserMenuVisible.value = false;
+  router.push('/profile');
 };
 
 // Cerrar el menú de usuario cuando se hace clic fuera
@@ -180,10 +184,10 @@ onUnmounted(() => {
                 <div v-if="isUserMenuVisible" class="user-dropdown">
                   <ul class="list-none p-0 m-0">
                     <li>
-                      <router-link to="/profile" class="dropdown-item">
+                      <a @click="goToProfile" class="dropdown-item">
                         <i class="pi pi-user mr-2"></i>
-                        {{ t('menu.profile') }}
-                      </router-link>
+                        {{ t('common.profile') }}
+                      </a>
                     </li>
                     <li>
                       <a @click="handleLogout" class="dropdown-item">

@@ -80,26 +80,48 @@ onMounted(() => {
     />
     <h2 class="text-2xl font-bold mb-4">{{ t('evaluations.title') }}</h2>
 
+    <!-- Mensaje informativo -->
+    <pv-message 
+      severity="info" 
+      :closable="false" 
+      class="mb-4"
+    >
+      <span>{{ t('evaluations.paymentCompletedInfo') }}</span>
+    </pv-message>
+
     <div v-if="loading" class="flex justify-content-center">
       <pv-progress-spinner />
     </div>
 
     <div v-else>
-      <div v-if="!selectedEvent" class="grid">
-        <div v-for="event in events" :key="event.id" class="col-12 md:col-6 lg:col-4">
-          <pv-card>
-            <template #header>
-              <img :src="event.imageUrl || '/default-event.jpg'" alt="Event Image" class="w-full h-15rem" />
-            </template>
-            <template #content>
-              <h3 class="text-xl font-bold">{{ event.name }}</h3>
-              <p>{{ event.location }}</p>
-              <p>{{ new Date(event.date).toLocaleDateString() }}</p>
-            </template>
-            <template #footer>
-              <pv-button label="Evaluar" icon="pi pi-star" @click="startEvaluation(event)" />
-            </template>
-          </pv-card>
+      <div v-if="!selectedEvent">
+        <div v-if="events.length === 0" class="text-center p-4">
+          <i class="pi pi-info-circle text-4xl text-500 mb-3"></i>
+          <h3 class="text-xl mb-2">{{ t('evaluations.noEventsToEvaluate') }}</h3>
+          <p class="text-500">{{ t('evaluations.noEventsDescription') }}</p>
+        </div>
+        <div v-else class="grid">
+          <div v-for="event in events" :key="event.id" class="col-12 md:col-6 lg:col-4">
+            <pv-card>
+              <template #header>
+                <img :src="event.imageUrl || '/default-event.jpg'" alt="Event Image" class="w-full h-15rem" />
+              </template>
+              <template #content>
+                <h3 class="text-xl font-bold">{{ event.name }}</h3>
+                <p>{{ event.location }}</p>
+                <p>{{ new Date(event.date).toLocaleDateString() }}</p>
+                <pv-tag 
+                  value="Pago Completado" 
+                  severity="success" 
+                  class="mt-2"
+                  icon="pi pi-check-circle" 
+                />
+              </template>
+              <template #footer>
+                <pv-button label="Evaluar" icon="pi pi-star" @click="startEvaluation(event)" />
+              </template>
+            </pv-card>
+          </div>
         </div>
       </div>
 

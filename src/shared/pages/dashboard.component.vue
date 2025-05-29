@@ -2,7 +2,7 @@
 import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
-import { EventApplicationService } from '../../event-application/services/event-application.service';
+import { EventApplicationService } from '../../events/services/event-application.service';
 import { PaymentService } from '../../payments/services/payment.service';
 import { EvaluationService } from '../../evaluations/services/evaluation.service';
 
@@ -132,21 +132,21 @@ export default {
                         .sort((a, b) => new Date(a.date) - new Date(b.date));
                 } else {
                     // Para músicos, obtener solo las postulaciones activas
-                    const applicants = await eventApplicationService.getUserApplications(user.value.id);
-                    
+                const applicants = await eventApplicationService.getUserApplications(user.value.id);
+                
                     // Filtrar postulaciones rechazadas y obtener detalles del evento
                     const activeApplicants = applicants.filter(app => app.status !== 'rejected');
                     const eventPromises = activeApplicants.map(applicant => 
-                        eventApplicationService.getById(applicant.eventId)
-                            .then(event => ({
-                                ...event,
-                                status: applicant.status,
+                    eventApplicationService.getById(applicant.eventId)
+                        .then(event => ({
+                            ...event,
+                            status: applicant.status,
                                 applicationDate: applicant.applicationDate
-                            }))
-                    );
-                    
+                        }))
+                );
+                
                     // Ordenar eventos por fecha
-                    const events = await Promise.all(eventPromises);
+                const events = await Promise.all(eventPromises);
                     upcomingEvents.value = events
                         .filter(event => new Date(event.date) >= new Date())
                         .sort((a, b) => new Date(a.date) - new Date(b.date));
@@ -174,7 +174,7 @@ export default {
             if (user.value?.role === 'promotor') {
                 router.push(`/events/${eventId}`);
             } else {
-                router.push(`/applications/${eventId}`);
+            router.push(`/applications/${eventId}`);
             }
         };
 
@@ -282,9 +282,9 @@ export default {
                                                        class="mb-2" />
                                             </template>
                                             <template v-else>
-                                                <pv-tag :value="$t(`eventApplications.status.${event.status}`)"
-                                                       :severity="getStatusSeverity(event.status)"
-                                                       class="mb-2" />
+                                            <pv-tag :value="$t(`eventApplications.status.${event.status}`)"
+                                                   :severity="getStatusSeverity(event.status)"
+                                                   class="mb-2" />
                                             </template>
                                             <pv-button 
                                                 icon="pi pi-eye" 

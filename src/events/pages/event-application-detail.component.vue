@@ -151,38 +151,71 @@ const signContract = async () => {
     if (!userStr) {
       toast.add({ 
         severity: 'error', 
-        summary: t('applicationDetail.contract.error'), 
+        summary: t('common.error'), 
         detail: t('applicationDetail.contract.noUser')
       });
       return;
     }
+
     const user = JSON.parse(userStr);
+    const signature = `${user.name}-${new Date().toISOString()}`;
     
-    const result = await eventApplicationService.signContract(
-      route.params.id,
-      user.id,
-      'firma-digital'
-    );
+    await eventApplicationService.signContract(route.params.id, user.id, signature);
     
-    if (result) {
-      application.value = result;
-      hasSignedContract.value = true;
-      showContractDialog.value = false;
-      
-      toast.add({ 
-        severity: 'success', 
-        summary: t('common.success'), 
-        detail: t('applicationDetail.contract.success')
-      });
-      
-      await fetchApplicationDetail();
-    }
+    showContractDialog.value = false;
+    hasSignedContract.value = true;
+    
+    toast.add({ 
+      severity: 'success', 
+      summary: t('common.success'), 
+      detail: t('applicationDetail.contract.success')
+    });
+    
+    await fetchApplicationDetail();
   } catch (error) {
     console.error('Error al firmar el contrato:', error);
     toast.add({ 
       severity: 'error', 
       summary: t('common.error'), 
       detail: t('applicationDetail.contract.error')
+    });
+  } finally {
+    updating.value = false;
+  }
+};
+
+const rejectContract = async () => {
+  try {
+    updating.value = true;
+    const userStr = localStorage.getItem('user');
+    if (!userStr) {
+      toast.add({ 
+        severity: 'error', 
+        summary: t('common.error'), 
+        detail: t('applicationDetail.contract.noUser')
+      });
+      return;
+    }
+
+    const user = JSON.parse(userStr);
+    
+    await eventApplicationService.rejectContract(route.params.id, user.id);
+    
+    showContractDialog.value = false;
+    
+    toast.add({ 
+      severity: 'info', 
+      summary: t('common.success'), 
+      detail: 'Contrato rechazado. El promotor podrá considerar otros músicos.'
+    });
+    
+    await fetchApplicationDetail();
+  } catch (error) {
+    console.error('Error al rechazar el contrato:', error);
+    toast.add({ 
+      severity: 'error', 
+      summary: t('common.error'), 
+      detail: 'Error al rechazar el contrato'
     });
   } finally {
     updating.value = false;
@@ -346,14 +379,14 @@ onMounted(() => {
 
             <div class="flex gap-3 justify-content-center mt-4">
               <pv-button
-                v-if="!hasSignedContract && application?.status?.toLowerCase() !== 'rejected'"
+                v-if="!hasSignedContract && application?.status?.toLowerCase() === 'contract_pending'"
                 @click="showContractDialog = true"
                 icon="pi pi-file-pdf"
                 :label="t('applicationDetail.contract.view')"
                 severity="info"
               />
               <pv-button
-                v-if="application?.status?.toLowerCase() === 'accepted' && !hasUploadedRider"
+                v-if="application?.status?.toLowerCase() === 'signed' && !hasUploadedRider"
                 @click="showRiderDialog = true"
                 icon="pi pi-upload"
                 :label="t('applicationDetail.rider.upload')"
@@ -379,7 +412,7 @@ onMounted(() => {
           <pv-button
             :label="t('applicationDetail.contract.reject')"
             icon="pi pi-times"
-            @click="showContractDialog = false"
+            @click="rejectContract"
             text
           />
           <pv-button

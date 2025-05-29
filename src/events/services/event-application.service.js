@@ -3,7 +3,6 @@
 
 import httpInstance from "../../shared/services/http.instance.js";
 import { EventApplication, Contract, RiderTechnical, EventApplicant } from '../model/event-application.model';
-import { config } from '../../config/config.js';
 
 export class EventApplicationService {
     resourceEndpoint = '/events';
@@ -55,10 +54,12 @@ export class EventApplicationService {
 
     async uploadImageToImgBB(file) {
         try {
-            // Verificar que tenemos la API key
-            const apiKey = config.IMGBB_API_KEY?.replace(/['"]/g, ''); // Remover comillas si existen
+            // Verificar que tenemos la API key (usar VITE_ para variables de entorno en Vue)
+            const apiKey = import.meta.env.VITE_IMGBB_API_KEY;
             if (!apiKey) {
-                throw new Error('API key de ImgBB no configurada');
+                console.warn('API key de ImgBB no configurada, usando imagen por defecto');
+                // Retornar una imagen por defecto si no hay API key
+                return 'https://images.unsplash.com/photo-1540039155733-5bb30b53aa14';
             }
 
             // Convertir el archivo a base64
@@ -93,7 +94,9 @@ export class EventApplicationService {
             }
         } catch (error) {
             console.error('Error detallado al subir la imagen:', error);
-            throw error;
+            // En caso de error, usar imagen por defecto en lugar de fallar
+            console.warn('Usando imagen por defecto debido a error en subida');
+            return 'https://images.unsplash.com/photo-1540039155733-5bb30b53aa14';
         }
     }
 
@@ -108,23 +111,34 @@ export class EventApplicationService {
 
     async create(eventResource) {
         try {
-            // Si hay un archivo de imagen, subirlo a ImgBB
+            console.log('Creando evento:', eventResource);
+            
+            // Si hay un archivo de imagen, intentar subirlo
             if (eventResource.imageFile) {
                 try {
+                    console.log('Subiendo imagen...');
                     const imageUrl = await this.uploadImageToImgBB(eventResource.imageFile);
                     eventResource.imageUrl = imageUrl;
+                    console.log('Imagen subida exitosamente:', imageUrl);
                 } catch (error) {
-                    console.error('Error al subir la imagen:', error);
-                    throw new Error('Error al subir la imagen. Por favor, intenta con otra imagen o más tarde.');
+                    console.warn('Error al subir la imagen, usando imagen por defecto:', error);
+                    eventResource.imageUrl = 'https://images.unsplash.com/photo-1540039155733-5bb30b53aa14';
                 }
+            } else {
+                // Si no hay imagen, usar una por defecto
+                eventResource.imageUrl = eventResource.imageUrl || 'https://images.unsplash.com/photo-1540039155733-5bb30b53aa14';
             }
 
             // Eliminar la propiedad imageFile antes de enviar al servidor
             const { imageFile, ...eventData } = eventResource;
             
+            console.log('Enviando datos del evento al servidor:', eventData);
             const response = await httpInstance.post(this.resourceEndpoint, eventData);
+            console.log('Evento creado exitosamente:', response.data);
+            
             return new EventApplication(response.data);
         } catch (error) {
+            console.error('Error al crear evento:', error);
             throw this.handleError(error);
         }
     }
@@ -207,8 +221,12 @@ export class EventApplicationService {
 
     async updateApplicationStatus(applicantId, status) {
         try {
-            // Normalizar el estado si es 'confirmed' a 'accepted'
-            const normalizedStatus = status.toLowerCase() === 'confirmed' ? 'accepted' : status.toLowerCase();
+            // Normalizar el estado si es 'confirmed' a 'contract_pending'
+            let normalizedStatus = status.toLowerCase();
+            if (normalizedStatus === 'confirmed' || normalizedStatus === 'accepted') {
+                normalizedStatus = 'contract_pending';
+            }
+            
             const response = await httpInstance.patch(`${this.applicantsEndpoint}/${applicantId}`, { 
                 status: normalizedStatus 
             });
@@ -280,16 +298,52 @@ export class EventApplicationService {
 
             const applicant = applicantsResponse.data[0];
 
-            // 2. Actualizar el estado de la postulación a aceptado
+            // 2. Obtener información del evento y del músico
+            const eventResponse = await httpInstance.get(`${this.resourceEndpoint}/${eventId}`);
+            const event = eventResponse.data;
+            
+            const musicoResponse = await httpInstance.get(`/users/${userId}`);
+            const musico = musicoResponse.data;
+
+            // 3. Crear el pago para el artista
+            const now = new Date().toISOString();
+            const paymentData = {
+                amount: Number(event.payment),
+                eventId: eventId,
+                musicoId: userId,
+                promotorId: event.adminId,
+                status: "PENDING",
+                paymentMethod: "bank_transfer",
+                bankInfo: {
+                    accountNumber: "****1234",
+                    bankName: "Banco de Crédito",
+                    accountType: "savings"
+                },
+                description: `Pago por presentación de ${musico.name} en ${event.name}`,
+                createdAt: now,
+                updatedAt: now,
+                statusHistory: [
+                    {
+                        status: "PENDING",
+                        timestamp: now,
+                        comment: "Pago creado después de firma de contrato"
+                    }
+                ]
+            };
+
+            console.log('Creando pago después de firma de contrato:', paymentData);
+            await httpInstance.post('/payments', paymentData);
+
+            // 4. Actualizar el estado de la postulación a 'signed' y marcar contrato como firmado
             await httpInstance.patch(
                 `${this.applicantsEndpoint}/${applicant.id}`,
                 {
-                    status: 'accepted',
+                    status: 'signed',
                     contractSigned: true
                 }
             );
 
-            // 3. Crear el contrato como un campo más en el evento
+            // 5. Crear el contrato como un campo más en el evento
             const contract = {
                 userId: userId,
                 signature: signature,
@@ -297,18 +351,59 @@ export class EventApplicationService {
                 status: 'signed'
             };
 
-            // 4. Actualizar el evento con el contrato
-            const eventResponse = await httpInstance.patch(
+            // 6. Actualizar el evento con el contrato
+            const eventUpdateResponse = await httpInstance.patch(
                 `${this.resourceEndpoint}/${eventId}`,
                 { 
                     contract: contract,
-                    status: 'accepted'
+                    status: 'signed'
                 }
             );
 
-            return eventResponse.data;
+            // 7. AHORA rechazar automáticamente a los demás postulantes
+            const allApplicantsResponse = await httpInstance.get(
+                `${this.applicantsEndpoint}?eventId=${eventId}`
+            );
+            
+            const otherApplicants = allApplicantsResponse.data.filter(app => app.id !== applicant.id);
+            await Promise.all(
+                otherApplicants.map(app => 
+                    httpInstance.patch(`${this.applicantsEndpoint}/${app.id}`, { status: 'rejected' })
+                )
+            );
+
+            return eventUpdateResponse.data;
         } catch (error) {
             console.error('Error en signContract:', error);
+            throw this.handleError(error);
+        }
+    }
+
+    async rejectContract(eventId, userId) {
+        try {
+            // 1. Obtener la postulación actual
+            const applicantsResponse = await httpInstance.get(
+                `${this.applicantsEndpoint}?eventId=${eventId}&userId=${userId}`
+            );
+
+            if (!applicantsResponse.data || applicantsResponse.data.length === 0) {
+                throw new Error('No se encontró la postulación');
+            }
+
+            const applicant = applicantsResponse.data[0];
+
+            // 2. Cambiar el estado de vuelta a 'rejected'
+            await httpInstance.patch(
+                `${this.applicantsEndpoint}/${applicant.id}`,
+                {
+                    status: 'rejected',
+                    contractSigned: false
+                }
+            );
+
+            return { success: true };
+        } catch (error) {
+            console.error('Error en rejectContract:', error);
             throw this.handleError(error);
         }
     }

@@ -74,9 +74,9 @@ export class PaymentService {
 
             // 4. Enriquecer los pagos con información adicional
             const enrichedPayments = await Promise.all(userPayments.map(async payment => {
-                try {
+                    try {
                     // Obtener información del evento
-                    const eventResponse = await httpInstance.get(`/events/${payment.eventId}`);
+                        const eventResponse = await httpInstance.get(`/events/${payment.eventId}`);
                     const event = eventResponse.data;
 
                     // Obtener información del músico
@@ -88,12 +88,12 @@ export class PaymentService {
                     const promotor = promotorResponse.data;
 
                     return {
-                        ...payment,
+                            ...payment,
                         eventName: event.name,
                         musicoName: musico.name,
                         promotorName: promotor.name
                     };
-                } catch (error) {
+                    } catch (error) {
                     console.error('Error enriching payment:', error);
                     return payment;
                 }

@@ -59,7 +59,7 @@ export class EventApplicant {
         id = null,
         userId = null,
         eventId = null,
-        status = 'pending', // Estado de la postulación: pending, accepted, rejected
+        status = 'pending', // Estados: pending, contract_pending, signed, rejected
         applicationDate = new Date().toISOString(),
         contractSigned = false,
         riderUploaded = false
@@ -73,6 +73,12 @@ export class EventApplicant {
         this.riderUploaded = riderUploaded
     }
 }
+
+// Estados de postulación:
+// - pending: Postulación enviada, esperando revisión del promotor
+// - contract_pending: Promotor aceptó al músico, esperando firma de contrato
+// - signed: Músico firmó el contrato, postulación completamente aceptada
+// - rejected: Postulación rechazada por el promotor
 
 export class Contract {
     constructor({

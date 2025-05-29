@@ -20,7 +20,8 @@ const currentUserId = computed(() => user.value?.id || null);
 const statusOptions = computed(() => [
   { label: t('eventApplications.allStatuses'), value: '' },
   { label: t('eventApplications.status.pending'), value: 'pending' },
-  { label: t('eventApplications.status.accepted'), value: 'accepted' },
+  { label: t('eventApplications.status.contract_pending'), value: 'contract_pending' },
+  { label: t('eventApplications.status.signed'), value: 'signed' },
   { label: t('eventApplications.status.rejected'), value: 'rejected' }
 ]);
 
@@ -30,27 +31,47 @@ const filteredApplications = computed(() => {
 });
 
 const fetchUserApplications = async () => {
-  if (!currentUserId.value) return;
+  if (!currentUserId.value) {
+    console.log('No hay usuario ID disponible');
+    return;
+  }
   
   try {
     loading.value = true;
+    console.log('Obteniendo postulaciones para usuario:', currentUserId.value);
+    
     // Get user applications
     const applicants = await eventApplicationService.getUserApplications(currentUserId.value);
+    console.log('Postulaciones encontradas:', applicants);
+    
+    if (applicants.length === 0) {
+      console.log('No se encontraron postulaciones para este usuario');
+      userApplications.value = [];
+      return;
+    }
     
     // Get event details for each application
-    const eventPromises = applicants.map(applicant => 
-      eventApplicationService.getById(applicant.eventId)
-        .then(event => ({
+    const eventPromises = applicants.map(async (applicant) => {
+      try {
+        const event = await eventApplicationService.getById(applicant.eventId);
+        return {
           ...event,
           status: applicant.status,
           applicationDate: applicant.applicationDate,
           contractSigned: applicant.contractSigned,
           riderUploaded: applicant.riderUploaded,
           id: event.id // Mantener el ID del evento
-        }))
-    );
+        };
+      } catch (error) {
+        console.error(`Error obteniendo evento ${applicant.eventId}:`, error);
+        return null;
+      }
+    });
     
-    userApplications.value = await Promise.all(eventPromises);
+    const results = await Promise.all(eventPromises);
+    userApplications.value = results.filter(result => result !== null);
+    console.log('Aplicaciones procesadas:', userApplications.value);
+    
   } catch (error) {
     console.error('Error fetching user applications:', error);
   } finally {

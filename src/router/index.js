@@ -5,27 +5,32 @@ const routes = [
         path: '/',
         redirect: '/login'
     },
-    {
+ {
         path: '/login',
         name: 'Login',
         component: () => import('../login/pages/login-home.component.vue')
     },
     {
+        path: '/register',
+        name: 'Register',
+        component: () => import('../login/pages/register.component.vue')
+    },
+    {
         path: '/dashboard',
         name: 'Dashboard',
-        component: () => import('../dashboard/pages/dashboard.component.vue'),
+        component: () => import('../shared/pages/dashboard.component.vue'),
         meta: { requiresAuth: true }
     },
     {
         path: '/search',
         name: 'EventSearch',
-        component: () => import('../event-application/pages/musician-event-search.component.vue'),
+        component: () => import('../events/pages/musician-event-search.component.vue'),
         meta: { requiresAuth: true }
     },
     {
         path: '/agenda',
         name: 'Agenda',
-        component: ()=> import('../schedule/pages/schedule-page.component.vue'),
+        component: ()=> import('../calendar/pages/calendar.component.vue'),
         meta: { requiresAuth: true }
     },
     {
@@ -56,7 +61,7 @@ const routes = [
         component: () => import('../evaluations/pages/evaluation-detail-page.component.vue'),
         meta: { requiresAuth: true }
     },
-    {
+  {
         path: '/evaluations/evaluated',
         redirect: '/evaluations/venues/evaluated'
     },
@@ -75,28 +80,28 @@ const routes = [
     {
         path: '/events/:id',
         name: 'EventDetail',
-        component: () => import('../event-application/pages/event-detail.component.vue'),
+        component: () => import('../events/pages/event-detail.component.vue'),
         meta: { requiresAuth: true }
-    },
-    {
+  },
+  {
         path: '/applications',
         name: 'EventApplications',
-        component: () => import('../event-application/pages/event-applications.component.vue'),
+        component: () => import('../events/pages/event-applications.component.vue'),
         meta: { requiresAuth: true }
     },
-    {
+   {
         path: '/applications/:id',
         name: 'EventApplicationDetail',
-        component: () => import('../event-application/pages/event-application-detail.component.vue'),
+        component: () => import('../events/pages/event-application-detail.component.vue'),
         meta: { requiresAuth: true }
     },
-    {
+   {
         path: '/entrada/producer',
         name: 'TicketProducer',
         component: () => import('../ticket/pages/ticket-producer.component.vue'),
         meta: { requiresAuth: true }
     },
-    {
+     {
         path: '/payments',
         name: 'PaymentSummary',
         component: () => import('../payments/pages/payment-summary.page.vue'),
@@ -121,17 +126,17 @@ const router = createRouter({
 // Guardia de navegación
 router.beforeEach((to, from, next) => {
     const isAuthenticated = localStorage.getItem('user') !== null;
-    const user = isAuthenticated ? JSON.parse(localStorage.getItem('user')) : null;
+     const user = isAuthenticated ? JSON.parse(localStorage.getItem('user')) : null;
 
-    if (to.meta.requiresAuth && !isAuthenticated) {
-        next('/login');
+  if (to.meta.requiresAuth && !isAuthenticated) {
+    next('/login');
     } else if (to.path === '/login' && isAuthenticated) {
         next('/dashboard');
     } else if (to.meta.role && user?.role !== to.meta.role) {
         next('/dashboard'); // Redirigir si el usuario no tiene el rol requerido
-    } else {
-        next();
-    }
+  } else {
+    next();
+  }
 });
 
 export default router;
