@@ -1,9 +1,9 @@
 {
   "evaluations": {
     "title": "Evaluaciones",
-    "paymentCompletedInfo": "Solo puedes evaluar eventos donde el pago se ha completado y el evento ya ha finalizado.",
+    "paymentCompletedInfo": "Solo puedes evaluar eventos donde el pago se ha completado.",
     "noEventsToEvaluate": "No hay eventos disponibles para evaluar",
-    "noEventsDescription": "Los eventos aparecerán aquí una vez que hayan finalizado y el pago se haya completado.",
+    "noEventsDescription": "Los eventos aparecerán aquí una vez que el pago se haya completado.",
     "filters": {
       "all": "Todas",
       "done": "Completadas",
@@ -75,7 +75,8 @@
     "required": "Este campo es requerido",
     "clear": "Limpiar",
     "apply": "Aplicar",
-    "back": "Regresar"
+    "back": "Regresar",
+    "viewProfile": "Ver perfil"
   },
   "schedule": {
     "confirmed": "Eventos Confirmados",
@@ -107,6 +108,7 @@
     "profile": "Mi Perfil",
     "applications": "Postulaciones",
     "search": "Buscar eventos",
+    "searchArtists": "Buscar artistas",
     "agenda": "Agenda",
     "evaluations": "Evaluaciones",
     "payments": "Pagos"
@@ -296,9 +298,14 @@
     "noEvents": "No hay eventos disponibles",
     "viewInfo": "Ver información",
     "apply": "Postular",
+    "invited": "Invitado",
+    "alreadyApplied": "Ya postulado",
+    "invitedMessage": "Has sido invitado a este evento. Revisa tu sección de invitaciones para aceptar o rechazar.",
+    "appliedMessage": "Ya te has postulado a este evento.",
     "viewEvent": "Ver evento",
     "viewApplication": "Ver postulación",
     "applicants": "Postulantes",
+    "invitations": "Invitaciones",
     "noApplicants": "No hay postulantes para este evento",
     "eventNotFound": "Evento no encontrado",
     "viewProfile": "Ver perfil",
@@ -431,6 +438,43 @@
       "contract": "Contrato",
       "soundcheck": "Prueba de sonido",
       "type": "Tipo"
+    }
+  },
+  "artistSearch": {
+    "searchArtists": "Buscar Artistas",
+    "searchPlaceholder": "Buscar por nombre",
+    "genrePlaceholder": "Seleccionar género",
+    "typePlaceholder": "Seleccionar tipo",
+    "contact": "Contactar",
+    "artistDetails": "Detalles del Artista",
+    "noResults": "No se encontraron artistas",
+    "noResultsDescription": "Intenta ajustar los filtros de búsqueda para encontrar más artistas."
+  },
+  "invitations": {
+    "title": "Mis Invitaciones",
+    "noInvitations": "No tienes invitaciones pendientes",
+    "noInvitationsDescription": "Las invitaciones de promotores aparecerán aquí cuando las recibas.",
+    "message": "Mensaje",
+    "viewInfo": "Ver información",
+    "accept": "Firmar contrato",
+    "reject": "Rechazar",
+    "eventDetails": "Detalles del Evento",
+    "promoter": "Promotor",
+    "invite": "Invitar",
+    "inviteArtist": "Invitar Artista",
+    "invitingTo": "Invitando a",
+    "selectEvent": "Seleccionar evento",
+    "selectEventPlaceholder": "Elige uno de tus eventos",
+    "noEventsAvailable": "Ya has invitado a este artista a todos tus eventos",
+    "messagePlaceholder": "Escribe un mensaje personalizado para el artista...",
+    "sendInvitation": "Enviar Invitación",
+    "alreadyInvited": "Ya invitado",
+    "alreadyInvitedInfo": "Ya has invitado a este artista a {count} evento(s).",
+    "eventAlreadyInvited": "Ya has invitado a este artista a este evento anteriormente.",
+    "status": {
+      "pending": "Pendiente",
+      "accepted": "Aceptada", 
+      "rejected": "Rechazada"
     }
   },
   "promoter": {

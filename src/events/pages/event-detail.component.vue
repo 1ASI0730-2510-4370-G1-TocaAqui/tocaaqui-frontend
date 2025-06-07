@@ -110,14 +110,64 @@
                     </div>
                 </div>
 
+                <!-- Invitaciones -->
+                <div v-if="invitedApplicants.length > 0" class="col-12 mt-4">
+                    <h2 class="text-2xl font-bold mb-4">{{ $t('eventApplications.invitations') }}</h2>
+                    <div class="grid">
+                        <div v-for="applicant in invitedApplicants" :key="applicant.id" class="col-12 mb-3">
+                            <div class="surface-200 p-4 border-round border-2 border-primary">
+                                <div class="flex flex-column md:flex-row align-items-center justify-content-between">
+                                    <div class="flex align-items-center mb-3 md:mb-0">
+                                        <img :src="applicant.imageUrl" :alt="applicant.name" 
+                                             class="border-circle mr-3" style="width: 64px; height: 64px; object-fit: cover;" />
+                                        <div>
+                                            <h3 class="text-xl font-semibold mb-2">
+                                                {{ applicant.name }}
+                                                <pv-tag value="Invitado" severity="success" class="ml-2" />
+                                            </h3>
+                                            <div class="flex gap-3">
+                                                <span class="flex align-items-center">
+                                                    <i class="pi pi-music mr-2"></i>
+                                                    {{ applicant.genre }}
+                                                </span>
+                                                <span class="flex align-items-center">
+                                                    <i class="pi pi-envelope mr-2"></i>
+                                                    {{ applicant.email }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-column align-items-end gap-2">
+                                        <pv-tag v-if="applicant.status" 
+                                               :value="$t(`eventApplications.status.${applicant.status}`)"
+                                               :severity="getStatusSeverity(applicant.status)"
+                                               class="mb-2" />
+                                        <div class="flex gap-2">
+                                            <pv-button 
+                                                icon="pi pi-eye" 
+                                                @click="viewApplicantProfile(applicant.userId)"
+                                                text 
+                                                :label="$t('eventApplications.viewProfile')" 
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div v-if="applicant.description" class="mt-3">
+                                    <p class="line-height-3">{{ applicant.description }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Postulantes -->
                 <div class="col-12 mt-4">
                     <h2 class="text-2xl font-bold mb-4">{{ $t('eventApplications.applicants') }}</h2>
-                    <div v-if="applicants.length === 0" class="text-center p-4">
+                    <div v-if="regularApplicants.length === 0" class="text-center p-4">
                         <p>{{ $t('eventApplications.noApplicants') }}</p>
                     </div>
                     <div v-else class="grid">
-                        <div v-for="applicant in applicants" :key="applicant.id" class="col-12 mb-3">
+                        <div v-for="applicant in regularApplicants" :key="applicant.id" class="col-12 mb-3">
                             <div class="surface-100 p-4 border-round">
                                 <div class="flex flex-column md:flex-row align-items-center justify-content-between">
                                     <div class="flex align-items-center mb-3 md:mb-0">
@@ -175,7 +225,7 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { EventApplicationService } from '../services/event-application.service';
@@ -197,6 +247,15 @@ export default {
         const hasAcceptedApplicant = ref(false);
         const payment = ref(null);
         const paymentLoading = ref(false);
+
+        // Computed properties para separar postulantes e invitados
+        const invitedApplicants = computed(() => {
+            return applicants.value.filter(applicant => applicant.isInvited === true);
+        });
+
+        const regularApplicants = computed(() => {
+            return applicants.value.filter(applicant => !applicant.isInvited);
+        });
 
         const formatDate = (date) => {
             if (!date) return '';
@@ -368,6 +427,8 @@ export default {
         return {
             event,
             applicants,
+            invitedApplicants,
+            regularApplicants,
             isLoading,
             hasAcceptedApplicant,
             payment,

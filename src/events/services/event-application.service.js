@@ -205,12 +205,14 @@ export class EventApplicationService {
         }
     }
 
-    async applyToEvent(eventId, userId) {
+    async applyToEvent(eventId, userId, initialStatus = 'pending') {
         try {
             const applicant = new EventApplicant({
                 eventId,
                 userId,
-                applicationDate: new Date().toISOString()
+                applicationDate: new Date().toISOString(),
+                status: initialStatus,
+                isInvited: initialStatus === 'contract_pending' // Marcar como invitado si el estado inicial es 'contract_pending'
             });
             const response = await httpInstance.post(this.applicantsEndpoint, applicant);
             return new EventApplicant(response.data);

@@ -48,21 +48,14 @@ export class EvaluationService {
                 completedEventIds.includes(event.id)
             );
 
-            // 4. Filtrar eventos que ya han pasado (solo se pueden evaluar eventos pasados)
-            const now = new Date();
-            const pastEvents = completedEvents.filter(event => {
-                const eventDate = new Date(event.date);
-                return eventDate < now;
-            });
-
-            // 5. Verificar que no hayan sido evaluados ya
+            // 4. Verificar que no hayan sido evaluados ya
             const evaluationsResponse = await httpInstance.get('/evaluations');
             const existingEvaluations = evaluationsResponse.data.filter(evaluation => 
                 evaluation.userId === musicianId && evaluation.type === 'venue'
             );
             const evaluatedEventIds = existingEvaluations.map(evaluation => evaluation.eventId);
 
-            return pastEvents.filter(event => !evaluatedEventIds.includes(event.id));
+            return completedEvents.filter(event => !evaluatedEventIds.includes(event.id));
         } catch (error) {
             console.error('Error fetching completed events for musician:', error);
             throw error;
@@ -93,15 +86,8 @@ export class EvaluationService {
                 completedEventIds.includes(event.id)
             );
 
-            // 4. Filtrar eventos que ya han pasado
-            const now = new Date();
-            const pastEvents = completedEvents.filter(event => {
-                const eventDate = new Date(event.date);
-                return eventDate < now;
-            });
-
-            // 5. Enriquecer con información de los artistas que tocaron
-            const eventsWithArtists = await Promise.all(pastEvents.map(async (event) => {
+            // 4. Enriquecer con información de los artistas que tocaron
+            const eventsWithArtists = await Promise.all(completedEvents.map(async (event) => {
                 try {
                     // Obtener postulaciones aceptadas para este evento
                     const applicantsResponse = await httpInstance.get('/event_applicants');

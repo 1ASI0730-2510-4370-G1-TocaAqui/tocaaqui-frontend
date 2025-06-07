@@ -404,23 +404,32 @@ onMounted(() => {
       modal
       :header="t('applicationDetail.contract.title')"
       :style="{ width: '80vw' }"
-      :closable="false"
+      :closable="true"
     >
       <div class="contract-text">{{ contractText }}</div>
       <template #footer>
-        <div class="flex justify-content-end gap-2">
+        <div class="flex justify-content-between">
           <pv-button
-            :label="t('applicationDetail.contract.reject')"
-            icon="pi pi-times"
-            @click="rejectContract"
-            text
+            :label="t('common.close')"
+            icon="pi pi-arrow-left"
+            @click="showContractDialog = false"
+            outlined
           />
-          <pv-button
-            :label="t('applicationDetail.contract.signAndAccept')"
-            icon="pi pi-check"
-            @click="signContract"
-            severity="success"
-          />
+          <div class="flex gap-2">
+            <pv-button
+              :label="t('applicationDetail.contract.reject')"
+              icon="pi pi-times"
+              @click="rejectContract"
+              severity="danger"
+              outlined
+            />
+            <pv-button
+              :label="t('applicationDetail.contract.signAndAccept')"
+              icon="pi pi-check"
+              @click="signContract"
+              severity="success"
+            />
+          </div>
         </div>
       </template>
     </pv-dialog>

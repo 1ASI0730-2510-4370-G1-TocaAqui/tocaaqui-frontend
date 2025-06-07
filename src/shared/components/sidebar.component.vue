@@ -12,20 +12,45 @@ export default {
     userName: {
       type: String,
       required: true
+    },
+    userRole: {
+      type: String,
+      required: true
     }
   },
-  setup() {
+  setup(props) {
     const { t } = useI18n()
     const route = useRoute()
 
-    const menuItems = computed(() => [
-      { label: t('menu.dashboard'), icon: 'pi pi-home', route: '/dashboard' },
-      { label: t('menu.applications'), icon: 'pi pi-file', route: '/applications' },
-      { label: t('menu.search'), icon: 'pi pi-search', route: '/search' },
-      { label: t('menu.agenda'), icon: 'pi pi-calendar', route: '/agenda' },
-      { label: t('menu.evaluations'), icon: 'pi pi-star', route: '/evaluations' },
-      { label: t('menu.payments'), icon: 'pi pi-money-bill', route: '/payments' }
-    ])
+    const menuItems = computed(() => {
+      const baseItems = [
+        { label: t('menu.dashboard'), icon: 'pi pi-home', route: '/dashboard' }
+      ]
+
+      if (props.userRole === 'musico') {
+        return [
+          ...baseItems,
+          { label: t('menu.applications'), icon: 'pi pi-file', route: '/applications' },
+          { label: t('invitations.title'), icon: 'pi pi-envelope', route: '/invitations' },
+          { label: t('menu.search'), icon: 'pi pi-search', route: '/search' },
+          { label: t('menu.agenda'), icon: 'pi pi-calendar', route: '/agenda' },
+          { label: t('menu.evaluations'), icon: 'pi pi-star', route: '/evaluations' },
+          { label: t('menu.payments'), icon: 'pi pi-money-bill', route: '/payments' }
+        ]
+      } else if (props.userRole === 'promotor') {
+        return [
+          ...baseItems,
+          { label: t('menu.applications'), icon: 'pi pi-file', route: '/applications' },
+          { label: t('menu.searchArtists'), icon: 'pi pi-search', route: '/search' },
+          { label: t('menu.agenda'), icon: 'pi pi-calendar', route: '/agenda' },
+          { label: t('menu.evaluations'), icon: 'pi pi-star', route: '/evaluations' },
+          { label: t('menu.payments'), icon: 'pi pi-money-bill', route: '/payments' }
+        ]
+      }
+
+      // Fallback en caso de rol desconocido
+      return baseItems
+    })
 
     const isActive = (itemRoute) => {
       // Verifica si la ruta actual coincide exactamente o es una subruta

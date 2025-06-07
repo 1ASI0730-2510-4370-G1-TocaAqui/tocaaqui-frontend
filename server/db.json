@@ -69,6 +69,90 @@
         "signedDate": "2025-05-28T23:56:08.746Z",
         "status": "signed"
       }
+    },
+    {
+      "id": 2,
+      "promoterId": 1,
+      "name": "xd",
+      "date": "2025-06-26",
+      "time": "10:19",
+      "publishDate": "2025-06-06",
+      "location": "xd",
+      "imageUrl": "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14",
+      "status": "signed",
+      "soundcheckDate": "2025-06-17",
+      "soundcheckTime": "12:19",
+      "capacity": 2,
+      "availableTickets": 2,
+      "adminName": "Oscar Antayhua",
+      "adminId": 1,
+      "adminContact": "xd",
+      "requirements": "xd",
+      "description": "xd",
+      "payment": "123",
+      "duration": 2,
+      "genre": "Jazz",
+      "equipment": "xd",
+      "contract": {
+        "userId": 3,
+        "signature": "Oscar Castillo-2025-06-07T22:45:59.203Z",
+        "signedDate": "2025-06-07T22:45:59.341Z",
+        "status": "signed"
+      }
+    },
+    {
+      "id": 3,
+      "promoterId": 1,
+      "name": "xd32",
+      "date": "2025-06-30",
+      "time": "14:59",
+      "publishDate": "2025-06-06",
+      "location": "dx23",
+      "imageUrl": "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14",
+      "status": "pending",
+      "soundcheckDate": "2025-06-27",
+      "soundcheckTime": "14:59",
+      "capacity": 233,
+      "availableTickets": 233,
+      "adminName": "Oscar Antayhua",
+      "adminId": 1,
+      "adminContact": "23",
+      "requirements": "23",
+      "description": "23",
+      "payment": "23",
+      "duration": 23,
+      "genre": "Pop",
+      "equipment": "23"
+    },
+    {
+      "id": 4,
+      "promoterId": 1,
+      "name": "123",
+      "date": "2025-06-20",
+      "time": "15:56",
+      "publishDate": "2025-06-07",
+      "location": "123",
+      "imageUrl": "https://i.ibb.co/zy4NkPr/769ee7a45873.webp",
+      "status": "signed",
+      "soundcheckDate": "2025-06-11",
+      "soundcheckTime": "13:56",
+      "capacity": 323,
+      "availableTickets": 323,
+      "adminName": "Oscar Antayhua",
+      "adminId": 1,
+      "adminContact": "123123",
+      "requirements": "3123",
+      "description": "32131",
+      "payment": "323",
+      "duration": 2,
+      "genre": "Pop",
+      "equipment": "123123",
+      "contract": {
+        "userId": 3,
+        "signature": "Oscar Castillo-2025-06-07T22:45:54.268Z",
+        "signedDate": "2025-06-07T22:45:54.429Z",
+        "status": "signed"
+      }
     }
   ],
   "riders": [],
@@ -99,6 +183,54 @@
         }
       ],
       "id": 1
+    },
+    {
+      "amount": 323,
+      "eventId": "4",
+      "musicoId": 3,
+      "promotorId": 1,
+      "status": "PENDING",
+      "paymentMethod": "bank_transfer",
+      "bankInfo": {
+        "accountNumber": "****1234",
+        "bankName": "Banco de Crédito",
+        "accountType": "savings"
+      },
+      "description": "Pago por presentación de Oscar Castillo en 123",
+      "createdAt": "2025-06-07T22:45:54.368Z",
+      "updatedAt": "2025-06-07T22:45:54.368Z",
+      "statusHistory": [
+        {
+          "status": "PENDING",
+          "timestamp": "2025-06-07T22:45:54.368Z",
+          "comment": "Pago creado después de firma de contrato"
+        }
+      ],
+      "id": 2
+    },
+    {
+      "amount": 123,
+      "eventId": "2",
+      "musicoId": 3,
+      "promotorId": 1,
+      "status": "PENDING",
+      "paymentMethod": "bank_transfer",
+      "bankInfo": {
+        "accountNumber": "****1234",
+        "bankName": "Banco de Crédito",
+        "accountType": "savings"
+      },
+      "description": "Pago por presentación de Oscar Castillo en xd",
+      "createdAt": "2025-06-07T22:45:59.301Z",
+      "updatedAt": "2025-06-07T22:45:59.301Z",
+      "statusHistory": [
+        {
+          "status": "PENDING",
+          "timestamp": "2025-06-07T22:45:59.301Z",
+          "comment": "Pago creado después de firma de contrato"
+        }
+      ],
+      "id": 3
     }
   ],
   "event_applicants": [
@@ -109,7 +241,8 @@
       "status": "rejected",
       "applicationDate": "2025-05-28T23:40:48.495Z",
       "contractSigned": false,
-      "riderUploaded": false
+      "riderUploaded": false,
+      "isInvited": false
     },
     {
       "id": 2,
@@ -118,7 +251,100 @@
       "status": "signed",
       "applicationDate": "2025-05-28T23:43:34.053Z",
       "contractSigned": true,
-      "riderUploaded": false
+      "riderUploaded": false,
+      "isInvited": false
+    },
+    {
+      "id": 3,
+      "userId": 3,
+      "eventId": 2,
+      "status": "signed",
+      "applicationDate": "2025-06-06T20:12:22.412Z",
+      "contractSigned": true,
+      "riderUploaded": false,
+      "isInvited": true
+    },
+    {
+      "id": 4,
+      "userId": 3,
+      "eventId": 4,
+      "status": "signed",
+      "applicationDate": "2025-06-07T19:58:00.942Z",
+      "contractSigned": true,
+      "riderUploaded": false,
+      "isInvited": true
+    },
+    {
+      "id": 5,
+      "userId": 3,
+      "eventId": 3,
+      "status": "rejected",
+      "applicationDate": "2025-06-07T19:58:53.593Z",
+      "contractSigned": false,
+      "riderUploaded": false,
+      "isInvited": false
+    }
+  ],
+  "invitations": [
+    {
+      "id": 1,
+      "eventId": 2,
+      "eventName": "xd",
+      "eventDate": "2025-06-26T10:19:00.000Z",
+      "eventLocation": "xd",
+      "eventImageUrl": "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14",
+      "promoterId": 1,
+      "promoterName": "Oscar Antayhua",
+      "artistId": 3,
+      "artistName": "Oscar Castillo",
+      "message": "Te invito a tocar en mi evento",
+      "status": "pending",
+      "createdAt": "2024-12-19T10:00:00.000Z",
+      "updatedAt": "2024-12-19T10:00:00.000Z"
+    },
+    {
+      "eventId": 2,
+      "eventName": "xd",
+      "eventDate": "2025-06-26",
+      "eventLocation": "xd",
+      "eventImageUrl": "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14",
+      "promoterId": 1,
+      "promoterName": "Oscar Antayhua",
+      "artistId": 3,
+      "artistName": "Oscar Castillo",
+      "message": "dx",
+      "status": "accepted",
+      "id": 2,
+      "updatedAt": "2025-06-06T20:12:22.378Z"
+    },
+    {
+      "eventId": 2,
+      "eventName": "xd",
+      "eventDate": "2025-06-26",
+      "eventLocation": "xd",
+      "eventImageUrl": "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14",
+      "promoterId": 1,
+      "promoterName": "Oscar Antayhua",
+      "artistId": 4,
+      "artistName": "musico1",
+      "message": "",
+      "status": "pending",
+      "id": 3
+    },
+    {
+      "eventId": 4,
+      "eventName": "123",
+      "eventDate": "2025-06-20",
+      "eventLocation": "123",
+      "eventImageUrl": "https://i.ibb.co/zy4NkPr/769ee7a45873.webp",
+      "promoterId": 1,
+      "promoterName": "Oscar Antayhua",
+      "artistId": 3,
+      "artistName": "Oscar Castillo",
+      "message": "",
+      "status": "accepted",
+      "id": 4,
+      "updatedAt": "2025-06-07T19:58:00.901Z"
     }
   ]
 }

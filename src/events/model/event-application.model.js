@@ -62,7 +62,8 @@ export class EventApplicant {
         status = 'pending', // Estados: pending, contract_pending, signed, rejected
         applicationDate = new Date().toISOString(),
         contractSigned = false,
-        riderUploaded = false
+        riderUploaded = false,
+        isInvited = false // Indica si la postulación proviene de una invitación
     } = {}) {
         this.id = id
         this.userId = userId
@@ -71,6 +72,7 @@ export class EventApplicant {
         this.applicationDate = applicationDate
         this.contractSigned = contractSigned
         this.riderUploaded = riderUploaded
+        this.isInvited = isInvited
     }
 }
 

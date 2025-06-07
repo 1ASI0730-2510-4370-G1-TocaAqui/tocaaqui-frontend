@@ -3,11 +3,13 @@ import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { EventApplicationService } from '../services/event-application.service';
+import { InvitationService } from '../services/invitation.service';
 import EventCard from '../components/event-card.component.vue';
 
 const router = useRouter();
 const { t } = useI18n();
 const eventApplicationService = new EventApplicationService();
+const invitationService = new InvitationService();
 
 const events = ref([]);
 const loading = ref(true);
@@ -15,6 +17,7 @@ const error = ref(null);
 const selectedEvent = ref(null);
 const showEventDialog = ref(false);
 const userApplications = ref([]);
+const userInvitations = ref([]);
 
 // Obtener usuario del localStorage
 const user = ref(null);
@@ -95,6 +98,10 @@ const fetchEvents = async () => {
     if (user.value?.id) {
       const applicants = await eventApplicationService.getUserApplications(user.value.id);
       userApplications.value = applicants;
+      
+      // Obtener las invitaciones del usuario actual
+      const invitations = await invitationService.getInvitationsByArtist(user.value.id);
+      userInvitations.value = invitations;
     }
   } catch (err) {
     error.value = err.message;
@@ -138,6 +145,21 @@ const hasApplied = (eventId) => {
   );
 };
 
+const isInvited = (eventId) => {
+  return userInvitations.value.some(invitation => 
+    invitation.eventId === eventId
+  );
+};
+
+const getEventStatus = (eventId) => {
+  if (isInvited(eventId)) {
+    return 'invited';
+  } else if (hasApplied(eventId)) {
+    return 'applied';
+  }
+  return 'available';
+};
+
 const applyToEvent = async () => {
   try {
     if (!user.value?.id || !selectedEvent.value?.id) return;
@@ -148,6 +170,10 @@ const applyToEvent = async () => {
     // Actualizar la lista de postulaciones
     const applicants = await eventApplicationService.getUserApplications(user.value.id);
     userApplications.value = applicants;
+    
+    // Actualizar la lista de invitaciones (por si cambió algo)
+    const invitations = await invitationService.getInvitationsByArtist(user.value.id);
+    userInvitations.value = invitations;
   } catch (error) {
     console.error('Error applying to event:', error);
   }
@@ -253,10 +279,10 @@ const applyToEvent = async () => {
                 style="object-fit: cover;"
               ></img>
               <pv-tag 
-                v-if="hasApplied(event.id)" 
-                severity="info" 
+                v-if="getEventStatus(event.id) !== 'available'" 
+                :severity="getEventStatus(event.id) === 'invited' ? 'success' : 'info'"
                 class="absolute top-0 right-0 m-2"
-                value="Postulado"
+                :value="getEventStatus(event.id) === 'invited' ? $t('eventApplications.invited') : $t('eventApplications.alreadyApplied')"
               ></pv-tag>
             </div>
           </template>
@@ -279,9 +305,10 @@ const applyToEvent = async () => {
               </div>
               <div class="flex justify-content-end mt-3">
                 <pv-button 
-                  :label="hasApplied(event.id) ? $t('eventApplications.alreadyApplied') : $t('eventApplications.viewInfo')"
-                  :class="{'p-button-secondary': hasApplied(event.id)}"
-                  :disabled="hasApplied(event.id)"
+                  :label="getEventStatus(event.id) === 'available' ? $t('eventApplications.viewInfo') : 
+                          (getEventStatus(event.id) === 'invited' ? $t('eventApplications.invited') : $t('eventApplications.alreadyApplied'))"
+                  :class="{'p-button-secondary': getEventStatus(event.id) !== 'available'}"
+                  :disabled="getEventStatus(event.id) !== 'available'"
                   @click="viewEventDetail(event)"
                 ></pv-button>
               </div>
@@ -364,7 +391,18 @@ const applyToEvent = async () => {
         </div>
         
         <div class="col-12 flex justify-content-end mt-4">
+          <div v-if="getEventStatus(selectedEvent?.id) === 'invited'" class="text-center">
+            <pv-message severity="success" :closable="false">
+              {{ $t('eventApplications.invitedMessage') }}
+            </pv-message>
+          </div>
+          <div v-else-if="getEventStatus(selectedEvent?.id) === 'applied'" class="text-center">
+            <pv-message severity="info" :closable="false">
+              {{ $t('eventApplications.appliedMessage') }}
+            </pv-message>
+          </div>
           <pv-button 
+            v-else
             :label="$t('eventApplications.apply')"
             icon="pi pi-check"
             @click="applyToEvent"

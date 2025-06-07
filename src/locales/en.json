@@ -1,9 +1,9 @@
 {
   "evaluations": {
     "title": "Evaluations",
-    "paymentCompletedInfo": "You can only evaluate events where payment has been completed and the event has already finished.",
+    "paymentCompletedInfo": "You can only evaluate events where payment has been completed.",
     "noEventsToEvaluate": "No events available to evaluate",
-    "noEventsDescription": "Events will appear here once they have finished and payment has been completed.",
+    "noEventsDescription": "Events will appear here once payment has been completed.",
     "filters": {
       "all": "All",
       "done": "Completed",
@@ -56,7 +56,8 @@
     "status": "State",
     "required": "This field is required",
     "clear": "Clear",
-    "apply": "Apply"
+    "apply": "Apply",
+    "viewProfile": "View profile"
   },
   "schedule": {
     "confirmed": "Confirmed Events",
@@ -68,6 +69,7 @@
     "profile": "My Profile",
     "applications": "Applications",
     "search": "Search Events",
+    "searchArtists": "Search Artists",
     "agenda": "Schedule",
     "evaluations": "Evaluations",
     "payments": "Payments"
@@ -206,9 +208,14 @@
     "noEvents": "No events available",
     "viewInfo": "View info",
     "apply": "Apply",
+    "invited": "Invited",
+    "alreadyApplied": "Already applied",
+    "invitedMessage": "You have been invited to this event. Check your invitations section to accept or decline.",
+    "appliedMessage": "You have already applied to this event.",
     "viewEvent": "View event",
     "viewApplication": "View application",
     "applicants": "Applicants",
+    "invitations": "Invitations",
     "noApplicants": "No applicants for this event",
     "eventNotFound": "Event not found",
     "viewProfile": "View profile",
@@ -435,6 +442,43 @@
     "error": "Invalid credentials",
     "noAccount": "Don't have an account?",
     "register": "Register"
+  },
+  "artistSearch": {
+    "searchArtists": "Search Artists",
+    "searchPlaceholder": "Search by name",
+    "genrePlaceholder": "Select genre",
+    "typePlaceholder": "Select type",
+    "contact": "Contact",
+    "artistDetails": "Artist Details",
+    "noResults": "No artists found",
+    "noResultsDescription": "Try adjusting the search filters to find more artists."
+  },
+  "invitations": {
+    "title": "My Invitations",
+    "noInvitations": "You have no pending invitations",
+    "noInvitationsDescription": "Invitations from promoters will appear here when you receive them.",
+    "message": "Message",
+    "viewInfo": "View information",
+    "accept": "Sign contract",
+    "reject": "Reject",
+    "eventDetails": "Event Details",
+    "promoter": "Promoter",
+    "invite": "Invite",
+    "inviteArtist": "Invite Artist",
+    "invitingTo": "Inviting",
+    "selectEvent": "Select event",
+    "selectEventPlaceholder": "Choose one of your events",
+    "noEventsAvailable": "You have already invited this artist to all your events",
+    "messagePlaceholder": "Write a personalized message for the artist...",
+    "sendInvitation": "Send Invitation",
+    "alreadyInvited": "Already invited",
+    "alreadyInvitedInfo": "You have already invited this artist to {count} event(s).",
+    "eventAlreadyInvited": "You have already invited this artist to this event.",
+    "status": {
+      "pending": "Pending",
+      "accepted": "Accepted", 
+      "rejected": "Rejected"
+    }
   },
   "register": {
     "title": "Create Account",

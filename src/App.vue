@@ -16,6 +16,7 @@ const { t } = useI18n();
 const isAuthenticated = ref(false);
 const userName = ref('');
 const userImage = ref('');
+const userRole = ref('');
 const isUserMenuVisible = ref(false);
 const isSidebarVisible = ref(false);
 const loginService = new LoginService();
@@ -53,6 +54,7 @@ const handleLogout = () => {
   isAuthenticated.value = false;
   userName.value = '';
   userImage.value = '';
+  userRole.value = '';
   router.push('/login');
 };
 
@@ -75,12 +77,14 @@ const handleLoginSuccess = (event) => {
   isAuthenticated.value = true;
   userName.value = user.name;
   userImage.value = user.imageUrl;
+  userRole.value = user.role;
 };
 
 const handleLogoutEvent = () => {
   isAuthenticated.value = false;
   userName.value = '';
   userImage.value = '';
+  userRole.value = '';
   router.push('/login');
 };
 
@@ -100,6 +104,7 @@ onMounted(() => {
     isAuthenticated.value = true;
     userName.value = user.name;
     userImage.value = user.imageUrl;
+    userRole.value = user.role;
   }
   
   document.addEventListener('click', handleClickOutside);
@@ -128,7 +133,8 @@ onUnmounted(() => {
 
       <!-- Sidebar -->
       <Sidebar 
-        :user-name="userName" 
+        :user-name="userName"
+        :user-role="userRole"
         @close="toggleSidebar"
         :class="['sidebar', { 'sidebar-active': isSidebarVisible }]"
       />

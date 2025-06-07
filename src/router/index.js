@@ -23,9 +23,24 @@ const routes = [
     },
     {
         path: '/search',
+        name: 'Search',
+        redirect: to => {
+            const user = JSON.parse(localStorage.getItem('user'));
+            return user?.role === 'promotor' ? '/search/artists' : '/search/events';
+        },
+        meta: { requiresAuth: true }
+    },
+    {
+        path: '/search/events',
         name: 'EventSearch',
         component: () => import('../events/pages/musician-event-search.component.vue'),
         meta: { requiresAuth: true }
+    },
+    {
+        path: '/search/artists',
+        name: 'ArtistSearch',
+        component: () => import('../events/pages/promoter-artist-search.component.vue'),
+        meta: { requiresAuth: true, role: 'promotor' }
     },
     {
         path: '/agenda',
@@ -89,11 +104,17 @@ const routes = [
         component: () => import('../events/pages/event-applications.component.vue'),
         meta: { requiresAuth: true }
     },
-   {
+       {
         path: '/applications/:id',
         name: 'EventApplicationDetail',
         component: () => import('../events/pages/event-application-detail.component.vue'),
         meta: { requiresAuth: true }
+    },
+    {
+        path: '/invitations',
+        name: 'Invitations',
+        component: () => import('../events/components/artist-invitations.component.vue'),
+        meta: { requiresAuth: true, role: 'musico' }
     },
    {
         path: '/entrada/producer',
