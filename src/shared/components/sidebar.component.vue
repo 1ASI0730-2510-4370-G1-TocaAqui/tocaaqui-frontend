@@ -30,12 +30,12 @@ export default {
       if (props.userRole === 'musico') {
         return [
           ...baseItems,
-          { label: t('menu.applications'), icon: 'pi pi-file', route: '/applications' },
+      { label: t('menu.applications'), icon: 'pi pi-file', route: '/applications' },
           { label: t('invitations.title'), icon: 'pi pi-envelope', route: '/invitations' },
-          { label: t('menu.search'), icon: 'pi pi-search', route: '/search' },
-          { label: t('menu.agenda'), icon: 'pi pi-calendar', route: '/agenda' },
-          { label: t('menu.evaluations'), icon: 'pi pi-star', route: '/evaluations' },
-          { label: t('menu.payments'), icon: 'pi pi-money-bill', route: '/payments' }
+      { label: t('menu.search'), icon: 'pi pi-search', route: '/search' },
+      { label: t('menu.agenda'), icon: 'pi pi-calendar', route: '/agenda' },
+      { label: t('menu.evaluations'), icon: 'pi pi-star', route: '/evaluations' },
+      { label: t('menu.payments'), icon: 'pi pi-money-bill', route: '/payments' }
         ]
       } else if (props.userRole === 'promotor') {
         return [

@@ -28,7 +28,7 @@ export class EvaluationService {
             // 1. Obtener todas las postulaciones del músico con contrato firmado
             const applicantsResponse = await httpInstance.get('/event_applicants');
             const musicianApplications = applicantsResponse.data.filter(app => 
-                app.userId === musicianId && app.status === 'signed'
+                Number(app.userId) === Number(musicianId) && app.status === 'signed'
             );
 
             if (musicianApplications.length === 0) {
@@ -38,24 +38,24 @@ export class EvaluationService {
             // 2. Obtener todos los pagos completados
             const paymentsResponse = await httpInstance.get('/payments');
             const completedPayments = paymentsResponse.data.filter(payment => 
-                payment.status === 'COMPLETED' && payment.musicoId === musicianId
+                payment.status === 'COMPLETED' && Number(payment.musicoId) === Number(musicianId)
             );
 
             // 3. Obtener eventos donde el músico tocó Y el pago se completó
-            const completedEventIds = completedPayments.map(payment => payment.eventId);
+            const completedEventIds = completedPayments.map(payment => Number(payment.eventId));
             const eventsResponse = await httpInstance.get('/events');
             const completedEvents = eventsResponse.data.filter(event => 
-                completedEventIds.includes(event.id)
+                completedEventIds.includes(Number(event.id))
             );
 
             // 4. Verificar que no hayan sido evaluados ya
             const evaluationsResponse = await httpInstance.get('/evaluations');
             const existingEvaluations = evaluationsResponse.data.filter(evaluation => 
-                evaluation.userId === musicianId && evaluation.type === 'venue'
+                Number(evaluation.userId) === Number(musicianId) && evaluation.type === 'venue'
             );
-            const evaluatedEventIds = existingEvaluations.map(evaluation => evaluation.eventId);
+            const evaluatedEventIds = existingEvaluations.map(evaluation => Number(evaluation.eventId));
 
-            return completedEvents.filter(event => !evaluatedEventIds.includes(event.id));
+            return completedEvents.filter(event => !evaluatedEventIds.includes(Number(event.id)));
         } catch (error) {
             console.error('Error fetching completed events for musician:', error);
             throw error;
@@ -67,7 +67,7 @@ export class EvaluationService {
             // 1. Obtener todos los eventos del promotor
             const eventsResponse = await httpInstance.get('/events');
             const promoterEvents = eventsResponse.data.filter(event => 
-                event.adminId === promoterId
+                Number(event.adminId) === Number(promoterId)
             );
 
             if (promoterEvents.length === 0) {
@@ -77,37 +77,52 @@ export class EvaluationService {
             // 2. Obtener todos los pagos completados para eventos del promotor
             const paymentsResponse = await httpInstance.get('/payments');
             const completedPayments = paymentsResponse.data.filter(payment => 
-                payment.status === 'COMPLETED' && payment.promotorId === promoterId
+                payment.status === 'COMPLETED' && Number(payment.promotorId) === Number(promoterId)
             );
 
             // 3. Filtrar eventos que tienen pagos completados
-            const completedEventIds = completedPayments.map(payment => payment.eventId);
+            const completedEventIds = completedPayments.map(payment => Number(payment.eventId));
             const completedEvents = promoterEvents.filter(event => 
-                completedEventIds.includes(event.id)
+                completedEventIds.includes(Number(event.id))
             );
 
-            // 4. Enriquecer con información de los artistas que tocaron
+            // 4. Obtener evaluaciones existentes de artistas para filtrar duplicados
+            const existingEvaluations = await this.getEvaluatedArtists();
+            const existingEvaluationKeys = existingEvaluations
+                .filter(evaluation => Number(evaluation.promoterId) === Number(promoterId))
+                .map(evaluation => `${evaluation.eventId}-${evaluation.musicianId}`);
+
+            // 5. Enriquecer con información de los artistas que tocaron (excluyendo ya evaluados)
             const eventsWithArtists = await Promise.all(completedEvents.map(async (event) => {
                 try {
                     // Obtener postulaciones aceptadas para este evento
                     const applicantsResponse = await httpInstance.get('/event_applicants');
                     const acceptedApplicants = applicantsResponse.data.filter(app => 
-                        app.eventId === event.id && app.status === 'signed'
+                        Number(app.eventId) === Number(event.id) && app.status === 'signed'
                     );
 
-                    // Obtener información de los artistas
+                    // Obtener información de los artistas y filtrar los ya evaluados
                     const artists = await Promise.all(acceptedApplicants.map(async (applicant) => {
-                        const userResponse = await httpInstance.get(`/users/${applicant.userId}`);
-                        return {
-                            userId: applicant.userId,
-                            name: userResponse.data.name,
-                            imageUrl: userResponse.data.imageUrl
-                        };
+                        const evaluationKey = `${event.id}-${applicant.userId}`;
+                        
+                        // Solo incluir si no ha sido evaluado todavía
+                        if (!existingEvaluationKeys.includes(evaluationKey)) {
+                            const userResponse = await httpInstance.get(`/users/${applicant.userId}`);
+                            return {
+                                userId: applicant.userId,
+                                name: userResponse.data.name,
+                                imageUrl: userResponse.data.imageUrl
+                            };
+                        }
+                        return null;
                     }));
+
+                    // Filtrar artistas nulos (ya evaluados)
+                    const filteredArtists = artists.filter(artist => artist !== null);
 
                     return {
                         ...event,
-                        artists
+                        artists: filteredArtists
                     };
                 } catch (error) {
                     console.error('Error enriching event with artists:', error);
@@ -118,7 +133,12 @@ export class EvaluationService {
                 }
             }));
 
-            return eventsWithArtists;
+            // 6. Filtrar eventos que tienen al menos un artista para evaluar
+            const eventsWithPendingEvaluations = eventsWithArtists.filter(event => 
+                event.artists && event.artists.length > 0
+            );
+
+            return eventsWithPendingEvaluations;
         } catch (error) {
             console.error('Error fetching completed events for promoter:', error);
             throw error;
@@ -198,11 +218,11 @@ export class EvaluationService {
             
             // 2. Obtener todos los eventos del promotor
             const eventsResponse = await httpInstance.get('/events');
-            const promoterEvents = eventsResponse.data.filter(event => event.adminId === promoterId);
+            const promoterEvents = eventsResponse.data.filter(event => Number(event.adminId) === Number(promoterId));
             
             // 3. Filtrar las evaluaciones que corresponden a los eventos del promotor
             const promoterEvaluations = evaluations.filter(evaluation => 
-                promoterEvents.some(event => event.id === evaluation.eventId)
+                promoterEvents.some(event => Number(event.id) === Number(evaluation.eventId))
             );
             
             return promoterEvaluations;
@@ -216,7 +236,7 @@ export class EvaluationService {
         try {
             // 1. Obtener todas las evaluaciones de artistas
             const evaluations = await this.getEvaluatedArtists();
-            const promoterEvaluations = evaluations.filter(evaluation => evaluation.promoterId === promoterId);
+            const promoterEvaluations = evaluations.filter(evaluation => Number(evaluation.promoterId) === Number(promoterId));
 
             // 2. Obtener información de los artistas y eventos
             const enrichedEvaluations = await Promise.all(promoterEvaluations.map(async (evaluation) => {

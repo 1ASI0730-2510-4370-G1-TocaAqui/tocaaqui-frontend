@@ -29,7 +29,25 @@
     },
     "submit": "Save Evaluation",
     "successMessage": "Evaluation saved successfully",
-    "errorMessage": "There was an error saving the evaluation"
+    "errorMessage": "There was an error saving the evaluation",
+    "artistEvaluations": "Evaluate Artists",
+    "evaluatedArtists": "Evaluated Artists",
+    "viewEvaluatedArtists": "View evaluated artists",
+    "evaluate": "Evaluate",
+    "viewEvaluated": "View Evaluated",
+    "artists": "Artists",
+    "errorLoadingArtists": "Error loading artist evaluations",
+    "venueEvaluation": {
+      "title": "Evaluate Venues",
+      "description": "Evaluate the venues where you have performed. Your opinion helps other musicians make better decisions."
+    },
+    "artistEvaluation": {
+      "title": "Evaluate Artists",
+      "description": "Evaluate the artists who have performed at your events. Help other promoters learn about the professionalism of artists.",
+      "placeholder": "Evaluate the artist's performance at {event}",
+      "success": "Artist evaluation saved successfully",
+      "error": "Error saving artist evaluation"
+    }
   },
   "common": {
     "add": "Add",
@@ -63,6 +81,26 @@
     "confirmed": "Confirmed Events",
     "noConfirmed": "No confirmed events yet",
     "year": "2025"
+  },
+  "profile": {
+    "title": "User Profile",
+    "name": "Name",
+    "email": "Email",
+    "role": "Role",
+    "password": "Password",
+    "editProfile": "Edit Profile",
+    "successUpdate": "Profile updated successfully",
+    "errorUpdate": "Could not update profile",
+    "genre": "Musical genre",
+    "type": "Type",
+    "description": "Description",
+    "soloist": "Soloist",
+    "band": "Band",
+    "notSpecified": "Not specified",
+    "changePhoto": "Change photo",
+    "uploadPhoto": "Upload photo",
+    "invalidImageType": "The selected file is not a valid image",
+    "imageTooLarge": "The image is too large. Maximum allowed size is 5MB"
   },
   "menu": {
     "dashboard": "Dashboard",
@@ -288,7 +326,12 @@
       "uploadLabel": "Upload",
       "cancelLabel": "Cancel",
       "dragDropText": "Drag and drop the PDF file here or click to select it",
-      "sizeNote": "* File must be in PDF format and must not exceed 5MB"
+      "sizeNote": "* File must be in PDF format and must not exceed 5MB",
+      "upload": "Upload Technical Rider",
+      "uploadSuccess": "Technical rider uploaded successfully",
+      "uploadError": "Error uploading technical rider",
+      "invalidType": "File must be in PDF format",
+      "invalidSize": "File must not exceed 5MB"
     }
   },
   "calendar": {
@@ -390,7 +433,9 @@
         "pending": "Pending",
         "confirmed": "Confirmed",
         "accepted": "Accepted",
-        "rejected": "Rejected"
+        "rejected": "Rejected",
+        "signed": "Contract Signed",
+        "active": "Active"
       }
     }
   },

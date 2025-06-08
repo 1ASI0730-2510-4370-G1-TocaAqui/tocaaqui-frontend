@@ -104,7 +104,7 @@ const routes = [
         component: () => import('../events/pages/event-applications.component.vue'),
         meta: { requiresAuth: true }
     },
-       {
+   {
         path: '/applications/:id',
         name: 'EventApplicationDetail',
         component: () => import('../events/pages/event-application-detail.component.vue'),

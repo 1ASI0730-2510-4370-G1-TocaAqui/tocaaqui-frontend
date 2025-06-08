@@ -529,7 +529,9 @@
         "pending": "Pendiente",
         "confirmed": "Confirmado",
         "accepted": "Aceptado",
-        "rejected": "Rechazado"
+        "rejected": "Rechazado",
+        "signed": "Contrato Firmado",
+        "active": "Activo"
       }
     }
   },

@@ -310,7 +310,7 @@ export default {
                 // Verificar si ya hay un postulante con contrato firmado
                 const signedApplicant = eventApplicants.find(app => app.status === 'signed');
                 hasAcceptedApplicant.value = !!signedApplicant;
-
+                
                 if (signedApplicant) {
                     console.log('Artista con contrato firmado encontrado:', signedApplicant);
                     // Buscar el pago asociado al artista con contrato firmado
@@ -318,8 +318,8 @@ export default {
                     console.log('Pagos encontrados:', payments);
                     if (payments && payments.length > 0) {
                         payment.value = payments.find(p => 
-                            p.eventId === Number(eventId) && 
-                            p.musicoId === signedApplicant.userId
+                            Number(p.eventId) === Number(eventId) && 
+                            Number(p.musicoId) === Number(signedApplicant.userId)
                         );
                         console.log('Pago para este evento:', payment.value);
                     }

@@ -1,12 +1,14 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useToast } from 'primevue/usetoast';
 import { EvaluationService } from '../services/evaluation.service';
 import { useRouter } from 'vue-router';
 import VenueRating from '../components/venue-rating.component.vue';
 
 const router = useRouter();
 const { t } = useI18n();
+const toast = useToast();
 const evaluationService = new EvaluationService();
 
 const events = ref([]);
@@ -54,10 +56,26 @@ const saveEvaluation = async () => {
     };
 
     await evaluationService.saveEvaluation(evaluationData);
-    console.log("Evaluación creada con éxito.");
+    
+    // Mostrar mensaje de éxito
+    toast.add({
+      severity: 'success',
+      summary: '¡Evaluación guardada!',
+      detail: `Has evaluado exitosamente el evento "${selectedEvent.value.name}"`,
+      life: 4000
+    });
+    
     cancelEvaluation(); // Limpia el estado después de guardar
   } catch (error) {
     console.error("Error saving evaluation:", error);
+    
+    // Mostrar mensaje de error
+    toast.add({
+      severity: 'error',
+      summary: 'Error al guardar',
+      detail: 'No se pudo guardar la evaluación. Inténtalo de nuevo.',
+      life: 4000
+    });
   }
 };
 
@@ -71,6 +89,7 @@ onMounted(() => {
 </script>
 
 <template>
+  <pv-toast />
   <div class="p-4">
     <pv-button
         label="Ver eventos evaluados"

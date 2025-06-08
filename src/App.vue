@@ -133,7 +133,7 @@ onUnmounted(() => {
 
       <!-- Sidebar -->
       <Sidebar 
-        :user-name="userName"
+        :user-name="userName" 
         :user-role="userRole"
         @close="toggleSidebar"
         :class="['sidebar', { 'sidebar-active': isSidebarVisible }]"

@@ -311,9 +311,9 @@ export class EventApplicationService {
             const now = new Date().toISOString();
             const paymentData = {
                 amount: Number(event.payment),
-                eventId: eventId,
-                musicoId: userId,
-                promotorId: event.adminId,
+                eventId: Number(eventId),
+                musicoId: Number(userId),
+                promotorId: Number(event.adminId),
                 status: "PENDING",
                 paymentMethod: "bank_transfer",
                 bankInfo: {
@@ -337,13 +337,13 @@ export class EventApplicationService {
             await httpInstance.post('/payments', paymentData);
 
             // 4. Actualizar el estado de la postulación a 'signed' y marcar contrato como firmado
-            await httpInstance.patch(
-                `${this.applicantsEndpoint}/${applicant.id}`,
-                {
-                    status: 'signed',
-                    contractSigned: true
-                }
-            );
+                await httpInstance.patch(
+                    `${this.applicantsEndpoint}/${applicant.id}`,
+                    {
+                        status: 'signed',
+                        contractSigned: true
+                    }
+                );
 
             // 5. Crear el contrato como un campo más en el evento
             const contract = {

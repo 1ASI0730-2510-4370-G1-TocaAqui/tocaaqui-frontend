@@ -64,10 +64,10 @@ export class PaymentService {
             // 3. Filtrar pagos según el rol del usuario
             const userPayments = payments.filter(payment => {
                 if (user.role === 'musico') {
-                    return payment.musicoId === Number(userId);
+                    return Number(payment.musicoId) === Number(userId);
                 }
                 if (user.role === 'promotor') {
-                    return payment.promotorId === Number(userId);
+                    return Number(payment.promotorId) === Number(userId);
                 }
                 return false;
             });

@@ -1,5 +1,78 @@
 {
-  "evaluations": [],
+  "evaluations": [
+    {
+      "eventId": 2,
+      "musicianId": 3,
+      "promoterId": 1,
+      "rating": 5,
+      "comment": "xd",
+      "artistChecklist": [
+        {
+          "id": "punctual",
+          "label": "Pago puntual",
+          "value": true
+        }
+      ],
+      "type": "artist",
+      "status": "evaluated",
+      "id": 1
+    },
+    {
+      "eventId": 4,
+      "musicianId": 3,
+      "promoterId": 1,
+      "rating": 3,
+      "comment": "dx",
+      "artistChecklist": [
+        {
+          "id": "punctual",
+          "label": "Pago puntual",
+          "value": true
+        }
+      ],
+      "type": "artist",
+      "status": "evaluated",
+      "id": 2
+    },
+    {
+      "userId": 3,
+      "eventId": 2,
+      "eventName": "xd",
+      "eventDate": "2025-06-26",
+      "eventLocation": "xd",
+      "eventImageUrl": "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14",
+      "rating": 3,
+      "comment": "asd",
+      "suggestions": "xd",
+      "type": "venue",
+      "promoterId": 1,
+      "name": "xd",
+      "date": "2025-06-26",
+      "location": "xd",
+      "imageUrl": "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14",
+      "status": "evaluated",
+      "id": 3
+    },
+    {
+      "userId": 3,
+      "eventId": 4,
+      "eventName": "123",
+      "eventDate": "2025-06-20",
+      "eventLocation": "123",
+      "eventImageUrl": "https://i.ibb.co/zy4NkPr/769ee7a45873.webp",
+      "rating": 5,
+      "comment": "xd",
+      "suggestions": "dx",
+      "type": "venue",
+      "promoterId": 1,
+      "name": "123",
+      "date": "2025-06-20",
+      "location": "123",
+      "imageUrl": "https://i.ibb.co/zy4NkPr/769ee7a45873.webp",
+      "status": "evaluated",
+      "id": 4
+    }
+  ],
   "evaluation_checklist": [],
   "users": [
     {
@@ -189,7 +262,7 @@
       "eventId": "4",
       "musicoId": 3,
       "promotorId": 1,
-      "status": "PENDING",
+      "status": "COMPLETED",
       "paymentMethod": "bank_transfer",
       "bankInfo": {
         "accountNumber": "****1234",
@@ -198,22 +271,25 @@
       },
       "description": "Pago por presentación de Oscar Castillo en 123",
       "createdAt": "2025-06-07T22:45:54.368Z",
-      "updatedAt": "2025-06-07T22:45:54.368Z",
+      "updatedAt": "2025-06-07T23:35:38.079Z",
       "statusHistory": [
         {
-          "status": "PENDING",
-          "timestamp": "2025-06-07T22:45:54.368Z",
-          "comment": "Pago creado después de firma de contrato"
+          "status": "COMPLETED",
+          "timestamp": "2025-06-07T23:35:38.079Z",
+          "comment": "Pago liberado después de confirmar el evento"
         }
       ],
-      "id": 2
+      "id": 2,
+      "eventName": "123",
+      "musicoName": "Oscar Castillo",
+      "promotorName": "Oscar Antayhua"
     },
     {
       "amount": 123,
       "eventId": "2",
       "musicoId": 3,
       "promotorId": 1,
-      "status": "PENDING",
+      "status": "COMPLETED",
       "paymentMethod": "bank_transfer",
       "bankInfo": {
         "accountNumber": "****1234",
@@ -222,15 +298,18 @@
       },
       "description": "Pago por presentación de Oscar Castillo en xd",
       "createdAt": "2025-06-07T22:45:59.301Z",
-      "updatedAt": "2025-06-07T22:45:59.301Z",
+      "updatedAt": "2025-06-07T23:35:52.979Z",
       "statusHistory": [
         {
-          "status": "PENDING",
-          "timestamp": "2025-06-07T22:45:59.301Z",
-          "comment": "Pago creado después de firma de contrato"
+          "status": "COMPLETED",
+          "timestamp": "2025-06-07T23:35:52.979Z",
+          "comment": "Pago liberado después de confirmar el evento"
         }
       ],
-      "id": 3
+      "id": 3,
+      "eventName": "xd",
+      "musicoName": "Oscar Castillo",
+      "promotorName": "Oscar Antayhua"
     }
   ],
   "event_applicants": [
@@ -283,6 +362,16 @@
       "contractSigned": false,
       "riderUploaded": false,
       "isInvited": false
+    },
+    {
+      "id": 6,
+      "userId": 3,
+      "eventId": 2,
+      "status": "contract_pending",
+      "applicationDate": "2025-06-07T22:49:33.724Z",
+      "contractSigned": false,
+      "riderUploaded": false,
+      "isInvited": true
     }
   ],
   "invitations": [
@@ -298,9 +387,9 @@
       "artistId": 3,
       "artistName": "Oscar Castillo",
       "message": "Te invito a tocar en mi evento",
-      "status": "pending",
+      "status": "accepted",
       "createdAt": "2024-12-19T10:00:00.000Z",
-      "updatedAt": "2024-12-19T10:00:00.000Z"
+      "updatedAt": "2025-06-07T22:49:33.693Z"
     },
     {
       "eventId": 2,

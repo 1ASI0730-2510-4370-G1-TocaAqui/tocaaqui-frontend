@@ -2,12 +2,14 @@
 import { ref, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
+import { useToast } from 'primevue/usetoast';
 import { EvaluationService } from '../services/evaluation.service';
 import { EventApplicationService } from '../../events/services/event-application.service';
 import ArtistRating from '../components/artist-rating.component.vue';
 
 const router = useRouter();
 const { t } = useI18n();
+const toast = useToast();
 const evaluationService = new EvaluationService();
 const eventApplicationService = new EventApplicationService();
 
@@ -55,10 +57,27 @@ const saveEvaluation = async () => {
     };
 
     await evaluationService.saveArtistEvaluation(evaluationData);
+    
+    // Mostrar mensaje de éxito
+    toast.add({
+      severity: 'success',
+      summary: '¡Evaluación guardada!',
+      detail: `Has evaluado exitosamente a ${selectedEvent.value.artist.name}`,
+      life: 4000
+    });
+    
     selectedEvent.value = null;
     await fetchCompletedEvents();
   } catch (error) {
     console.error("Error saving evaluation:", error);
+    
+    // Mostrar mensaje de error
+    toast.add({
+      severity: 'error',
+      summary: 'Error al guardar',
+      detail: 'No se pudo guardar la evaluación. Inténtalo de nuevo.',
+      life: 4000
+    });
   }
 };
 
@@ -72,6 +91,7 @@ onMounted(() => {
 </script>
 
 <template>
+  <pv-toast />
   <div class="p-4">
     <pv-button
       :label="t('evaluations.viewEvaluatedArtists')"
@@ -96,10 +116,24 @@ onMounted(() => {
 
     <div v-else>
       <div v-if="!selectedEvent">
-        <div v-if="events.length === 0" class="text-center p-4">
-          <i class="pi pi-info-circle text-4xl text-500 mb-3"></i>
-          <h3 class="text-xl mb-2">{{ t('evaluations.noEventsToEvaluate') }}</h3>
-          <p class="text-500">{{ t('evaluations.noEventsDescription') }}</p>
+        <div v-if="events.length === 0" class="text-center p-6">
+          <i class="pi pi-star text-6xl text-400 mb-4"></i>
+          <h3 class="text-2xl font-semibold mb-3">{{ t('evaluations.noEventsToEvaluate') }}</h3>
+          <p class="text-500 text-lg mb-4">{{ t('evaluations.noEventsDescription') }}</p>
+          <div class="bg-blue-50 border-left-3 border-blue-500 p-4 mb-4 text-left">
+            <p class="text-blue-800 font-medium mb-2">Para que aparezcan eventos aquí necesitas:</p>
+            <ul class="text-blue-700 list-disc list-inside">
+              <li>Tener eventos finalizados con contratos firmados</li>
+              <li>Haber completado los pagos a los artistas</li>
+              <li>Que los artistas no hayan sido evaluados previamente</li>
+            </ul>
+          </div>
+          <pv-button 
+            label="Ver artistas evaluados" 
+            icon="pi pi-list" 
+            class="p-button-outlined"
+            @click="goToEvaluatedArtists"
+          />
         </div>
         <div v-else class="grid">
           <div v-for="event in events" :key="event.id" class="col-12 md:col-6 xl:col-4 mb-4">

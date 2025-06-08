@@ -416,19 +416,19 @@ onMounted(() => {
             outlined
           />
           <div class="flex gap-2">
-            <pv-button
-              :label="t('applicationDetail.contract.reject')"
-              icon="pi pi-times"
-              @click="rejectContract"
+          <pv-button
+            :label="t('applicationDetail.contract.reject')"
+            icon="pi pi-times"
+            @click="rejectContract"
               severity="danger"
               outlined
-            />
-            <pv-button
-              :label="t('applicationDetail.contract.signAndAccept')"
-              icon="pi pi-check"
-              @click="signContract"
-              severity="success"
-            />
+          />
+          <pv-button
+            :label="t('applicationDetail.contract.signAndAccept')"
+            icon="pi pi-check"
+            @click="signContract"
+            severity="success"
+          />
           </div>
         </div>
       </template>
