@@ -17,7 +17,7 @@ const handleLogin = async () => {
     return;
   }
 
-  const loginEntity = new LoginEntity('', email.value, password.value, '');
+  const loginEntity = new LoginEntity(email.value, password.value);
   try {
     const user = await loginService.login(loginEntity);
     toast.add({ severity: 'success', summary: 'Éxito', detail: `Bienvenid@, ${user.name}`, life: 3000 });

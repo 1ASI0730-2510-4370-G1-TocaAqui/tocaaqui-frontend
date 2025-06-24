@@ -5,6 +5,7 @@ import { useToast } from 'primevue/usetoast';
 import { EventApplicationService } from '../services/event-application.service';
 import { EventApplication } from '../model/event-application.model';
 import { useRouter } from 'vue-router';
+import { getMusicGenreOptions, getBackendGenre } from '../../utils/musicGenres';
 
 const { t } = useI18n();
 const toast = useToast();
@@ -27,23 +28,23 @@ const loadingEvents = ref(true);
 const event = reactive({
   promoterId: null,
   name: '',
-  date: '',
-  time: '',
+  date: null,
+  time: null,
   location: '',
   imageUrl: '',
-  status: 'pending',
+  status: 'Pending',
   publishDate: new Date().toISOString().split('T')[0], // Today's date
-  soundcheckDate: '',
-  soundcheckTime: '',
-  capacity: '',
-  availableTickets: '',
+  soundcheckDate: null,
+  soundcheckTime: null,
+  capacity: 0,
+  availableTickets: 0,
   adminName: '',
-  adminId: '',
+  adminId: null,
   adminContact: '',
   requirements: '',
   description: '',
-  payment: '',
-  duration: null,
+  payment: 0,
+  duration: 0,
   genre: '',
   equipment: ''
 });
@@ -66,11 +67,8 @@ const validationErrors = reactive({
   adminContact: false
 });
 
-// Genre options
-const genreOptions = [
-  'Rock', 'Pop', 'Jazz', 'Electrónica', 'Hip Hop', 'Reggaeton', 
-  'Salsa', 'Cumbia', 'Clásica', 'Folk', 'Metal', 'Blues', 'Otro'
-];
+// Genre options using i18n
+const genreOptions = computed(() => getMusicGenreOptions(t));
 
 // Image upload
 const imageFile = ref(null);
@@ -173,6 +171,8 @@ const resetForm = () => {
         event[key] = new Date().toISOString().split('T')[0];
       } else if (key === 'date' || key === 'soundcheckDate' || key === 'time' || key === 'soundcheckTime') {
         event[key] = null; // Para pv-calendar
+      } else if (key === 'capacity' || key === 'availableTickets' || key === 'duration' || key === 'payment') {
+        event[key] = 0; // Para números
       } else {
         event[key] = '';
       }
@@ -193,29 +193,35 @@ const validateForm = () => {
   });
   
   // Required fields validation
-  const requiredFields = [
-    'name', 'date', 'time', 'location', 'soundcheckDate', 
-    'soundcheckTime', 'capacity', 'requirements', 'description', 
-    'payment', 'duration', 'genre', 'equipment', 'adminContact'
+  const requiredStringFields = [
+    'name', 'location', 'requirements', 'description', 
+    'genre', 'equipment', 'adminContact'
   ];
   
-  requiredFields.forEach(field => {
+  const requiredDateFields = ['date', 'time', 'soundcheckDate', 'soundcheckTime'];
+  const requiredNumberFields = ['capacity', 'payment', 'duration'];
+  
+  requiredStringFields.forEach(field => {
     if (!event[field]) {
       validationErrors[field] = true;
       isValid = false;
     }
   });
   
-  // Numeric fields validation
-  if (event.capacity && (isNaN(event.capacity) || event.capacity <= 0)) {
-    validationErrors.capacity = true;
+  requiredDateFields.forEach(field => {
+    if (!event[field]) {
+      validationErrors[field] = true;
     isValid = false;
   }
+  });
   
-  if (event.duration && (isNaN(event.duration) || event.duration <= 0)) {
-    validationErrors.duration = true;
+  requiredNumberFields.forEach(field => {
+    if (!event[field] || event[field] <= 0) {
+      validationErrors[field] = true;
     isValid = false;
   }
+  });
+
   
   // Date validation
   const currentDate = new Date();
@@ -319,6 +325,11 @@ const submitForm = async () => {
       soundcheckDate: event.soundcheckDate ? new Date(event.soundcheckDate).toISOString().split('T')[0] : '',
       time: event.time ? formatTime(event.time) : '',
       soundcheckTime: event.soundcheckTime ? formatTime(event.soundcheckTime) : '',
+      capacity: parseInt(event.capacity) || 0,
+      availableTickets: parseInt(event.availableTickets) || parseInt(event.capacity) || 0,
+      duration: parseFloat(event.duration) || 0,
+      payment: parseFloat(event.payment) || 0,
+      genre: getBackendGenre(event.genre), // Convertir género de UI a valor del backend
       imageFile: imageFile.value
     });
     
@@ -531,6 +542,8 @@ const getStatusSeverity = (status) => {
                     id="genre" 
                     v-model="event.genre" 
                     :options="genreOptions" 
+                  option-label="label"
+                  option-value="value"
                     :class="{'p-invalid': submitted && validationErrors.genre}"
                   />
                   <label for="genre">{{ $t('applicationDetail.genre') }} *</label>
@@ -556,9 +569,13 @@ const getStatusSeverity = (status) => {
               
               <div class="col-12 md:col-6 mb-3">
                 <pv-float-label>
-                  <pv-input-text 
+                  <pv-input-number 
                     id="payment" 
                     v-model="event.payment" 
+                    mode="currency" 
+                    currency="USD" 
+                    locale="en-US"
+                    :min="0"
                     :class="{'p-invalid': submitted && validationErrors.payment}"
                   />
                   <label for="payment">{{ $t('applicationDetail.payment') }} *</label>

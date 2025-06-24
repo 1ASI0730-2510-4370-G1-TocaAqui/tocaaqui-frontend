@@ -1,6 +1,10 @@
 import httpInstance from '../../shared/services/http.instance';
 
 export class EvaluationService {
+    constructor() {
+        this.resourceEndpoint = `${import.meta.env.VITE_CATEGORIES_ENDPOINT_PATH}evaluations`;
+    }
+
     async getAllEvents() {
         try {
             // Obtener el usuario actual
@@ -107,7 +111,7 @@ export class EvaluationService {
                         
                         // Solo incluir si no ha sido evaluado todavía
                         if (!existingEvaluationKeys.includes(evaluationKey)) {
-                            const userResponse = await httpInstance.get(`/users/${applicant.userId}`);
+                            const userResponse = await httpInstance.get(`/api/v1/users/${applicant.userId}`);
                             return {
                                 userId: applicant.userId,
                                 name: userResponse.data.name,
@@ -179,7 +183,7 @@ export class EvaluationService {
 
     async saveArtistEvaluation(evaluationData) {
         try {
-            const response = await httpInstance.post('/evaluations', {
+            const response = await httpInstance.post(this.resourceEndpoint, {
                 ...evaluationData,
                 type: 'artist',
                 status: 'evaluated'
@@ -242,7 +246,7 @@ export class EvaluationService {
             const enrichedEvaluations = await Promise.all(promoterEvaluations.map(async (evaluation) => {
                 try {
                     // Obtener información del artista
-                    const artistResponse = await httpInstance.get(`/users/${evaluation.musicianId}`);
+                    const artistResponse = await httpInstance.get(`/api/v1/users/${evaluation.musicianId}`);
                     const artist = artistResponse.data;
 
                     // Obtener información del evento

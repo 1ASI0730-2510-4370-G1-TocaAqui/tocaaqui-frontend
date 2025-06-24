@@ -1,8 +1,9 @@
 <script setup>
 import { useI18n } from 'vue-i18n';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useToast } from 'primevue/usetoast';
 import { ProfileService } from '../services/profile.service';
+import { getMusicGenreOptions, getBackendGenre } from '../../utils/musicGenres';
 
 const { t } = useI18n();
 const user = ref(null);
@@ -13,22 +14,8 @@ const profileService = new ProfileService();
 const previewImage = ref(null);
 const fileInput = ref(null);
 
-// Opciones para los dropdowns
-const genreOptions = [
-  { label: 'Rock', value: 'Rock' },
-  { label: 'Pop', value: 'Pop' },
-  { label: 'Jazz', value: 'Jazz' },
-  { label: 'Electrónica', value: 'Electrónica' },
-  { label: 'Hip Hop', value: 'Hip Hop' },
-  { label: 'Reggaeton', value: 'Reggaeton' },
-  { label: 'Salsa', value: 'Salsa' },
-  { label: 'Cumbia', value: 'Cumbia' },
-  { label: 'Clásica', value: 'Clásica' },
-  { label: 'Folk', value: 'Folk' },
-  { label: 'Metal', value: 'Metal' },
-  { label: 'Blues', value: 'Blues' },
-  { label: 'Otro', value: 'Otro' }
-];
+// Opciones para los dropdowns usando i18n
+const genreOptions = computed(() => getMusicGenreOptions(t));
 
 const typeOptions = [
   { label: t('profile.soloist'), value: 'solista' },
@@ -95,7 +82,12 @@ const handleImageUpload = async (event) => {
 
 const handleUpdate = async () => {
   try {
-    const updatedUser = await profileService.updateProfile(formData.value);
+    // Convertir género de UI a valor del backend antes de enviar
+    const dataToUpdate = {
+      ...formData.value,
+      genre: formData.value.genre ? getBackendGenre(formData.value.genre) : formData.value.genre
+    };
+    const updatedUser = await profileService.updateProfile(dataToUpdate);
     user.value = updatedUser;
     localStorage.setItem('user', JSON.stringify(updatedUser));
     

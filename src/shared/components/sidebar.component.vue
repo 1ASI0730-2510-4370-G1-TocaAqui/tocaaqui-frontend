@@ -11,11 +11,13 @@ export default {
   props: {
     userName: {
       type: String,
-      required: true
+      required: true,
+      default: ''
     },
     userRole: {
       type: String,
-      required: true
+      required: true,
+      default: ''
     }
   },
   setup(props) {

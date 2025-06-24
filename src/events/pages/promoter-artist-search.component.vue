@@ -7,6 +7,7 @@ import httpInstance from '../../shared/services/http.instance';
 import { InvitationService } from '../services/invitation.service';
 import { EventApplicationService } from '../services/event-application.service';
 import { EvaluationService } from '../../evaluations/services/evaluation.service';
+import { getMusicGenreOptions } from '../../utils/musicGenres';
 
 const router = useRouter();
 const { t } = useI18n();
@@ -71,10 +72,7 @@ const filters = ref({
 });
 
 // Opciones de género musical
-const genreOptions = [
-  'Rock', 'Pop', 'Jazz', 'Electrónica', 'Hip Hop', 'Reggaeton', 
-  'Salsa', 'Cumbia', 'Clásica', 'Folk', 'Metal', 'Blues', 'Otro'
-];
+const genreOptions = computed(() => getMusicGenreOptions(t));
 
 // Opciones de tipo
 const typeOptions = [
@@ -109,7 +107,7 @@ const filteredArtists = computed(() => {
 const fetchArtists = async () => {
   try {
     loading.value = true;
-    const response = await httpInstance.get('/users');
+    const response = await httpInstance.get('/api/v1/users');
     // Filtrar solo usuarios con rol de músico
     artists.value = response.data.filter(user => user.role === 'musico');
   } catch (err) {
@@ -297,6 +295,8 @@ const sendInvitation = async () => {
                 id="genre" 
                 v-model="filters.genre" 
                 :options="genreOptions" 
+                option-label="label"
+                option-value="value"
                 :placeholder="$t('artistSearch.genrePlaceholder')"
                 class="w-full" 
               />

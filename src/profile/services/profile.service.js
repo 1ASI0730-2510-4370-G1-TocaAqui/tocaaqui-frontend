@@ -3,7 +3,7 @@ import httpInstance from '../../shared/services/http.instance.js';
 export class ProfileService {
     async getProfile() {
         try {
-            const response = await httpInstance.get('/users');
+            const response = await httpInstance.get('/api/v1/users');
             return {
                 ...response.data,
                 password: response.data.password || ''

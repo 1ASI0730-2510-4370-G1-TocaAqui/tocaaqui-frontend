@@ -264,7 +264,11 @@
       "signed": "Signed",
       "accepted": "Accepted",
       "rejected": "Rejected",
-      "active": "Active"
+      "active": "Active",
+      "Pending": "Pending",
+      "ContractPending": "Contract Pending",
+      "Signed": "Signed",
+      "Rejected": "Rejected"
     },
     "basicInfo": "Basic Information",
     "additionalInfo": "Additional Information",
@@ -297,7 +301,11 @@
       "signed": "Signed",
       "accepted": "Accepted",
       "rejected": "Rejected",
-      "confirmed": "Accepted"
+      "confirmed": "Accepted",
+      "Pending": "Pending",
+      "ContractPending": "Contract Pending",
+      "Signed": "Signed",
+      "Rejected": "Rejected"
     },
     "technicalDetails": "Technical Details",
     "publishDate": "Publish Date",
@@ -478,6 +486,21 @@
       "twitter": "Twitter/X",
       "whatsapp": "WhatsApp"
     }
+  },
+  "musicGenres": {
+    "rock": "Rock",
+    "pop": "Pop",
+    "jazz": "Jazz",
+    "blues": "Blues",
+    "classical": "Classical",
+    "electronic": "Electronic",
+    "folk": "Folk",
+    "hiphop": "Hip Hop",
+    "metal": "Metal",
+    "reggaeton": "Reggaeton",
+    "salsa": "Salsa",
+    "cumbia": "Cumbia",
+    "other": "Other"
   },
   "login": {
     "title": "Login",

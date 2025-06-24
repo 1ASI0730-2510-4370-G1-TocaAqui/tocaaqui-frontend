@@ -1,9 +1,7 @@
 export class LoginEntity {
-    constructor(name = '', email = '', password = '', role = '') {
-        this.name = name;
+    constructor(email = '', password = '') {
         this.email = email;
         this.password = password;
-        this.role = role;
     }
 }
 
@@ -13,9 +11,9 @@ export class RegisterEntity {
         email = '', 
         password = '', 
         role = '',
-        genre = '',
-        type = '',
-        description = '',
+        genre = null,
+        type = null,
+        description = null,
         imageFile = null
     ) {
         this.name = name;
@@ -26,5 +24,22 @@ export class RegisterEntity {
         this.type = type;
         this.description = description;
         this.imageFile = imageFile;
+    }
+
+    toDTO() {
+        const dto = {
+            name: this.name,
+            email: this.email,
+            password: this.password,
+            role: this.role
+        };
+
+        if (this.role === 'musico') {
+            dto.genre = this.genre;
+            dto.type = this.type;
+            dto.description = this.description;
+        }
+
+        return dto;
     }
 }

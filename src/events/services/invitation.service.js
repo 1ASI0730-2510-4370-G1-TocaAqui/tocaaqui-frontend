@@ -3,7 +3,7 @@ import { Invitation } from '../model/invitation.model';
 
 export class InvitationService {
     constructor() {
-        this.resourceEndpoint = '/invitations';
+        this.resourceEndpoint = `${import.meta.env.VITE_CATEGORIES_ENDPOINT_PATH}invitations`;
     }
 
     async sendInvitation(invitationData) {

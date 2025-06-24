@@ -5,6 +5,7 @@ import { useI18n } from 'vue-i18n';
 import { EventApplicationService } from '../services/event-application.service';
 import { InvitationService } from '../services/invitation.service';
 import EventCard from '../components/event-card.component.vue';
+import { getMusicGenreOptions } from '../../utils/musicGenres';
 
 const router = useRouter();
 const { t } = useI18n();
@@ -40,10 +41,7 @@ const filters = ref({
 });
 
 // Opciones de género musical
-const genreOptions = [
-  'Rock', 'Pop', 'Jazz', 'Electrónica', 'Hip Hop', 'Reggaeton', 
-  'Salsa', 'Cumbia', 'Clásica', 'Folk', 'Metal', 'Blues', 'Otro'
-];
+const genreOptions = computed(() => getMusicGenreOptions(t));
 
 // Eventos filtrados
 const filteredEvents = computed(() => {
@@ -221,6 +219,8 @@ const applyToEvent = async () => {
                 id="genre" 
                 v-model="filters.genre" 
                 :options="genreOptions" 
+                option-label="label"
+                option-value="value"
                 :placeholder="$t('eventApplications.genrePlaceholder')"
                 class="w-full" 
               ></pv-dropdown>

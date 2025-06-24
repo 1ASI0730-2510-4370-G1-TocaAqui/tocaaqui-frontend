@@ -5,6 +5,7 @@ import { useI18n } from 'vue-i18n';
 import { RegisterEntity } from "../model/login.entity.js";
 import { LoginService } from "../services/login.service.js";
 import { useRouter } from 'vue-router';
+import { getMusicGenreOptions, getBackendGenre } from '../../utils/musicGenres';
 
 // Composables
 const { t } = useI18n();
@@ -26,11 +27,8 @@ const description = ref('');
 const imageFile = ref(null);
 const uploadedImage = ref(null);
 
-// Opciones para los dropdowns
-const genreOptions = [
-  'Rock', 'Pop', 'Jazz', 'Electrónica', 'Hip Hop', 'Reggaeton', 
-  'Salsa', 'Cumbia', 'Clásica', 'Folk', 'Metal', 'Blues', 'Otro'
-];
+// Opciones para los dropdowns usando i18n
+const genreOptions = computed(() => getMusicGenreOptions(t));
 
 const typeOptions = [
   { label: t('register.typeOptions.soloist'), value: 'solista' },
@@ -82,7 +80,7 @@ const handleRegister = async () => {
 
   // Agregar campos específicos para músicos
   if (isMusicianRole.value) {
-    registerData.genre = genre.value;
+    registerData.genre = getBackendGenre(genre.value); // Convertir género de UI a valor del backend
     registerData.type = type.value;
     registerData.description = description.value;
     registerData.imageFile = imageFile.value;
@@ -269,6 +267,8 @@ const clearImage = () => {
                     id="genre"
                     v-model="genre"
                     :options="genreOptions"
+                    option-label="label"
+                    option-value="value"
                     :placeholder="$t('register.placeholders.genre')"
                     class="w-full"
                 />

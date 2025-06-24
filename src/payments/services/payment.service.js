@@ -11,7 +11,7 @@ export class PaymentService {
             const event = eventResponse.data;
             
             // Obtener información del músico
-            const musicoResponse = await httpInstance.get(`/users/${userId}`);
+            const musicoResponse = await httpInstance.get(`/api/v1/users/${userId}`);
             const musico = musicoResponse.data;
 
             const now = new Date().toISOString();
@@ -53,7 +53,7 @@ export class PaymentService {
     async getPaymentsByUser(userId) {
         try {
             // 1. Obtener el usuario
-            const userResponse = await httpInstance.get(`/users/${userId}`);
+            const userResponse = await httpInstance.get(`/api/v1/users/${userId}`);
             const user = userResponse.data;
 
             // 2. Obtener todos los pagos
@@ -80,11 +80,11 @@ export class PaymentService {
                     const event = eventResponse.data;
 
                     // Obtener información del músico
-                    const musicoResponse = await httpInstance.get(`/users/${payment.musicoId}`);
+                    const musicoResponse = await httpInstance.get(`/api/v1/users/${payment.musicoId}`);
                     const musico = musicoResponse.data;
 
                     // Obtener información del promotor
-                    const promotorResponse = await httpInstance.get(`/users/${payment.promotorId}`);
+                    const promotorResponse = await httpInstance.get(`/api/v1/users/${payment.promotorId}`);
                     const promotor = promotorResponse.data;
 
                     return {
@@ -168,11 +168,11 @@ export class PaymentService {
             const event = eventResponse.data;
 
             // Obtener información del músico
-            const musicoResponse = await httpInstance.get(`/users/${Number(payment.musicoId)}`);
+                            const musicoResponse = await httpInstance.get(`/api/v1/users/${Number(payment.musicoId)}`);
             const musico = musicoResponse.data;
 
             // Obtener información del promotor
-            const promotorResponse = await httpInstance.get(`/users/${Number(payment.promotorId)}`);
+                            const promotorResponse = await httpInstance.get(`/api/v1/users/${Number(payment.promotorId)}`);
             const promotor = promotorResponse.data;
 
             const enrichedPayment = new Payment(

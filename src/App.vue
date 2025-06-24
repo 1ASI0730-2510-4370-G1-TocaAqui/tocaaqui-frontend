@@ -73,11 +73,11 @@ const handleClickOutside = (event) => {
 
 // Manejadores de eventos de login/logout
 const handleLoginSuccess = (event) => {
-  const user = event.detail;
+  const user = event.detail.user;
   isAuthenticated.value = true;
-  userName.value = user.name;
-  userImage.value = user.imageUrl;
-  userRole.value = user.role;
+  userName.value = user.name || '';
+  userImage.value = user.imageUrl || '';
+  userRole.value = user.role || '';
 };
 
 const handleLogoutEvent = () => {
@@ -102,9 +102,9 @@ onMounted(() => {
   if (userStr) {
     const user = JSON.parse(userStr);
     isAuthenticated.value = true;
-    userName.value = user.name;
-    userImage.value = user.imageUrl;
-    userRole.value = user.role;
+    userName.value = user.name || '';
+    userImage.value = user.imageUrl || '';
+    userRole.value = user.role || '';
   }
   
   document.addEventListener('click', handleClickOutside);

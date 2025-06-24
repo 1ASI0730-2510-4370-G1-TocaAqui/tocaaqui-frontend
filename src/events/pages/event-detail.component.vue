@@ -200,7 +200,7 @@
                                                 :label="$t('eventApplications.viewProfile')" 
                                             />
                                             <pv-button 
-                                                v-if="!hasAcceptedApplicant && applicant.status === 'pending'"
+                                                v-if="!hasAcceptedApplicant && (applicant.status === 'pending' || applicant.status === 'Pending')"
                                                 icon="pi pi-check" 
                                                 @click="acceptApplicant(applicant.id)"
                                                 severity="success"
@@ -281,7 +281,11 @@ export default {
                 contract_pending: 'info',
                 signed: 'success',
                 accepted: 'success',
-                rejected: 'danger'
+                rejected: 'danger',
+                Pending: 'warning',
+                ContractPending: 'info',
+                Signed: 'success',
+                Rejected: 'danger'
             };
             return severities[status] || 'info';
         };
@@ -308,7 +312,7 @@ export default {
                 const eventApplicants = await eventApplicationService.getEventApplicants(eventId);
                 
                 // Verificar si ya hay un postulante con contrato firmado
-                const signedApplicant = eventApplicants.find(app => app.status === 'signed');
+                const signedApplicant = eventApplicants.find(app => app.status === 'signed' || app.status === 'Signed');
                 hasAcceptedApplicant.value = !!signedApplicant;
                 
                 if (signedApplicant) {

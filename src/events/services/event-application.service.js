@@ -5,10 +5,10 @@ import httpInstance from "../../shared/services/http.instance.js";
 import { EventApplication, Contract, RiderTechnical, EventApplicant } from '../model/event-application.model';
 
 export class EventApplicationService {
-    resourceEndpoint = '/events';
-    applicantsEndpoint = '/event_applicants';
-    contractsEndpoint = '/contracts';
-    documentsEndpoint = '/documents';
+    resourceEndpoint = `${import.meta.env.VITE_CATEGORIES_ENDPOINT_PATH}events`;
+    applicantsEndpoint = `${import.meta.env.VITE_CATEGORIES_ENDPOINT_PATH}event-applicants`;
+    contractsEndpoint = `${import.meta.env.VITE_CATEGORIES_ENDPOINT_PATH}contracts`;
+    documentsEndpoint = `${import.meta.env.VITE_CATEGORIES_ENDPOINT_PATH}documents`;
 
     async getAll() {
         try {
@@ -33,9 +33,10 @@ export class EventApplicationService {
             }
             const user = JSON.parse(userStr);
 
-            // Obtener la postulación del usuario para este evento
-            const applicantResponse = await httpInstance.get(`${this.applicantsEndpoint}?eventId=${id}&userId=${user.id}`);
-            const applicant = applicantResponse.data[0];
+            // Obtener la postulación del usuario para este evento específico
+            try {
+                const applicantResponse = await httpInstance.get(`${this.applicantsEndpoint}/event/${id}/user/${user.id}`);
+                const applicant = applicantResponse.data;
 
             // Si existe una postulación, incluir su estado en el evento
             if (applicant) {
@@ -43,6 +44,12 @@ export class EventApplicationService {
                     ...response.data,
                     status: applicant.status
                 });
+                }
+            } catch (error) {
+                // Si es 404, significa que no hay postulación (normal)
+                if (error.response?.status !== 404) {
+                    console.error('Error fetching applicant:', error);
+                }
             }
 
             return new EventApplication(response.data);
@@ -162,7 +169,7 @@ export class EventApplicationService {
 
     async getUserApplications(userId) {
         try {
-            const response = await httpInstance.get(`${this.applicantsEndpoint}?userId=${userId}`);
+            const response = await httpInstance.get(`${this.applicantsEndpoint}/user/${userId}`);
             return response.data.map(applicant => new EventApplicant(applicant));
         } catch (error) {
             throw this.handleError(error);
@@ -171,13 +178,13 @@ export class EventApplicationService {
 
     async getEventApplicants(eventId) {
         try {
-            const response = await httpInstance.get(`${this.applicantsEndpoint}?eventId=${eventId}`);
+            const response = await httpInstance.get(`${this.applicantsEndpoint}/event/${eventId}`);
             const applicants = response.data;
 
             // Obtener información detallada de cada postulante
             const applicantsWithDetails = await Promise.all(
                 applicants.map(async (applicant) => {
-                    const userResponse = await httpInstance.get(`/users/${applicant.userId}`);
+                    const userResponse = await httpInstance.get(`${import.meta.env.VITE_CATEGORIES_ENDPOINT_PATH}users/${applicant.userId}`);
                     return {
                         ...applicant,
                         name: userResponse.data.name,
@@ -198,21 +205,21 @@ export class EventApplicationService {
 
     async getUserById(userId) {
         try {
-            const response = await httpInstance.get(`/users/${userId}`);
+            const response = await httpInstance.get(`${import.meta.env.VITE_CATEGORIES_ENDPOINT_PATH}users/${userId}`);
             return response.data;
         } catch (error) {
             throw this.handleError(error);
         }
     }
 
-    async applyToEvent(eventId, userId, initialStatus = 'pending') {
+    async applyToEvent(eventId, userId, initialStatus = 'Pending') {
         try {
             const applicant = new EventApplicant({
                 eventId,
                 userId,
                 applicationDate: new Date().toISOString(),
                 status: initialStatus,
-                isInvited: initialStatus === 'contract_pending' // Marcar como invitado si el estado inicial es 'contract_pending'
+                isInvited: initialStatus === 'ContractPending' // Marcar como invitado si el estado inicial es 'ContractPending'
             });
             const response = await httpInstance.post(this.applicantsEndpoint, applicant);
             return new EventApplicant(response.data);
@@ -223,13 +230,21 @@ export class EventApplicationService {
 
     async updateApplicationStatus(applicantId, status) {
         try {
-            // Normalizar el estado si es 'confirmed' a 'contract_pending'
-            let normalizedStatus = status.toLowerCase();
-            if (normalizedStatus === 'confirmed' || normalizedStatus === 'accepted') {
-                normalizedStatus = 'contract_pending';
+            // Normalizar el estado según el enum del backend
+            let normalizedStatus = status;
+            if (status === 'confirmed' || status === 'accepted') {
+                normalizedStatus = 'ContractPending';
+            } else if (status === 'pending') {
+                normalizedStatus = 'Pending';
+            } else if (status === 'rejected') {
+                normalizedStatus = 'Rejected';
+            } else if (status === 'signed') {
+                normalizedStatus = 'Signed';
+            } else if (status === 'contract_pending') {
+                normalizedStatus = 'ContractPending';
             }
             
-            const response = await httpInstance.patch(`${this.applicantsEndpoint}/${applicantId}`, { 
+            const response = await httpInstance.patch(`${this.applicantsEndpoint}/${applicantId}/status`, { 
                 status: normalizedStatus 
             });
             return new EventApplicant(response.data);
@@ -249,20 +264,21 @@ export class EventApplicationService {
 
             // 2. Obtener la postulación actual
             const applicantsResponse = await httpInstance.get(
-                `${this.applicantsEndpoint}?eventId=${eventId}&userId=${user.id}`
+                `${this.applicantsEndpoint}/event/${eventId}/user/${user.id}`
             );
 
-            if (!applicantsResponse.data || applicantsResponse.data.length === 0) {
+            if (!applicantsResponse.data) {
                 throw new Error('No se encontró la postulación');
             }
 
-            const applicant = applicantsResponse.data[0];
+            const applicant = applicantsResponse.data;
 
             // 3. Actualizar el estado del rider en la postulación
-            await httpInstance.patch(
-                `${this.applicantsEndpoint}/${applicant.id}`,
-                { riderUploaded: true }
-            );
+            // TODO: El backend no tiene endpoint para actualizar riderUploaded
+            // await httpInstance.patch(
+            //     `${this.applicantsEndpoint}/${applicant.id}`,
+            //     { riderUploaded: true }
+            // );
 
             // 4. Guardar la información del rider en el evento
             const riderInfo = {
@@ -289,25 +305,50 @@ export class EventApplicationService {
 
     async signContract(eventId, userId, signature) {
         try {
+            console.log('Iniciando signContract con:', { eventId, userId, signature });
+            
             // 1. Obtener la postulación actual
+            console.log('Buscando postulación en:', `${this.applicantsEndpoint}/event/${eventId}/user/${userId}`);
+            
+            let applicant = null;
+            try {
             const applicantsResponse = await httpInstance.get(
-                `${this.applicantsEndpoint}?eventId=${eventId}&userId=${userId}`
+                    `${this.applicantsEndpoint}/event/${eventId}/user/${userId}`
             );
-
-            if (!applicantsResponse.data || applicantsResponse.data.length === 0) {
-                throw new Error('No se encontró la postulación');
+                applicant = applicantsResponse.data;
+            } catch (error) {
+                console.error('Error obteniendo postulación específica:', error);
+                
+                // Fallback: buscar entre todas las postulaciones del evento
+                console.log('Intentando fallback: buscar entre todas las postulaciones del evento');
+                const allApplicantsResponse = await httpInstance.get(
+                    `${this.applicantsEndpoint}/event/${eventId}`
+                );
+                
+                applicant = allApplicantsResponse.data.find(app => Number(app.userId) === Number(userId));
+                console.log('Postulación encontrada via fallback:', applicant);
             }
 
-            const applicant = applicantsResponse.data[0];
+            if (!applicant) {
+                throw new Error('No se encontró la postulación del usuario para este evento');
+            }
 
-            // 2. Obtener información del evento y del músico
+            console.log('Postulación encontrada:', applicant);
+
+            // 2. Obtener información del evento
             const eventResponse = await httpInstance.get(`${this.resourceEndpoint}/${eventId}`);
             const event = eventResponse.data;
             
-            const musicoResponse = await httpInstance.get(`/users/${userId}`);
-            const musico = musicoResponse.data;
+            // Obtener información del músico desde localStorage en lugar del backend
+            const userStr = localStorage.getItem('user');
+            if (!userStr) {
+                throw new Error('No hay usuario autenticado');
+            }
+            const musico = JSON.parse(userStr);
 
-            // 3. Crear el pago para el artista
+            // 3. Crear el pago para el artista (COMENTADO - endpoint no existe aún)
+            // TODO: Implementar cuando el backend tenga el controlador de pagos
+            /*
             const now = new Date().toISOString();
             const paymentData = {
                 amount: Number(event.payment),
@@ -335,13 +376,13 @@ export class EventApplicationService {
 
             console.log('Creando pago después de firma de contrato:', paymentData);
             await httpInstance.post('/payments', paymentData);
+            */
 
-            // 4. Actualizar el estado de la postulación a 'signed' y marcar contrato como firmado
+            // 4. Actualizar el estado de la postulación a 'Signed' y marcar contrato como firmado
                 await httpInstance.patch(
-                    `${this.applicantsEndpoint}/${applicant.id}`,
+                    `${this.applicantsEndpoint}/${applicant.id}/status`,
                     {
-                        status: 'signed',
-                        contractSigned: true
+                        status: 'Signed'
                     }
                 );
 
@@ -364,13 +405,13 @@ export class EventApplicationService {
 
             // 7. AHORA rechazar automáticamente a los demás postulantes
             const allApplicantsResponse = await httpInstance.get(
-                `${this.applicantsEndpoint}?eventId=${eventId}`
+                `${this.applicantsEndpoint}/event/${eventId}`
             );
             
             const otherApplicants = allApplicantsResponse.data.filter(app => app.id !== applicant.id);
             await Promise.all(
                 otherApplicants.map(app => 
-                    httpInstance.patch(`${this.applicantsEndpoint}/${app.id}`, { status: 'rejected' })
+                    httpInstance.patch(`${this.applicantsEndpoint}/${app.id}/status`, { status: 'Rejected' })
                 )
             );
 
@@ -385,21 +426,20 @@ export class EventApplicationService {
         try {
             // 1. Obtener la postulación actual
             const applicantsResponse = await httpInstance.get(
-                `${this.applicantsEndpoint}?eventId=${eventId}&userId=${userId}`
+                `${this.applicantsEndpoint}/event/${eventId}/user/${userId}`
             );
 
-            if (!applicantsResponse.data || applicantsResponse.data.length === 0) {
+            if (!applicantsResponse.data) {
                 throw new Error('No se encontró la postulación');
             }
 
-            const applicant = applicantsResponse.data[0];
+            const applicant = applicantsResponse.data;
 
-            // 2. Cambiar el estado de vuelta a 'rejected'
+            // 2. Cambiar el estado de vuelta a 'Rejected'
             await httpInstance.patch(
-                `${this.applicantsEndpoint}/${applicant.id}`,
+                `${this.applicantsEndpoint}/${applicant.id}/status`,
                 {
-                    status: 'rejected',
-                    contractSigned: false
+                    status: 'Rejected'
                 }
             );
 
@@ -412,10 +452,12 @@ export class EventApplicationService {
 
     async getEventApplicant(eventId, userId) {
         try {
-            const response = await httpInstance.get(`${this.applicantsEndpoint}?eventId=${eventId}&userId=${userId}`);
-            const applicants = response.data;
-            return applicants.length > 0 ? new EventApplicant(applicants[0]) : null;
+            const response = await httpInstance.get(`${this.applicantsEndpoint}/event/${eventId}/user/${userId}`);
+            return response.data ? new EventApplicant(response.data) : null;
         } catch (error) {
+            if (error.response?.status === 404) {
+                return null; // No se encontró la postulación, es normal
+            }
             throw this.handleError(error);
         }
     }

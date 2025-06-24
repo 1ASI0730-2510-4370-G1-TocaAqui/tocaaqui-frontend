@@ -316,7 +316,11 @@
       "signed": "Firmado",
       "accepted": "Aceptado",
       "rejected": "Rechazado",
-      "active": "Activo"
+      "active": "Activo",
+      "Pending": "Pendiente",
+      "ContractPending": "Pendiente de Contrato",
+      "Signed": "Firmado",
+      "Rejected": "Rechazado"
     },
     "basicInfo": "Información Básica",
     "additionalInfo": "Información Adicional",
@@ -349,7 +353,11 @@
       "signed": "Firmado",
       "accepted": "Aceptado",
       "rejected": "Rechazado",
-      "confirmed": "Aceptado"
+      "confirmed": "Aceptado",
+      "Pending": "Pendiente",
+      "ContractPending": "Pendiente de Contrato",
+      "Signed": "Firmado",
+      "Rejected": "Rechazado"
     },
     "technicalDetails": "Detalles Técnicos",
     "publishDate": "Fecha de Publicación",
@@ -533,6 +541,21 @@
         "active": "Activo"
       }
     }
+  },
+  "musicGenres": {
+    "rock": "Rock",
+    "pop": "Pop",
+    "jazz": "Jazz",
+    "blues": "Blues",
+    "classical": "Clásica",
+    "electronic": "Electrónica",
+    "folk": "Folk",
+    "hiphop": "Hip Hop",
+    "metal": "Metal",
+    "reggaeton": "Reggaeton",
+    "salsa": "Salsa",
+    "cumbia": "Cumbia",
+    "other": "Otro"
   },
   "ticket": {
     "management": "Gestión de Entradas",
