@@ -2,31 +2,63 @@
 import httpInstance from '../../shared/services/http.instance.js';
 
 class EventCalendarService {
-    endpoint = '/events';
+    endpoint = `${import.meta.env.VITE_CATEGORIES_ENDPOINT_PATH}events`;
+    applicantsEndpoint = `${import.meta.env.VITE_CATEGORIES_ENDPOINT_PATH}event-applicants`;
+
+    constructor() {
+        // Service initialized
+    }
+
+    // Función para normalizar el formato de fecha
+    normalizeEventData(event) {
+        try {
+            // Asegurar que la fecha esté en formato YYYY-MM-DD
+            let normalizedDate = event.date;
+            if (event.date) {
+                const date = new Date(event.date);
+                if (!isNaN(date.getTime())) {
+                    normalizedDate = date.toISOString().split('T')[0]; // YYYY-MM-DD
+                }
+            }
+
+            // Normalizar la fecha del soundcheck también
+            let normalizedSoundcheckDate = event.soundcheckDate;
+            if (event.soundcheckDate) {
+                const soundcheckDate = new Date(event.soundcheckDate);
+                if (!isNaN(soundcheckDate.getTime())) {
+                    normalizedSoundcheckDate = soundcheckDate.toISOString().split('T')[0];
+                }
+            }
+
+            return {
+                ...event,
+                date: normalizedDate,
+                soundcheckDate: normalizedSoundcheckDate
+            };
+        } catch (error) {
+            console.error('Error normalizing event data:', event, error);
+            return event;
+        }
+    }
 
     async getAll() { 
         try {
-            console.log('🗓️ EventCalendarService: Iniciando obtención de eventos...');
-            
             // 1. Obtener el usuario actual del localStorage
             const userStr = localStorage.getItem('user');
             if (!userStr) {
-                console.warn('⚠️ No hay usuario en localStorage');
+                console.warn('No hay usuario en localStorage');
                 return [];
             }
             const user = JSON.parse(userStr);
-            console.log('👤 Usuario actual:', { id: user.id, role: user.role, name: user.name });
 
             if (!user.id) {
-                console.error('❌ El usuario no tiene ID');
+                console.error('El usuario no tiene ID');
                 return [];
             }
 
             // Si es promotor, obtener sus eventos directamente
             if (user.role === 'promotor') {
-                console.log('🎭 Usuario es promotor, obteniendo eventos creados...');
                 const eventsResponse = await httpInstance.get(`${this.endpoint}?promoterId=${user.id}`);
-                console.log('📅 Eventos del promotor:', eventsResponse.data);
                 
                 // Para promotores, crear eventos de soundcheck también
                 const allCalendarItems = [];
@@ -58,38 +90,25 @@ class EventCalendarService {
                 return allCalendarItems;
             }
 
-            console.log('🎵 Usuario es músico, obteniendo postulaciones aceptadas...');
-            
             // Para músicos, obtener postulaciones con contrato pendiente o firmado
             // 2. Obtener las postulaciones del usuario que están aceptadas o con contrato firmado
-            const applicantsResponse = await httpInstance.get('/event_applicants');
-            console.log('📋 Total de postulaciones en el sistema:', applicantsResponse.data.length);
+            const applicantsResponse = await httpInstance.get(`${this.applicantsEndpoint}/user/${user.id}`);
             
             const userAcceptedApplications = applicantsResponse.data.filter(app => {
-                const isUserApp = app.userId === user.id;
-                const isAcceptedOrSigned = app.status === 'contract_pending' || app.status === 'signed';
-                console.log(`📝 Postulación ${app.id}: userId=${app.userId}, status=${app.status}, match=${isUserApp && isAcceptedOrSigned}`);
-                return isUserApp && isAcceptedOrSigned;
+                return app.status === 'ContractPending' || app.status === 'Signed';
             });
-            console.log('✅ Postulaciones aceptadas/firmadas del usuario:', userAcceptedApplications.length);
 
             if (userAcceptedApplications.length === 0) {
-                console.log('ℹ️ No se encontraron postulaciones aceptadas para el usuario');
                 return [];
             }
 
             // 3. Obtener los eventos correspondientes
             const eventIds = userAcceptedApplications.map(app => app.eventId);
-            console.log('🔍 IDs de eventos a buscar:', eventIds);
             
             const eventsResponse = await httpInstance.get(this.endpoint);
-            console.log('📊 Total de eventos en el sistema:', eventsResponse.data.length);
-            
             const events = eventsResponse.data.filter(event => eventIds.includes(event.id));
-            console.log('🎯 Eventos filtrados para el usuario:', events.length);
 
             if (events.length === 0) {
-                console.log('⚠️ No se encontraron eventos para las postulaciones del usuario');
                 return [];
             }
 
@@ -99,51 +118,40 @@ class EventCalendarService {
             events.forEach(event => {
                 const application = userAcceptedApplications.find(app => app.eventId === event.id);
                 
+                // Normalizar los datos del evento
+                const normalizedEvent = this.normalizeEventData(event);
+                
                 // Agregar el evento principal
                 const enrichedEvent = {
-                    ...event,
+                    ...normalizedEvent,
                     eventType: 'event',
                     applicationStatus: application.status,
                     contractSigned: application.contractSigned || false,
                     riderUploaded: application.riderUploaded || false
                 };
-                console.log(`🎪 Evento enriquecido: ${event.name} - Contrato: ${enrichedEvent.contractSigned}`);
                 allCalendarItems.push(enrichedEvent);
                 
                 // Agregar el soundcheck si existe
-                if (event.soundcheckDate && event.soundcheckTime) {
+                if (normalizedEvent.soundcheckDate && normalizedEvent.soundcheckTime) {
                     const soundcheckEvent = {
-                        ...event,
-                        id: `soundcheck-${event.id}`,
-                        name: `🎵 Soundcheck: ${event.name}`,
-                        date: event.soundcheckDate,
-                        time: event.soundcheckTime,
+                        ...normalizedEvent,
+                        id: `soundcheck-${normalizedEvent.id}`,
+                        name: `🎵 Soundcheck: ${normalizedEvent.name}`,
+                        date: normalizedEvent.soundcheckDate,
+                        time: normalizedEvent.soundcheckTime,
                         eventType: 'soundcheck',
-                        originalEventId: event.id,
+                        originalEventId: normalizedEvent.id,
                         applicationStatus: application.status,
                         contractSigned: application.contractSigned || false,
                         riderUploaded: application.riderUploaded || false
                     };
-                    console.log(`🎵 Soundcheck creado: ${soundcheckEvent.name} - ${soundcheckEvent.date} ${soundcheckEvent.time}`);
                     allCalendarItems.push(soundcheckEvent);
                 }
             });
             
-            console.log('🎉 Eventos finales para el calendario (incluyendo soundchecks):', allCalendarItems.length);
             return allCalendarItems;
         } catch (error) {
-            console.error('💥 Error al obtener eventos:', error);
-            if (error.response) {
-                console.error('📡 Error de respuesta del servidor:', {
-                    status: error.response.status,
-                    statusText: error.response.statusText,
-                    data: error.response.data
-                });
-            } else if (error.request) {
-                console.error('🌐 Error de red - no se recibió respuesta:', error.request);
-            } else {
-                console.error('⚙️ Error de configuración:', error.message);
-            }
+            console.error('Error al obtener eventos:', error);
             return [];
         }
     }

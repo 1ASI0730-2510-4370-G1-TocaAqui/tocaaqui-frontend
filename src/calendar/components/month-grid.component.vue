@@ -57,19 +57,39 @@ const days = computed(() => {
 const dayEvents = computed(() => {
   const eventMap = new Map()
   events.value.forEach(event => {
-    console.log('Procesando evento:', event)
-    // Asegurarnos de que la fecha se procese en la zona horaria local
-    const eventDate = new Date(event.date + 'T00:00:00')
-    const dateStr = eventDate.toISOString().split('T')[0]
-    console.log('Fecha original del evento:', event.date)
-    console.log('Fecha procesada del evento:', dateStr)
-    console.log('Día de la semana:', eventDate.getDay())
+    // Manejar la fecha de manera más segura
+    let dateStr = event.date
+    
+    // Si la fecha no está en formato YYYY-MM-DD, intentar normalizarla
+    if (event.date) {
+      try {
+        // Si ya está en formato YYYY-MM-DD, usar directamente
+        if (/^\d{4}-\d{2}-\d{2}$/.test(event.date)) {
+          dateStr = event.date
+        } else {
+          // Si no, intentar crear una fecha válida
+          const eventDate = new Date(event.date)
+          if (!isNaN(eventDate.getTime())) {
+            dateStr = eventDate.toISOString().split('T')[0]
+          } else {
+            console.error('Fecha inválida para evento:', event)
+            return // Saltar este evento
+          }
+        }
+      } catch (error) {
+        console.error('Error procesando fecha del evento:', event, error)
+        return // Saltar este evento
+      }
+    } else {
+      console.error('Evento sin fecha:', event)
+      return // Saltar este evento
+    }
+    
     if (!eventMap.has(dateStr)) {
       eventMap.set(dateStr, [])
     }
     eventMap.get(dateStr).push(event)
   })
-  console.log('Mapa de eventos:', Object.fromEntries(eventMap))
   return eventMap
 })
 
@@ -93,7 +113,26 @@ function goToToday() {
 
 /* ---------- helpers para fechas ---------- */
 function getDateString(date) {
-  return date.toISOString().split('T')[0]
+  try {
+    // Asegurar que la fecha esté en formato YYYY-MM-DD
+    if (date instanceof Date) {
+      return date.toISOString().split('T')[0]
+    }
+    // Si ya es un string en formato YYYY-MM-DD, devolverlo tal como está
+    if (typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date)) {
+      return date
+    }
+    // Intentar convertir a Date si es otro formato
+    const dateObj = new Date(date)
+    if (!isNaN(dateObj.getTime())) {
+      return dateObj.toISOString().split('T')[0]
+    }
+    console.error('Fecha inválida en getDateString:', date)
+    return null
+  } catch (error) {
+    console.error('Error en getDateString:', date, error)
+    return null
+  }
 }
 
 /* ---------- tooltip para eventos ---------- */
@@ -106,13 +145,24 @@ ${t('calendar.tooltip.time')}: ${event.time}
 ${t('calendar.tooltip.location')}: ${event.location}
 ${t('calendar.tooltip.type')}: ${t('calendar.eventTypes.soundcheck')}`
   } else {
-    const statusKey = event.applicationStatus === 'signed' ? 'signed' : 
-                     event.applicationStatus === 'contract_pending' ? 'contract_pending' : 'pending'
+    // Mapear correctamente los estados
+    let statusKey = 'pending'
+    if (event.applicationStatus === 'Signed') {
+      statusKey = 'signed'
+    } else if (event.applicationStatus === 'ContractPending') {
+      statusKey = 'contract_pending'
+    }
+    
+    // Determinar el estado del contrato
+    let contractStatus = event.contractSigned ? 
+      t('calendar.eventStatus.signed') : 
+      t('calendar.eventStatus.pending')
+    
     return `${event.name}
 ${t('calendar.tooltip.time')}: ${event.time}
 ${t('calendar.tooltip.location')}: ${event.location}
 ${t('calendar.tooltip.status')}: ${t('calendar.eventStatus.' + statusKey)}
-${t('calendar.tooltip.contract')}: ${event.applicationStatus === 'signed' ? t('calendar.eventStatus.signed') : t('calendar.eventStatus.pending')}`
+${t('calendar.tooltip.contract')}: ${contractStatus}`
   }
 }
 
@@ -120,14 +170,9 @@ ${t('calendar.tooltip.contract')}: ${event.applicationStatus === 'signed' ? t('c
 async function loadEvents() {
   try {
     isLoading.value = true
-    console.log('Iniciando carga de eventos...')
     const loadedEvents = await EventService.getAll()
-    console.log('Eventos cargados en el calendario:', loadedEvents)
     if (loadedEvents.length === 0) {
-      console.log('No se encontraron eventos. Verificar:')
-      console.log('1. ¿Hay un usuario en localStorage?')
-      console.log('2. ¿El usuario tiene postulaciones aceptadas?')
-      console.log('3. ¿Los eventos existen en la base de datos?')
+      console.log('No se encontraron eventos para mostrar en el calendario')
     }
     events.value = loadedEvents
   } catch (error) {
@@ -242,21 +287,21 @@ watch(pivot, () => {
       >
         <span class="date-number">{{ d.date.getDate() }}</span>
         <!-- Eventos del día -->
-        <div class="events-container" v-if="dayEvents.get(getDateString(d.date))">
+        <div class="events-container" v-if="getDateString(d.date) && dayEvents.get(getDateString(d.date))">
           <div 
             v-for="event in dayEvents.get(getDateString(d.date))" 
             :key="event.id"
             class="event-chip"
             :class="{ 
-              'event-contract-pending': event.eventType === 'event' && event.applicationStatus === 'contract_pending',
-              'event-signed': event.eventType === 'event' && event.applicationStatus === 'signed',
+              'event-contract-pending': event.eventType === 'event' && event.applicationStatus === 'ContractPending',
+              'event-signed': event.eventType === 'event' && event.applicationStatus === 'Signed',
               'soundcheck': event.eventType === 'soundcheck'
             }"
             :title="getEventTooltip(event)"
           >
             <i v-if="event.eventType === 'soundcheck'" class="pi pi-volume-up mr-1" style="font-size: 0.7rem;"></i>
-            <i v-else-if="event.applicationStatus === 'signed'" class="pi pi-check-circle mr-1" style="font-size: 0.7rem;"></i>
-            <i v-else-if="event.applicationStatus === 'contract_pending'" class="pi pi-clock mr-1" style="font-size: 0.7rem;"></i>
+            <i v-else-if="event.applicationStatus === 'Signed'" class="pi pi-check-circle mr-1" style="font-size: 0.7rem;"></i>
+            <i v-else-if="event.applicationStatus === 'ContractPending'" class="pi pi-clock mr-1" style="font-size: 0.7rem;"></i>
             <i v-else class="pi pi-hourglass mr-1" style="font-size: 0.7rem;"></i>
             {{ event.eventType === 'soundcheck' ? event.name.replace('🎵 Soundcheck: ', '') : event.name }}
           </div>

@@ -2,25 +2,31 @@ import httpInstance from "../../shared/services/http.instance.js";
 import { Payment, PaymentStatus } from '../model/payment.model';
 
 export class PaymentService {
-    async createPayment(eventId, amount, userId, promotorId) {
+    constructor() {
+        this.resourceEndpoint = `${import.meta.env.VITE_CATEGORIES_ENDPOINT_PATH}payments`;
+        this.eventsEndpoint = `${import.meta.env.VITE_CATEGORIES_ENDPOINT_PATH}events`;
+        this.usersEndpoint = `${import.meta.env.VITE_CATEGORIES_ENDPOINT_PATH}users`;
+    }
+
+    async createPayment(eventId, amount, userId, promoterId) {
         try {
-            console.log('Creating payment:', { eventId, amount, userId, promotorId });
+            console.log('Creating payment:', { eventId, amount, userId, promoterId });
             
             // Obtener información del evento
-            const eventResponse = await httpInstance.get(`/events/${eventId}`);
+            const eventResponse = await httpInstance.get(`${this.eventsEndpoint}/${eventId}`);
             const event = eventResponse.data;
             
             // Obtener información del músico
-            const musicoResponse = await httpInstance.get(`/api/v1/users/${userId}`);
-            const musico = musicoResponse.data;
+            const musicianResponse = await httpInstance.get(`${this.usersEndpoint}/${userId}`);
+            const musician = musicianResponse.data;
 
             const now = new Date().toISOString();
             
             const paymentData = {
                 eventId: Number(eventId),
                 amount: Number(amount),
-                musicoId: Number(userId),
-                promotorId: Number(promotorId),
+                musicianId: Number(userId),
+                promoterId: Number(promoterId),
                 status: PaymentStatus.PENDING,
                 paymentMethod: "bank_transfer",
                 bankInfo: {
@@ -28,7 +34,7 @@ export class PaymentService {
                     bankName: "Banco de Crédito",
                     accountType: "savings"
                 },
-                description: `Pago por presentación de ${musico.name} en ${event.name}`,
+                description: `Pago por presentación de ${musician.name} en ${event.name}`,
                 createdAt: now,
                 updatedAt: now,
                 statusHistory: [
@@ -41,7 +47,7 @@ export class PaymentService {
             };
 
             console.log('Creating payment with data:', paymentData);
-            const response = await httpInstance.post('/payments', paymentData);
+            const response = await httpInstance.post(this.resourceEndpoint, paymentData);
             console.log('Payment created:', response.data);
             return new Payment(response.data);
         } catch (error) {
@@ -53,47 +59,47 @@ export class PaymentService {
     async getPaymentsByUser(userId) {
         try {
             // 1. Obtener el usuario
-            const userResponse = await httpInstance.get(`/api/v1/users/${userId}`);
+            const userResponse = await httpInstance.get(`${this.usersEndpoint}/${userId}`);
             const user = userResponse.data;
 
             // 2. Obtener todos los pagos
-            const paymentsResponse = await httpInstance.get('/payments');
+            const paymentsResponse = await httpInstance.get(this.resourceEndpoint);
             const payments = Array.isArray(paymentsResponse.data) ? paymentsResponse.data : [];
             console.log('Payments from server:', payments);
 
             // 3. Filtrar pagos según el rol del usuario
             const userPayments = payments.filter(payment => {
                 if (user.role === 'musico') {
-                    return Number(payment.musicoId) === Number(userId);
+                    return Number(payment.musicianId) === Number(userId);
                 }
                 if (user.role === 'promotor') {
-                    return Number(payment.promotorId) === Number(userId);
+                    return Number(payment.promoterId) === Number(userId);
                 }
                 return false;
             });
 
             // 4. Enriquecer los pagos con información adicional
             const enrichedPayments = await Promise.all(userPayments.map(async payment => {
-                    try {
+                try {
                     // Obtener información del evento
-                        const eventResponse = await httpInstance.get(`/events/${payment.eventId}`);
+                    const eventResponse = await httpInstance.get(`${this.eventsEndpoint}/${payment.eventId}`);
                     const event = eventResponse.data;
 
                     // Obtener información del músico
-                    const musicoResponse = await httpInstance.get(`/api/v1/users/${payment.musicoId}`);
-                    const musico = musicoResponse.data;
+                    const musicianResponse = await httpInstance.get(`/api/v1/users/${payment.musicianId}`);
+                    const musician = musicianResponse.data;
 
                     // Obtener información del promotor
-                    const promotorResponse = await httpInstance.get(`/api/v1/users/${payment.promotorId}`);
-                    const promotor = promotorResponse.data;
+                    const promoterResponse = await httpInstance.get(`/api/v1/users/${payment.promoterId}`);
+                    const promoter = promoterResponse.data;
 
                     return {
-                            ...payment,
+                        ...payment,
                         eventName: event.name,
-                        musicoName: musico.name,
-                        promotorName: promotor.name
+                        musicianName: musician.name,
+                        promoterName: promoter.name
                     };
-                    } catch (error) {
+                } catch (error) {
                     console.error('Error enriching payment:', error);
                     return payment;
                 }
@@ -112,7 +118,7 @@ export class PaymentService {
     async updatePaymentStatus(paymentId, newStatus) {
         try {
             // Primero obtener el pago actual para mantener el historial
-            const currentPayment = await httpInstance.get(`/payments/${paymentId}`);
+            const currentPayment = await httpInstance.get(`${this.resourceEndpoint}/${paymentId}`);
             const payment = currentPayment.data;
 
             const now = new Date().toISOString();
@@ -144,7 +150,7 @@ export class PaymentService {
                 statusHistory: [...(payment.statusHistory || []), statusHistoryEntry]
             };
 
-            const { data } = await httpInstance.patch(`/payments/${paymentId}`, updatedData);
+            const { data } = await httpInstance.patch(`${this.resourceEndpoint}/${paymentId}/status`, updatedData);
             return new Payment(data);
         } catch (error) {
             console.error('Error updating payment status:', error);
@@ -198,4 +204,4 @@ export class PaymentService {
             return payment;
         }
     }
-} 
+}

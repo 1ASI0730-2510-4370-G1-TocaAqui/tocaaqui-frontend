@@ -12,15 +12,16 @@ export class Payment {
         this.id = data.id;
         this.amount = data.amount;
         this.eventId = data.eventId;
-        this.musicoId = data.musicoId;
-        this.promotorId = data.promotorId;
+        // Unificar nombres en inglés para backend
+        this.musicianId = data.musicianId ?? data.musicoId;
+        this.promoterId = data.promoterId ?? data.promotorId;
         this.status = data.status;
         this.description = data.description;
         this.createdAt = data.createdAt;
         this.updatedAt = data.updatedAt;
         this.eventName = data.eventName;
-        this.musicoName = data.musicoName;
-        this.promotorName = data.promotorName;
+        this.musicianName = data.musicianName ?? data.musicoName;
+        this.promoterName = data.promoterName ?? data.promotorName;
         this.paymentMethod = data.paymentMethod;
         this.bankInfo = data.bankInfo;
     }
@@ -34,8 +35,8 @@ export class Payment {
             id: this.id,
             amount: this.amount,
             eventId: this.eventId,
-            musicoId: this.musicoId,
-            promotorId: this.promotorId,
+            musicianId: this.musicianId,
+            promoterId: this.promoterId,
             status: this.status,
             description: this.description,
             createdAt: this.createdAt,
@@ -44,4 +45,4 @@ export class Payment {
             bankInfo: this.bankInfo
         };
     }
-} 
+}

@@ -19,6 +19,7 @@ const selectedEvent = ref(null);
 const showEventDialog = ref(false);
 const userApplications = ref([]);
 const userInvitations = ref([]);
+const eventsWithSignedStatus = ref([]);
 
 // Obtener usuario del localStorage
 const user = ref(null);
@@ -46,23 +47,21 @@ const genreOptions = computed(() => getMusicGenreOptions(t));
 // Eventos filtrados
 const filteredEvents = computed(() => {
   if (!events.value) return [];
-  
   return events.value.filter(event => {
+    // Ocultar eventos con contrato firmado
+    if (eventsWithSignedStatus.value.includes(event.id)) return false;
     // Filtrar por nombre
     if (filters.value.name && !event.name.toLowerCase().includes(filters.value.name.toLowerCase())) {
       return false;
     }
-    
     // Filtrar por ubicación
     if (filters.value.location && !event.location.toLowerCase().includes(filters.value.location.toLowerCase())) {
       return false;
     }
-    
     // Filtrar por género
     if (filters.value.genre && event.genre !== filters.value.genre) {
       return false;
     }
-    
     // Filtrar por fecha desde
     if (filters.value.dateFrom) {
       const eventDate = new Date(event.date);
@@ -71,7 +70,6 @@ const filteredEvents = computed(() => {
         return false;
       }
     }
-    
     // Filtrar por fecha hasta
     if (filters.value.dateTo) {
       const eventDate = new Date(event.date);
@@ -80,7 +78,6 @@ const filteredEvents = computed(() => {
         return false;
       }
     }
-    
     return true;
   });
 });
@@ -109,7 +106,24 @@ const fetchEvents = async () => {
   }
 };
 
-onMounted(fetchEvents);
+const fetchSignedStatus = async () => {
+  eventsWithSignedStatus.value = [];
+  for (const event of events.value) {
+    try {
+      const applicants = await eventApplicationService.getEventApplicants(event.id);
+      if (applicants.some(app => app.status === 'Signed' || app.status === 'signed')) {
+        eventsWithSignedStatus.value.push(event.id);
+      }
+    } catch (e) {
+      // Si hay error, no filtrar ese evento
+    }
+  }
+};
+
+onMounted(async () => {
+  await fetchEvents();
+  await fetchSignedStatus();
+});
 
 const applyFilters = () => {
   // Los filtros ya se aplican a través del computed property filteredEvents
@@ -457,4 +471,4 @@ const applyToEvent = async () => {
 .m-2 {
   margin: 0.5rem;
 }
-</style> 
+</style>

@@ -461,6 +461,14 @@
     "title": "Mis Invitaciones",
     "noInvitations": "No tienes invitaciones pendientes",
     "noInvitationsDescription": "Las invitaciones de promotores aparecerán aquí cuando las recibas.",
+    "status": {
+      "pending": "Pendiente",
+      "Pending": "Pendiente",
+      "accepted": "Aceptada", 
+      "Accepted": "Aceptada",
+      "rejected": "Rechazada",
+      "Rejected": "Rechazada"
+    },
     "message": "Mensaje",
     "viewInfo": "Ver información",
     "accept": "Firmar contrato",
@@ -478,11 +486,19 @@
     "alreadyInvited": "Ya invitado",
     "alreadyInvitedInfo": "Ya has invitado a este artista a {count} evento(s).",
     "eventAlreadyInvited": "Ya has invitado a este artista a este evento anteriormente.",
-    "status": {
-      "pending": "Pendiente",
-      "accepted": "Aceptada", 
-      "rejected": "Rechazada"
-    }
+    "pendingInvitations": "Invitaciones Pendientes"
+  },
+  "contracts": {
+    "pendingContracts": "Contratos Pendientes de Firma",
+    "signContract": "Firmar Contrato",
+    "viewDetails": "Ver Detalles",
+    "contractDetails": "Detalles del Contrato",
+    "sign": "Firmar Contrato",
+    "reject": "Rechazar Contrato",
+    "title": "Contrato de Presentación Musical",
+    "terms": "Términos y Condiciones",
+    "payment": "Pago",
+    "description": "Descripción"
   },
   "promoter": {
     "dashboard": {

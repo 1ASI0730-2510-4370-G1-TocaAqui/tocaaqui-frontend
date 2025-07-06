@@ -25,7 +25,7 @@
                                 
                                 <!-- Botón de Pagar -->
                                 <pv-button
-                                    v-if="payment && payment.status === 'PENDING'"
+                                    v-if="payment && (payment.status === 'PENDING' || payment.status === 'Pending')"
                                     label="Pagar"
                                     icon="pi pi-money-bill"
                                     :loading="paymentLoading"
@@ -34,7 +34,7 @@
                                 
                                 <!-- Botón de Finalizar Evento -->
                                 <pv-button
-                                    v-if="payment && payment.status === 'HELD'"
+                                    v-if="payment && (payment.status === 'HELD' || payment.status === 'Held')"
                                     label="Finalizar Evento"
                                     icon="pi pi-check-circle"
                                     :loading="paymentLoading"
@@ -323,7 +323,7 @@ export default {
                     if (payments && payments.length > 0) {
                         payment.value = payments.find(p => 
                             Number(p.eventId) === Number(eventId) && 
-                            Number(p.musicoId) === Number(signedApplicant.userId)
+                            Number(p.musicianId) === Number(signedApplicant.userId)
                         );
                         console.log('Pago para este evento:', payment.value);
                     }
@@ -358,30 +358,7 @@ export default {
             if (!payment.value) return;
             try {
                 paymentLoading.value = true;
-                const now = new Date().toISOString();
-                
-                // Asegurarnos de que statusHistory sea un array
-                const currentHistory = Array.isArray(payment.value.statusHistory) 
-                    ? payment.value.statusHistory 
-                    : [];
-                
-                // Actualizar el pago a estado HELD
-                const updatedPayment = {
-                    ...payment.value,
-                    status: "HELD",
-                    updatedAt: now,
-                    statusHistory: [
-                        ...currentHistory,
-                        {
-                            status: "HELD",
-                            timestamp: now,
-                            comment: "Pago en espera de confirmación del evento"
-                        }
-                    ]
-                };
-
-                const response = await httpInstance.patch(`/payments/${payment.value.id}`, updatedPayment);
-                payment.value = response.data;
+                await paymentService.updatePaymentStatus(payment.value.id, 'HELD');
                 await loadEventData();
             } catch (error) {
                 console.error('Error processing payment:', error);
@@ -394,30 +371,7 @@ export default {
             if (!payment.value) return;
             try {
                 paymentLoading.value = true;
-                const now = new Date().toISOString();
-                
-                // Asegurarnos de que statusHistory sea un array
-                const currentHistory = Array.isArray(payment.value.statusHistory) 
-                    ? payment.value.statusHistory 
-                    : [];
-                
-                // Actualizar el pago a estado COMPLETED
-                const updatedPayment = {
-                    ...payment.value,
-                    status: "COMPLETED",
-                    updatedAt: now,
-                    statusHistory: [
-                        ...currentHistory,
-                        {
-                            status: "COMPLETED",
-                            timestamp: now,
-                            comment: "Pago liberado después de confirmar el evento"
-                        }
-                    ]
-                };
-
-                const response = await httpInstance.patch(`/payments/${payment.value.id}`, updatedPayment);
-                payment.value = response.data;
+                await paymentService.updatePaymentStatus(payment.value.id, 'COMPLETED');
                 await loadEventData();
             } catch (error) {
                 console.error('Error finalizing event:', error);
@@ -507,4 +461,4 @@ export default {
         height: 300px;
     }
 }
-</style> 
+</style>

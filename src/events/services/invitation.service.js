@@ -17,7 +17,7 @@ export class InvitationService {
 
     async getInvitationsByArtist(artistId) {
         try {
-            const response = await httpInstance.get(`${this.resourceEndpoint}?artistId=${artistId}`);
+            const response = await httpInstance.get(`${this.resourceEndpoint}/artist/${artistId}`);
             return response.data.map(invitation => new Invitation(invitation));
         } catch (error) {
             throw this.handleError(error);
@@ -26,7 +26,16 @@ export class InvitationService {
 
     async getInvitationsByPromoter(promoterId) {
         try {
-            const response = await httpInstance.get(`${this.resourceEndpoint}?promoterId=${promoterId}`);
+            const response = await httpInstance.get(`${this.resourceEndpoint}/promoter/${promoterId}`);
+            return response.data.map(invitation => new Invitation(invitation));
+        } catch (error) {
+            throw this.handleError(error);
+        }
+    }
+
+    async getInvitationsByEvent(eventId) {
+        try {
+            const response = await httpInstance.get(`${this.resourceEndpoint}/event/${eventId}`);
             return response.data.map(invitation => new Invitation(invitation));
         } catch (error) {
             throw this.handleError(error);
@@ -35,9 +44,8 @@ export class InvitationService {
 
     async acceptInvitation(invitationId) {
         try {
-            const response = await httpInstance.patch(`${this.resourceEndpoint}/${invitationId}`, {
-                status: 'accepted',
-                updatedAt: new Date().toISOString()
+            const response = await httpInstance.patch(`${this.resourceEndpoint}/${invitationId}/respond`, {
+                Status: 'Accepted'
             });
             return new Invitation(response.data);
         } catch (error) {
@@ -47,9 +55,8 @@ export class InvitationService {
 
     async rejectInvitation(invitationId) {
         try {
-            const response = await httpInstance.patch(`${this.resourceEndpoint}/${invitationId}`, {
-                status: 'rejected',
-                updatedAt: new Date().toISOString()
+            const response = await httpInstance.patch(`${this.resourceEndpoint}/${invitationId}/respond`, {
+                Status: 'Rejected'
             });
             return new Invitation(response.data);
         } catch (error) {
@@ -75,4 +82,4 @@ export class InvitationService {
             return error.message || 'Error desconocido';
         }
     }
-} 
+}

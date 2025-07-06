@@ -5,10 +5,24 @@ import httpInstance from "../../shared/services/http.instance.js";
 import { EventApplication, Contract, RiderTechnical, EventApplicant } from '../model/event-application.model';
 
 export class EventApplicationService {
-    resourceEndpoint = `${import.meta.env.VITE_CATEGORIES_ENDPOINT_PATH}events`;
-    applicantsEndpoint = `${import.meta.env.VITE_CATEGORIES_ENDPOINT_PATH}event-applicants`;
-    contractsEndpoint = `${import.meta.env.VITE_CATEGORIES_ENDPOINT_PATH}contracts`;
-    documentsEndpoint = `${import.meta.env.VITE_CATEGORIES_ENDPOINT_PATH}documents`;
+    resourceEndpoint = `${import.meta.env.VITE_CATEGORIES_ENDPOINT_PATH || '/api/v1/'}events`;
+    applicantsEndpoint = `${import.meta.env.VITE_CATEGORIES_ENDPOINT_PATH || '/api/v1/'}event-applicants`;
+    contractsEndpoint = `${import.meta.env.VITE_CATEGORIES_ENDPOINT_PATH || '/api/v1/'}contracts`;
+    documentsEndpoint = `${import.meta.env.VITE_CATEGORIES_ENDPOINT_PATH || '/api/v1/'}documents`;
+
+    constructor() {
+        // Logs de debugging temporalmente comentados
+        // console.log('Environment variables:', {
+        //     VITE_API_BASE_URL: import.meta.env.VITE_API_BASE_URL,
+        //     VITE_CATEGORIES_ENDPOINT_PATH: import.meta.env.VITE_CATEGORIES_ENDPOINT_PATH
+        // });
+        // console.log('EventApplicationService endpoints:', {
+        //     resourceEndpoint: this.resourceEndpoint,
+        //     applicantsEndpoint: this.applicantsEndpoint,
+        //     contractsEndpoint: this.contractsEndpoint,
+        //     documentsEndpoint: this.documentsEndpoint
+        // });
+    }
 
     async getAll() {
         try {
@@ -33,22 +47,25 @@ export class EventApplicationService {
             }
             const user = JSON.parse(userStr);
 
-            // Obtener la postulación del usuario para este evento específico
-            try {
-                const applicantResponse = await httpInstance.get(`${this.applicantsEndpoint}/event/${id}/user/${user.id}`);
-                const applicant = applicantResponse.data;
+            // Solo buscar aplicación si el usuario NO es el creador del evento
+            if (response.data.adminId !== user.id) {
+                // Obtener la postulación del usuario para este evento específico
+                try {
+                    const applicantResponse = await httpInstance.get(`${this.applicantsEndpoint}/event/${id}/user/${user.id}`);
+                    const applicant = applicantResponse.data;
 
-            // Si existe una postulación, incluir su estado en el evento
-            if (applicant) {
-                return new EventApplication({
-                    ...response.data,
-                    status: applicant.status
-                });
-                }
-            } catch (error) {
-                // Si es 404, significa que no hay postulación (normal)
-                if (error.response?.status !== 404) {
-                    console.error('Error fetching applicant:', error);
+                // Si existe una postulación, incluir su estado en el evento
+                if (applicant) {
+                    return new EventApplication({
+                        ...response.data,
+                        status: applicant.status
+                    });
+                    }
+                } catch (error) {
+                    // Si es 404, significa que no hay postulación (normal)
+                    if (error.response?.status !== 404) {
+                        console.error('Error fetching applicant:', error);
+                    }
                 }
             }
 
@@ -346,37 +363,19 @@ export class EventApplicationService {
             }
             const musico = JSON.parse(userStr);
 
-            // 3. Crear el pago para el artista (COMENTADO - endpoint no existe aún)
-            // TODO: Implementar cuando el backend tenga el controlador de pagos
-            /*
-            const now = new Date().toISOString();
-            const paymentData = {
-                amount: Number(event.payment),
-                eventId: Number(eventId),
-                musicoId: Number(userId),
-                promotorId: Number(event.adminId),
-                status: "PENDING",
-                paymentMethod: "bank_transfer",
-                bankInfo: {
-                    accountNumber: "****1234",
-                    bankName: "Banco de Crédito",
-                    accountType: "savings"
-                },
-                description: `Pago por presentación de ${musico.name} en ${event.name}`,
-                createdAt: now,
-                updatedAt: now,
-                statusHistory: [
-                    {
-                        status: "PENDING",
-                        timestamp: now,
-                        comment: "Pago creado después de firma de contrato"
-                    }
-                ]
-            };
-
-            console.log('Creando pago después de firma de contrato:', paymentData);
-            await httpInstance.post('/payments', paymentData);
-            */
+            // 3. Crear el pago para el artista (descomentar y ajustar cuando el backend esté disponible)
+            try {
+              const paymentService = new (await import('../../payments/services/payment.service.js')).PaymentService();
+              const newPayment = await paymentService.createPayment(
+                eventId,
+                event.payment,
+                userId,
+                event.adminId
+              );
+              console.log('Pago creado tras firma de contrato:', newPayment);
+            } catch (err) {
+              console.error('Error creando el pago tras firma de contrato:', err);
+            }
 
             // 4. Actualizar el estado de la postulación a 'Signed' y marcar contrato como firmado
                 await httpInstance.patch(
@@ -386,24 +385,10 @@ export class EventApplicationService {
                     }
                 );
 
-            // 5. Crear el contrato como un campo más en el evento
-            const contract = {
-                userId: userId,
-                signature: signature,
-                signedDate: new Date().toISOString(),
-                status: 'signed'
-            };
+            // 5. Crear el contrato como un campo más en la postulación (no en el evento)
+            // No necesitamos actualizar el evento, solo la postulación ya tiene el estado correcto
 
-            // 6. Actualizar el evento con el contrato
-            const eventUpdateResponse = await httpInstance.patch(
-                `${this.resourceEndpoint}/${eventId}`,
-                { 
-                    contract: contract,
-                    status: 'signed'
-                }
-            );
-
-            // 7. AHORA rechazar automáticamente a los demás postulantes
+            // 6. AHORA rechazar automáticamente a los demás postulantes
             const allApplicantsResponse = await httpInstance.get(
                 `${this.applicantsEndpoint}/event/${eventId}`
             );
@@ -415,7 +400,7 @@ export class EventApplicationService {
                 )
             );
 
-            return eventUpdateResponse.data;
+            return { success: true, applicant: applicant };
         } catch (error) {
             console.error('Error en signContract:', error);
             throw this.handleError(error);

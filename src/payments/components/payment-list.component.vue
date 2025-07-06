@@ -85,28 +85,29 @@ export default {
             }).format(new Date(date));
         },
         getStatusSeverity(status) {
+            const normalized = (status || '').toUpperCase();
             const severities = {
-                [PaymentStatus.PENDING]: 'warning',
-                [PaymentStatus.HELD]: 'info',
-                [PaymentStatus.COMPLETED]: 'success',
-                [PaymentStatus.CANCELLED]: 'danger'
+                'PENDING': 'warning',
+                'HELD': 'info',
+                'COMPLETED': 'success',
+                'CANCELLED': 'danger'
             };
-            return severities[status] || 'info';
+            return severities[normalized] || 'info';
         },
         translateStatus(status) {
             return this.$t(`payments.status.${status.toLowerCase()}`);
         },
         getCurrentStep() {
             if (!this.selectedPayment) return 0;
-            
-            switch (this.selectedPayment.status) {
-                case PaymentStatus.PENDING:
+            const status = (this.selectedPayment.status || '').toUpperCase();
+            switch (status) {
+                case 'PENDING':
                     return 0;
-                case PaymentStatus.HELD:
+                case 'HELD':
                     return 1;
-                case PaymentStatus.COMPLETED:
+                case 'COMPLETED':
                     return 2;
-                case PaymentStatus.CANCELLED:
+                case 'CANCELLED':
                     return 2;
                 default:
                     return 0;
@@ -227,8 +228,8 @@ export default {
                     <div class="col-12">
                         <h3 class="text-primary">{{ $t('payments.details.eventInfo') }}</h3>
                         <p><strong>{{ $t('payments.details.name') }}:</strong> {{ selectedPayment.eventName }}</p>
-                        <p><strong>{{ $t('payments.details.musician') }}:</strong> {{ selectedPayment.musicoName }}</p>
-                        <p><strong>{{ $t('payments.details.promoter') }}:</strong> {{ selectedPayment.promotorName }}</p>
+                        <p><strong>{{ $t('payments.details.musician') }}:</strong> {{ selectedPayment.musicianName ?? selectedPayment.musicoName }}</p>
+                        <p><strong>{{ $t('payments.details.promoter') }}:</strong> {{ selectedPayment.promoterName ?? selectedPayment.promotorName }}</p>
                     </div>
                     
                     <div class="col-12">
@@ -299,4 +300,4 @@ export default {
 :deep(.p-progressbar.danger) .p-progressbar-value {
     background: var(--red-500);
 }
-</style> 
+</style>

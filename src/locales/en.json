@@ -544,9 +544,21 @@
     "eventAlreadyInvited": "You have already invited this artist to this event.",
     "status": {
       "pending": "Pending",
+      "Pending": "Pending",
       "accepted": "Accepted", 
-      "rejected": "Rejected"
-    }
+      "Accepted": "Accepted",
+      "rejected": "Rejected",
+      "Rejected": "Rejected"
+    },
+    "pendingInvitations": "Pending Invitations"
+  },
+  "contracts": {
+    "pendingContracts": "Pending Contracts to Sign",
+    "signContract": "Sign Contract",
+    "viewDetails": "View Details",
+    "contractDetails": "Contract Details",
+    "payment": "Payment",
+    "description": "Description"
   },
   "register": {
     "title": "Create Account",

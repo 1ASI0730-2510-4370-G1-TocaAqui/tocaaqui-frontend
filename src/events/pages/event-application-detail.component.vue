@@ -117,6 +117,10 @@ const fetchApplicationDetail = async () => {
     hasSignedContract.value = application.value.contractSigned === true;
     // Verificar si ya subió el rider
     hasUploadedRider.value = application.value.riderUploaded === true;
+    
+    // Debug: Mostrar el status actual
+    console.log('Status actual:', application.value.status);
+    console.log('Status en minúsculas:', application.value.status?.toLowerCase());
   } catch (err) {
     error.value = t('applicationDetail.errorLoading');
     console.error('Error fetching application details:', err);
@@ -379,7 +383,7 @@ onMounted(() => {
 
             <div class="flex gap-3 justify-content-center mt-4">
               <pv-button
-                v-if="!hasSignedContract && application?.status?.toLowerCase() === 'contract_pending'"
+                v-if="!hasSignedContract && (application?.status?.toLowerCase() === 'contract_pending' || application?.status?.toLowerCase() === 'contractpending' || application?.status === 'ContractPending')"
                 @click="showContractDialog = true"
                 icon="pi pi-file-pdf"
                 :label="t('applicationDetail.contract.view')"

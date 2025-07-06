@@ -30,9 +30,9 @@ export class EvaluationService {
     async getCompletedEventsForMusician(musicianId) {
         try {
             // 1. Obtener todas las postulaciones del músico con contrato firmado
-            const applicantsResponse = await httpInstance.get('/event_applicants');
+            const applicantsResponse = await httpInstance.get(`${import.meta.env.VITE_CATEGORIES_ENDPOINT_PATH}event-applicants/user/${musicianId}`);
             const musicianApplications = applicantsResponse.data.filter(app => 
-                Number(app.userId) === Number(musicianId) && app.status === 'signed'
+                app.status === 'signed'
             );
 
             if (musicianApplications.length === 0) {
@@ -40,20 +40,20 @@ export class EvaluationService {
             }
 
             // 2. Obtener todos los pagos completados
-            const paymentsResponse = await httpInstance.get('/payments');
+            const paymentsResponse = await httpInstance.get(`${import.meta.env.VITE_CATEGORIES_ENDPOINT_PATH}payments`);
             const completedPayments = paymentsResponse.data.filter(payment => 
                 payment.status === 'COMPLETED' && Number(payment.musicoId) === Number(musicianId)
             );
 
             // 3. Obtener eventos donde el músico tocó Y el pago se completó
             const completedEventIds = completedPayments.map(payment => Number(payment.eventId));
-            const eventsResponse = await httpInstance.get('/events');
+            const eventsResponse = await httpInstance.get(`${import.meta.env.VITE_CATEGORIES_ENDPOINT_PATH}events`);
             const completedEvents = eventsResponse.data.filter(event => 
                 completedEventIds.includes(Number(event.id))
             );
 
             // 4. Verificar que no hayan sido evaluados ya
-            const evaluationsResponse = await httpInstance.get('/evaluations');
+            const evaluationsResponse = await httpInstance.get(`${import.meta.env.VITE_CATEGORIES_ENDPOINT_PATH}evaluations`);
             const existingEvaluations = evaluationsResponse.data.filter(evaluation => 
                 Number(evaluation.userId) === Number(musicianId) && evaluation.type === 'venue'
             );
@@ -69,7 +69,7 @@ export class EvaluationService {
     async getCompletedEventsForPromoter(promoterId) {
         try {
             // 1. Obtener todos los eventos del promotor
-            const eventsResponse = await httpInstance.get('/events');
+            const eventsResponse = await httpInstance.get(`${import.meta.env.VITE_CATEGORIES_ENDPOINT_PATH}events`);
             const promoterEvents = eventsResponse.data.filter(event => 
                 Number(event.adminId) === Number(promoterId)
             );
@@ -79,7 +79,7 @@ export class EvaluationService {
             }
 
             // 2. Obtener todos los pagos completados para eventos del promotor
-            const paymentsResponse = await httpInstance.get('/payments');
+            const paymentsResponse = await httpInstance.get(`${import.meta.env.VITE_CATEGORIES_ENDPOINT_PATH}payments`);
             const completedPayments = paymentsResponse.data.filter(payment => 
                 payment.status === 'COMPLETED' && Number(payment.promotorId) === Number(promoterId)
             );
@@ -100,7 +100,7 @@ export class EvaluationService {
             const eventsWithArtists = await Promise.all(completedEvents.map(async (event) => {
                 try {
                     // Obtener postulaciones aceptadas para este evento
-                    const applicantsResponse = await httpInstance.get('/event_applicants');
+                    const applicantsResponse = await httpInstance.get(`${import.meta.env.VITE_CATEGORIES_ENDPOINT_PATH}event-applicants`);
                     const acceptedApplicants = applicantsResponse.data.filter(app => 
                         Number(app.eventId) === Number(event.id) && app.status === 'signed'
                     );
@@ -111,7 +111,7 @@ export class EvaluationService {
                         
                         // Solo incluir si no ha sido evaluado todavía
                         if (!existingEvaluationKeys.includes(evaluationKey)) {
-                            const userResponse = await httpInstance.get(`/api/v1/users/${applicant.userId}`);
+                            const userResponse = await httpInstance.get(`${import.meta.env.VITE_CATEGORIES_ENDPOINT_PATH}users/${applicant.userId}`);
                             return {
                                 userId: applicant.userId,
                                 name: userResponse.data.name,
@@ -162,10 +162,10 @@ export class EvaluationService {
     async saveEvaluation(evaluationData) {
         try {
             // Primero obtener la información del evento para conseguir el promoterId
-            const eventResponse = await httpInstance.get(`/events/${evaluationData.eventId}`);
+            const eventResponse = await httpInstance.get(`${import.meta.env.VITE_CATEGORIES_ENDPOINT_PATH}events/${evaluationData.eventId}`);
             const event = eventResponse.data;
 
-            const response = await httpInstance.post('/evaluations', {
+            const response = await httpInstance.post(`${import.meta.env.VITE_CATEGORIES_ENDPOINT_PATH}evaluations`, {
                 ...evaluationData,
                 promoterId: event.adminId, // Agregamos el ID del promotor
                 name: evaluationData.eventName,
@@ -197,8 +197,9 @@ export class EvaluationService {
 
     async getEvaluatedEvents() {
         try {
-            const response = await httpInstance.get('/evaluations?type=venue');
-            return response.data;
+            const response = await httpInstance.get(`${import.meta.env.VITE_CATEGORIES_ENDPOINT_PATH}evaluations?type=venue`);
+            // Asegura que siempre retorna un array
+            return Array.isArray(response.data) ? response.data : [];
         } catch (error) {
             console.error('Error al obtener eventos evaluados:', error);
             throw new Error('No se pudieron cargar los eventos evaluados');
@@ -207,8 +208,9 @@ export class EvaluationService {
 
     async getEvaluatedArtists() {
         try {
-            const response = await httpInstance.get('/evaluations?type=artist');
-            return response.data;
+            const response = await httpInstance.get(`${import.meta.env.VITE_CATEGORIES_ENDPOINT_PATH}evaluations?type=artist`);
+            // Asegura que siempre retorna un array
+            return Array.isArray(response.data) ? response.data : [];
         } catch (error) {
             console.error('Error al obtener artistas evaluados:', error);
             throw new Error('No se pudieron cargar las evaluaciones de artistas');
@@ -221,7 +223,7 @@ export class EvaluationService {
             const evaluations = await this.getEvaluatedEvents();
             
             // 2. Obtener todos los eventos del promotor
-            const eventsResponse = await httpInstance.get('/events');
+            const eventsResponse = await httpInstance.get(`${import.meta.env.VITE_CATEGORIES_ENDPOINT_PATH}events`);
             const promoterEvents = eventsResponse.data.filter(event => Number(event.adminId) === Number(promoterId));
             
             // 3. Filtrar las evaluaciones que corresponden a los eventos del promotor
@@ -246,11 +248,11 @@ export class EvaluationService {
             const enrichedEvaluations = await Promise.all(promoterEvaluations.map(async (evaluation) => {
                 try {
                     // Obtener información del artista
-                    const artistResponse = await httpInstance.get(`/api/v1/users/${evaluation.musicianId}`);
+                    const artistResponse = await httpInstance.get(`${import.meta.env.VITE_CATEGORIES_ENDPOINT_PATH}users/${evaluation.musicianId}`);
                     const artist = artistResponse.data;
 
                     // Obtener información del evento
-                    const eventResponse = await httpInstance.get(`/events/${evaluation.eventId}`);
+                    const eventResponse = await httpInstance.get(`${import.meta.env.VITE_CATEGORIES_ENDPOINT_PATH}events/${evaluation.eventId}`);
                     const event = eventResponse.data;
 
                     return {
@@ -306,7 +308,7 @@ export class EvaluationService {
     async getAverageRatingForPromoter(promoterId) {
         try {
             // 1. Obtener todos los eventos del promotor
-            const eventsResponse = await httpInstance.get('/events');
+            const eventsResponse = await httpInstance.get(`${import.meta.env.VITE_CATEGORIES_ENDPOINT_PATH}events`);
             const promoterEvents = eventsResponse.data.filter(event => event.adminId === promoterId);
             
             // 2. Obtener todas las evaluaciones de venues

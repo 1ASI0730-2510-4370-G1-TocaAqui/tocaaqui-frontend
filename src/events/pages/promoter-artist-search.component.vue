@@ -225,20 +225,20 @@ const sendInvitation = async () => {
   try {
     const selectedEvent = promoterEvents.value.find(e => e.id === inviteForm.value.eventId);
     
+    console.log('Creando invitación para:');
+    console.log('- Artista seleccionado:', selectedArtist.value);
+    console.log('- Artista ID:', selectedArtist.value.id);
+    console.log('- Evento ID:', inviteForm.value.eventId);
+    console.log('- Promoter ID:', user.value.id);
+    
     const invitationData = {
-      eventId: inviteForm.value.eventId,
-      eventName: selectedEvent.name,
-      eventDate: selectedEvent.date,
-      eventLocation: selectedEvent.location,
-      eventImageUrl: selectedEvent.imageUrl,
-      promoterId: user.value.id,
-      promoterName: user.value.name,
-      artistId: selectedArtist.value.id,
-      artistName: selectedArtist.value.name,
-      message: inviteForm.value.message,
-      status: 'pending'
+      EventId: inviteForm.value.eventId,
+      ArtistId: selectedArtist.value.id,
+      PromoterId: user.value.id,
+      Message: inviteForm.value.message
     };
 
+    console.log('Datos de invitación a enviar:', invitationData);
     await invitationService.sendInvitation(invitationData);
     
     toast.add({
